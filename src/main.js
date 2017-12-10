@@ -35,6 +35,7 @@ Vue.locale('en-US', mergeEN);
 // 路由配置
 const RouterConfig = {
     mode: 'history',
+    base: 'app',
     routes: Routers
 };
 const router = new VueRouter(RouterConfig);

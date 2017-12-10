@@ -4,9 +4,9 @@
   "description": "中控平台前端",
   "main": "index.js",
   "scripts": {
-    "init": "webpack --progress --config webpack.dev.config.js",
-    "dev": "webpack-dev-server --content-base ./ --open --inline --hot --compress --history-api-fallback --config webpack.dev.config.js",
-    "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
+    "init": "webpack --progress --config build/webpack.dev.config.js",
+    "dev": "webpack-dev-server --content-base ./ --open --inline --hot --compress --history-api-fallback --config build/webpack.dev.config.js",
+    "build": "webpack --progress --hide-modules --config build/webpack.prod.config.js",
     "lint": "eslint --fix --ext .js,.vue src"
   },
   "repository": {
@@ -37,6 +37,7 @@
     "eslint": "^3.12.2",
     "eslint-plugin-html": "^1.7.0",
     "extract-text-webpack-plugin": "^2.0.0",
+    "webpack-bundle-tracker": "^0.2.0",
     "file-loader": "^0.8.5",
     "html-loader": "^0.3.0",
     "html-webpack-plugin": "^2.28.0",

@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const BundleTracker = require('webpack-bundle-tracker')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -7,6 +8,9 @@ module.exports = {
         main: './src/main',
         vendors: './src/vendors'
     },
+    plugins: [
+        new BundleTracker({filename: './webpack-stats.json'}),
+    ],
     output: {
         path: path.join(__dirname, './dist')
     },
