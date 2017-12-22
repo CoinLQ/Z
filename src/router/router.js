@@ -37,6 +37,15 @@ export const page500 = {
     component: resolve => { require(['@/views/error-page/500.vue'], resolve); }
 };
 
+export const confidence = {
+    path: '/confidence',
+    meta: {
+        title: '置信校对'
+    },
+    name: 'zhixin-jiaodui',
+    component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); }
+};
+
 // export const preview = {
 //     path: '/preview',
 //     name: 'preview',
@@ -253,4 +262,5 @@ export const routers = [
     loginRouter,
     otherRouter,
     ...appRouter,
+    confidence,
 ];

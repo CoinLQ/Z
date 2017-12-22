@@ -1,8 +1,9 @@
 <template>
     <Breadcrumb>
-        <BreadcrumbItem 
-            v-for="item in currentPath" 
-            :href="item.path" 
+        <icon type="ios-home-outline"></icon>
+        <BreadcrumbItem
+            v-for="item in currentPath"
+            :href="item.path"
             :key="item.name"
         >{{ itemTitle(item) }}</BreadcrumbItem>
     </Breadcrumb>
