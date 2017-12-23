@@ -15,7 +15,7 @@ body{
 	padding: 100px 0;
 }
 .form{
-	width: 780px;
+	#width: 780px;
 	background-color: #fff;
 	padding:74px 110px 0 110px;
 	position: relative;
@@ -53,7 +53,7 @@ body{
 	top:17px;
 	width: 28px;
 	height:28px;
-	background:url(../img/user-v1.png) no-repeat;
+	background:url(../img/email-v1.png) no-repeat;
 }
 .form .item:nth-child(2):before{
 	content:"";
@@ -62,7 +62,7 @@ body{
 	top:26px;
 	width: 26px;
 	height:21px;
-	background:url(../img/email-v1.png) no-repeat;
+	background:url(../img/pass-v1.png) no-repeat;
 }
 .login .item:nth-child(2):before{
 	width: 21px;
@@ -96,6 +96,15 @@ body{
 	height:19px;
 	background:url(../img/selected-v1.png) no-repeat;
 }
+.register .item:nth-child(3):before{
+	content:"";
+	position: absolute;
+	left:0;
+	top:23px;
+	width: 21px;
+	height:26px;
+	background:url(../img/verifycode-v1.png) no-repeat;
+}
 .form .item:nth-child(4):before{
 	content:"";
 	position: absolute;
@@ -105,7 +114,16 @@ body{
 	height:19px;
 	background:url(../img/selected-v1.png) no-repeat;
 }
-.form .item input[type="text"]{
+.register .item:nth-child(4):before{
+	content:"";
+	position: absolute;
+	left:0;
+	top:17px;
+	width: 0px;
+	height:0px;
+	background:url(../img/selected-v1.png) no-repeat;
+}
+.form .item input[type="text"],input[type="password"]{
 	width: 100%;
 	box-sizing:border-box;
 	border:0;
@@ -149,4 +167,7 @@ body{
 }
 .item .hidden{
 	top:20px;
+}
+.form .item .login_specific{
+	margin-top: 20px;
 }
