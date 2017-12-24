@@ -1,13 +1,40 @@
 import Main from '@/views/Main.vue';
 
 // 不作为Main组件的子页面展示的页面单独写，如下
+// export const loginRouter = {
+//     path: '/login',
+//     name: 'login',
+//     meta: {
+//         title: 'Login - 登录'
+//     },
+//     component: resolve => { require(['@/views/login.vue'], resolve); }
+// };
+
 export const loginRouter = {
     path: '/login',
     name: 'login',
     meta: {
         title: 'Login - 登录'
     },
-    component: resolve => { require(['@/views/login.vue'], resolve); }
+    component: resolve => { require(['@/views/auth/login.vue'], resolve); }
+};
+
+export const signupRouter = {
+    path: '/signup',
+    name: 'signup',
+    meta: {
+        title: 'Signup - 注册'
+    },
+    component: resolve => { require(['@/views/auth/signup.vue'], resolve); }
+};
+
+export const resetPasswdRouter = {
+    path: '/resetpasswd',
+    name: 'resetpasswd',
+    meta: {
+        title: 'Reset Password - 重置密码'
+    },
+    component: resolve => { require(['@/views/auth/resetpasswd.vue'], resolve); }
 };
 
 export const page404 = {
@@ -246,21 +273,23 @@ export const appRouter = [
 // ];
 
 // // 所有上面定义的路由都要写在下面的routers里
+export const routers = [
+    loginRouter,
+    signupRouter,
+    resetPasswdRouter,
+    otherRouter,
+    // preview,
+    // locking,
+    ...appRouter,
+    confidence,
+    page500,
+    page403,
+    page404
+];
+
+
 // export const routers = [
 //     loginRouter,
 //     otherRouter,
-//     preview,
-//     locking,
 //     ...appRouter,
-//     page500,
-//     page403,
-//     page404
 // ];
-
-
-export const routers = [
-    loginRouter,
-    otherRouter,
-    ...appRouter,
-    confidence,
-];
