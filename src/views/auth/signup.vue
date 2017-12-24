@@ -9,7 +9,7 @@
             <h1><img src="./img/logo-v1.png" alt=""></h1>
         </div>
         <div class="main w">
-            <div class="form register">
+            <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
                     <h3><img src="./img/resg-v1.png" alt=""></h3>
@@ -17,19 +17,19 @@
                 </div>
                 <div class="bd">
                     <Form ref="regForm" :model="form" :rules="rules">
-                        <div class="item">
+                        <div class="item email">
                             <FormItem prop="email">
-                                <Input class="login_specific" v-model="form.email" placeholder="请输入用户名"></Input>
+                                <Input v-model="form.email" placeholder="请输入用户名"></Input>
                             </FormItem>
                         </div>
-                        <div class="item">
+                        <div class="item password">
                             <FormItem prop="password">
-                                <Input class="login_specific" v-model="form.password" placeholder="请输入密码" type="password" ></Input>
+                                <Input v-model="form.password" placeholder="请输入密码" type="password" ></Input>
                             </FormItem>
                         </div>
-                        <div class="item">
+                        <div class="item checkmark">
                             <FormItem prop="repassword">
-                                <Input class="login_specific" v-model="form.repassword" placeholder="再输入密码" type="password" ></Input>
+                                <Input v-model="form.repassword" placeholder="再输入密码" type="password" ></Input>
                             </FormItem>
                         </div>
                     </Form>
@@ -98,7 +98,7 @@ export default {
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [
-                    { type: 'string', min: 6, required: true },
+                    { type: 'string', required: true },
                     { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }

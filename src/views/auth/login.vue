@@ -9,7 +9,7 @@
             <h1><img src="./img/logo-v1.png" alt=""></h1>
         </div>
         <div class="main w">
-            <div class="form login">
+            <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
                     <h3><img src="./img/title-v1.png" alt=""></h3>
@@ -17,19 +17,19 @@
                 </div>
                 <div class="bd">
                     <Form ref="loginForm" :model="form" :rules="rules">
-                        <div class="item">
-                            <FormItem prop="userName">
-                                <Input class="login_specific" v-model="form.userName" placeholder="请输入邮箱地址"></Input>
+                        <div class="item email">
+                            <FormItem prop="email">
+                                <Input v-model="form.email" placeholder="请输入邮箱地址"></Input>
                             </FormItem>
                         </div>
-                        <div class="item">
+                        <div class="item password">
                             <FormItem prop="password">
-                                <Input class="login_specific" v-model="form.password" placeholder="请输入密码" type="password" ></Input>
+                                <Input v-model="form.password" placeholder="请输入密码" type="password" ></Input>
                                 <span class="forget" @click="handleResetpw">忘记密码?</span>
                             </FormItem>
                         </div>
                         <div class="item clearfix">
-                            <p><span class="fl rember"><Checkbox v-model="rememberPasswd">记住密码</Checkbox></span><span class="fr">还没账号?&nbsp;点我<em @click="handleSignup">注册</em></span></p>
+                            <p><Checkbox v-model="rememberPasswd"><span class="fl rember" style="font-size:18px;font-weight:400;">记住密码</span></Checkbox><span class="fr">还没账号?&nbsp;点我<em @click="handleSignup">注册</em></span></p>
                         </div>
                     </Form>
                 </div>
@@ -51,11 +51,11 @@ export default {
     data () {
         return {
             form: {
-                userName: saved_username,
+                email: saved_username,
                 password: ''
             },
             rules: {
-                userName: [
+                email: [
                     { required: true, message: '账号不能为空', trigger: 'blur' }
                 ],
                 password: [
@@ -72,7 +72,7 @@ export default {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     util.ajax.post('/auth/api-auth/', {
-                            email: that.form.userName,
+                            email: that.form.email,
                             password: that.form.password
                     })
                     .then(function (response) {

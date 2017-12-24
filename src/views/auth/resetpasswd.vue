@@ -9,27 +9,39 @@
             <h1><img src="./img/logo-v1.png" alt=""></h1>
         </div>
         <div class="main w">
-            <div class="form login">
+            <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3><img src="./img/title-v1.png" alt=""></h3>
+                    <h3><img src="./img/reset-v1.png" alt=""></h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">
-                    <Form ref="loginForm" :model="form" :rules="rules">
-                        <div class="item">
-                            <FormItem prop="userName">
-                                <Input class="login_specific" v-model="form.userName" placeholder="请输入用户名"></Input>
+                    <Form ref="resetForm" :model="form" :rules="rules">
+                        <div class="item email">
+                            <FormItem prop="email">
+                                <input v-model="form.email" type="text" placeholder="请输入您的注册邮箱">
                             </FormItem>
                         </div>
-                        <div class="item">
+                        <div class="item vericode">
+                            <FormItem prop="vericode">
+                                <input v-model="form.vericode" type="text" placeholder="请输入您收到的验证码">
+                                <span class="send" @click="handleSendVericode">点击发送验证码</span>
+                            </FormItem>
+                        </div>
+                        <div class="item password">
                             <FormItem prop="password">
-                                <Input class="login_specific" v-model="form.password" placeholder="请输入密码" type="password" ></Input>
-                                <span class="forget">忘记密码?</span>
+                                <input v-model="form.password" type="password" placeholder="请输入您的新密码">
+                                <span class="hidden"><img src="./img/hidden.png" alt=""></span>
                             </FormItem>
                         </div>
+                        <div class="item checkmark">
+                            <FormItem prop="repassword">
+                                <input v-model="form.repassword" type="password" placeholder="再次输入您的新密码">
+                                <span class="hidden"><img src="./img/hidden.png" alt=""></span>
+                            </FormItem>
+                        </div>                    
                         <div class="item clearfix">
-                            <p><span class="fl rember">记住密码</span><span class="fr">还没账号?&nbsp;点我<em @click="handleSignup">注册</em></span></p>
+                            <p><span class="fr">想起来了?&nbsp;点我<em @click="handleLogin">登录</em></span></p>
                         </div>
                     </Form>
                 </div>
@@ -47,19 +59,64 @@ let saved_username = Cookies.get('user');
 
 export default {
 
-
     data () {
+
+        const validatePass = (rule, value, callback) => {
+            var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}');
+            if (!regex.test(value)) {
+                // Complexity match checking
+                callback(new Error('The password must contain at least 6 and max 30 of mixings of numbers, alphabets, specials.'))
+            }
+            callback();
+        };
+        const validatePassCheck = (rule, value, callback) => {
+            if (value !== this.form.password) {
+                callback(new Error('The two input passwords do not match!'));
+            } else {
+                callback();
+            }
+        };
+        const validateEmail = (rule, value, callback) => {
+            // TODO: Check available account name
+            // util.ajax.post('/auth/check-avail-email', {
+            //     email: value
+            // })
+            // .then(function (response) {
+
+            // })
+            // .catch(function (error) {
+
+            // });
+            callback();
+        };
+        const validateVericode = (rule, value, callback) => {
+            // TODO: Check vericode
+            callback();
+        }
+
         return {
             form: {
-                userName: saved_username,
-                password: ''
+                email: saved_username,
+                vericode: '',
+                password: '',
+                repassword: ''
             },
             rules: {
-                userName: [
-                    { required: true, message: '账号不能为空', trigger: 'blur' }
+                email: [
+                    { type: 'email', required: true },
+                    { validator: validateEmail, trigger: 'blur' }
+                ],
+                vericode: [
+                    { type: 'string', required: true },
+                    { validator: validateVericode, trigger: 'blur'}
                 ],
                 password: [
-                    { required: true, message: '密码不能为空', trigger: 'blur' }
+                    { type: 'string', min: 6, required: true },
+                    { validator: validatePass, trigger: 'blur' }
+                ],
+                repassword: [
+                    { type: 'string', required: true },
+                    { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }
         };
@@ -68,14 +125,19 @@ export default {
         handleSubmit () {
             console.log('handleSubmit');
             let that = this;
-            this.$refs.loginForm.validate((valid) => {
+            this.$refs.resetForm.validate((valid) => {
                 if (valid) {
-                    util.ajax.post('/auth/api-auth/', {
-                            email: that.form.userName,
+                    util.ajax.post('/auth/api-resetpw/', {
+                            email: that.form.email,
                             password: that.form.password
                     })
                     .then(function (response) {
-                        that.handleLogin(response);
+                        that.$Notice.success({
+                            title: 'Now please use new password to login.',
+                            desc: ''
+                        });
+
+                        that.handleLogin();
                     })
                     .catch(function (error) {
                         that.handleFailure(error);
@@ -84,54 +146,37 @@ export default {
             });
         },
 
-        handleLogin(response) {
-            // debugger
-            console.log(response);
-
-            if (response.data.staff.is_active) {
-
-                // this.$Notice.success({
-                //     title: 'Succesfully logged in.',
-                //     desc: ''
-                // });
-
-                Cookies.set('user', response.data.staff.email);
-                Cookies.set('token', response.data.token);
-                Cookies.set('last_login', response.data.staff.last_login);
-
-                this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-
-                this.$router.push({
-                    name: 'otherRouter'
-                });
-
-            } else {
-                // Pop user diabled
-                this.$Notice.info({
-                    title: 'The account is not activated, please contact admin.',
-                    desc: ''
-                });
-            }
-
-        },
-
         handleFailure(error) {
-            // console.log(error);
-            if (error.response.data.non_field_errors[0]) {
-                // Test server should not reply auth message with 400.
-            } else {
-
-            }
             this.$Notice.error({
                 title: 'Something went wrong.',
                 desc: error.message
             });
         },
 
-        handleSignup() {
+        handleLogin() {
              this.$router.push({
-                name: 'signup'
+                name: 'login'
             });           
+        },
+
+        handleSendVericode() {
+            let that = this;
+            this.$refs.resetForm.validateField('email',(error) => {
+                if (!error) {
+                    util.ajax.post('/auth/api-vericode/', {
+                        email: that.form.email
+                    })
+                    .then(function (response) {
+                        that.$Notice.info({
+                            title: 'Vericode has been sent, please check email.',
+                            desc: ''
+                        });
+                    })
+                    .catch(function (error) {
+                        that.handleFailure(error);
+                    });
+                }
+            });
         }
     }
 };
