@@ -137,6 +137,9 @@ body{
 	margin-top: -67px;
 	cursor: pointer;
 }
+.form .btn:hover{
+	opacity: 0.5;
+}
 .item .rember{
 	cursor: pointer;
 }

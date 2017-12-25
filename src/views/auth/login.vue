@@ -25,11 +25,11 @@
                         <div class="item password">
                             <FormItem prop="password">
                                 <Input v-model="form.password" placeholder="请输入密码" type="password" ></Input>
-                                <span class="forget" @click="handleResetpw">忘记密码?</span>
+                                <router-link :to="{name: 'resetpasswd'}"><span class="forget">忘记密码?</span></router-link>
                             </FormItem>
                         </div>
                         <div class="item clearfix">
-                            <p><Checkbox v-model="rememberPasswd"><span class="fl rember" style="font-size:18px;font-weight:400;">记住密码</span></Checkbox><span class="fr">还没账号?&nbsp;点我<em @click="handleSignup">注册</em></span></p>
+                            <p><Checkbox v-model="rememberPasswd"><span class="fl rember" style="font-size:18px;font-weight:400;">记住密码</span></Checkbox><span class="fr">还没账号?&nbsp;点我<router-link :to="{name: 'signup'}"><em>注册</em></router-link></span></p>
                         </div>
                     </Form>
                 </div>
@@ -43,12 +43,12 @@
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
 
-let saved_username = Cookies.get('user');
-
 export default {
 
 
     data () {
+        let saved_username = Cookies.get('user');
+
         return {
             form: {
                 email: saved_username,
@@ -130,18 +130,6 @@ export default {
                 title: 'Something went wrong.',
                 desc: error.message
             });
-        },
-
-        handleSignup() {
-            this.$router.push({
-                name: 'signup'
-            });           
-        },
-
-        handleResetpw() {
-            this.$router.push({
-                name: 'resetpasswd'
-            });           
         }
     }
 };
