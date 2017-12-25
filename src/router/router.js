@@ -91,16 +91,17 @@ export const otherRouter = {
 
 export const appRouter = [
         {
-            path: '/access',
-            icon: 'key',
-            name: 'access',
-            title: '权限管理',
+            path: '/jiaodui',
+            icon: 'ios-grid-view',
+            name: 'jiaodui',
+            title: '切分校对',
             component: Main,
-
             children: [
-            { path: '/locking', title: 'suo管理', name: 'locking', component: resolve => { require(['@/views/main-components/lockscreen/components/locking-page.vue'], resolve); } },
+                { path: 'confidence', title: '置信校对', name: 'zhixin-jiaodui', icon: 'connection-bars', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
+                { path: 'classify', title: '聚类校对', name: 'julei-jiaodui', icon: 'ios-pricetags-outline', component: resolve => { require(['@/views/jiaodui/b_classify.vue'], resolve); } },
+                { path: 'page', title: '逐字校对', name: 'zhuzi-jiaodui', icon: 'images', component: resolve => { require(['@/views/jiaodui/b_page.vue'], resolve); } }
             ]
-        },
+        }
 
     ]
 

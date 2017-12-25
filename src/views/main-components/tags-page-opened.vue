@@ -18,12 +18,12 @@
         </div>
         <div ref="scrollBody" class="tags-inner-scroll-body" :style="{left: tagBodyLeft + 'px'}">
             <transition-group name="taglist-moving-animation">
-                <Tag 
+                <Tag
                     type="dot"
-                    v-for="(item, index) in pageTagsList" 
+                    v-for="(item, index) in pageTagsList"
                     ref="tagsPageOpened"
-                    :key="item.name" 
-                    :name="item.name" 
+                    :key="item.name"
+                    :name="item.name"
                     @on-close="closePage"
                     @click.native="linkTo(item)"
                     :closable="item.name==='home_index'?false:true"
@@ -37,6 +37,7 @@
 <script>
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
+
 Vue.use(VueI18n);
 export default {
     name: 'tagsPageOpened',

@@ -62,10 +62,12 @@
             </div>
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
-            <div class="single-page">
+            <div class="layout">
+                <div class="layout-content" :height="content_height">
                 <keep-alive :include="cachePage">
                     <router-view></router-view>
                 </keep-alive>
+                </div>
             </div>
         </div>
     </div>
@@ -123,6 +125,9 @@
             },
             mesCount () {
                 return this.$store.state.app.messageCount;
+            },
+            content_height() {
+                return window.innerHeight - 103;
             }
         },
         methods: {

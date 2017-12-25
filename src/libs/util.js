@@ -2,6 +2,7 @@ import axios from 'axios';
 import semver from 'semver';
 import env from '../config/env';
 import packjson from '../../package.json';
+import Cookies from 'js-cookie';
 
 let util = {
 
@@ -22,11 +23,24 @@ util.ajax = axios.create({
     timeout: 30000
 });
 
+util.ajax.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+
+util.ajax.interceptors.request.use(
+    config => {
+        if (Cookies.get('token')) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+            config.headers.Authorization = `token ${Cookies.get('token')}`;
+        }
+        return config;
+    },
+    err => {
+        return Promise.reject(err);
+});
+
 util.inOf = function (arr, targetArr) {
     let res = true;
     arr.map(item => {
         if (targetArr.indexOf(item) < 0) {
-            res = res && false;
+            res = false;
         }
     });
     return res;
@@ -261,10 +275,10 @@ util.checkUpdate = function (vm) {
             duration: 0
         });
         if (semver.lt(packjson.version, version)) {
-            vm.$Notice.info({
-                title: '后台已更新啦',
-                desc: '<p>Z平台已更新到' + version + '了，去看看有哪些变化吧</p><a style="font-size:13px;" href="https://github.com/CoinLQ/Z/releases" target="_blank">前往github查看</a>'
-            });
+            // vm.$Notice.info({
+            //     title: '后台已更新啦',
+            //     desc: '<p>Z平台已更新到' + version + '了，去看看有哪些变化吧</p><a style="font-size:13px;" href="https://github.com/CoinLQ/Z/releases" target="_blank">前往github查看</a>'
+            // });
         }
     });
 };
