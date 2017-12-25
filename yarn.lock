@@ -3251,12 +3251,6 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
-lodash-for-vue@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/lodash-for-vue/-/lodash-for-vue-1.0.3.tgz#e64ae481eda908f66a963483eb49e6ae667da7d2"
-  dependencies:
-    lodash "^4.17.4"
-
 lodash._createcompounder@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._createcompounder/-/lodash._createcompounder-3.0.0.tgz#5dd2cb55372d6e70e0e2392fb2304d6631091075"

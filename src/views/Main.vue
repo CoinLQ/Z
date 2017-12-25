@@ -91,11 +91,9 @@
             fullScreen,
             lockScreen,
             messageTip,
-            themeSwitch,
         },
         data () {
             return {
-                window_height: 600,
                 shrink: false,
                 userName: '',
                 isFullScreen: false,

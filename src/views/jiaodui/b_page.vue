@@ -8,10 +8,10 @@
 </style>
 <template>
             <Row ref="mainrow">
-                <Col span="7">
+                <Col span="17">
                     <div class="layout-content-main"><h1>逐字校对</h1></div>
                 </Col>
-                <Col span="17">
+                <Col span="7">
                     <div class="canvas-layout">
                         <canvas-op :rects="rects" :imageUrl="image_url"></canvas-op>
                     </div>

@@ -86,9 +86,6 @@ export default {
         },
 
         handleSuccess(response) {
-            // debugger
-            console.log(response);
-            debugger;
             if (response.data.staff.is_active) {
 
                 // this.$Notice.success({
