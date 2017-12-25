@@ -91,10 +91,11 @@
             fullScreen,
             lockScreen,
             messageTip,
-            themeSwitch
+            themeSwitch,
         },
         data () {
             return {
+                window_height: 600,
                 shrink: false,
                 userName: '',
                 isFullScreen: false,
@@ -202,6 +203,9 @@
         },
         mounted () {
             this.init();
+            window.onresize = function() {
+                this.content_height = window.innerHeight - 103;
+            };
         },
         created () {
             // 显示打开的页面的列表
