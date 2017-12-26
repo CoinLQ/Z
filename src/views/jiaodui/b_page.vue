@@ -9,7 +9,7 @@
 <template>
             <Row ref="mainrow">
                 <Col span="17">
-                    <div class="layout-content-main"><h1>置信校对</h1></div>
+                    <div class="layout-content-main"><h1>逐字校对</h1></div>
                 </Col>
                 <Col span="7">
                     <div class="canvas-layout">
@@ -22,7 +22,7 @@
 <script>
 import canvasOp from './components/canvas_op.vue';
 export default {
-    name: 'bClassify',
+    name: 'bPage',
     components: {
         canvasOp,
     },

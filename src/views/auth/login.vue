@@ -86,9 +86,6 @@ export default {
         },
 
         handleSuccess(response) {
-            // debugger
-            console.log(response);
-
             if (response.data.staff.is_active) {
 
                 // this.$Notice.success({
@@ -99,7 +96,7 @@ export default {
                 Cookies.set('user', response.data.staff.email);
                 Cookies.set('token', response.data.token);
                 Cookies.set('last_login', response.data.staff.last_login);
-                
+
                 if (this.rememberPasswd)
                     Cookies.set('pw', this.form.password);
 
