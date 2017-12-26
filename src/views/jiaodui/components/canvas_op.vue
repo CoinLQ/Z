@@ -18,7 +18,7 @@ export default {
     },
     computed: {
         canvas_height(){
-                return this.window_height - 103;
+                return this.window_height - this.topHeight;
         },
         canvas_width() {
             return (this.window_width -200) * 7 /24;
@@ -26,6 +26,7 @@ export default {
     },
     data () {
         return {
+            topHeight: 103,
             current: {},
             window_height: window.innerHeight,
             window_width: window.innerWidth,

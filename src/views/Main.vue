@@ -94,6 +94,7 @@
         },
         data () {
             return {
+                topHeight: 103,
                 shrink: false,
                 userName: '',
                 isFullScreen: false,
@@ -126,7 +127,7 @@
                 return this.$store.state.app.messageCount;
             },
             content_height() {
-                return window.innerHeight - 103;
+                return window.innerHeight - this.topHeight;
             }
         },
         methods: {
@@ -202,7 +203,7 @@
         mounted () {
             this.init();
             window.onresize = function() {
-                this.content_height = window.innerHeight - 103;
+                this.content_height = window.innerHeight - this.topHeight;
             };
         },
         created () {
