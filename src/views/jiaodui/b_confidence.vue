@@ -42,12 +42,18 @@ import util from '@/libs/util';
 import _ from 'lodash';
 
 export default {
-    name: 'bClassify',
+    name: 'bConfidence',
     components: {
         canvasOp,
         glyphBlock,
     },
     data () {
+        // return {
+        //     rects: [],
+        //     // rects: [{"id":"5e2841f9-e5c0-418c-973e-0e6adea7ee58","line_no":5,"col_no":7,"x":60,"y":155,"width":43,"height":34,"confidence":0.711728,"op":0,"hans":"\u554f","page_id":"29737aa7-3b1f-452c-9b48-390f8e83ddab", "valid": false},
+        //     //         {"id":"5e2841f9-e5c0-418c-973e-0e6adea2ee58","line_no":5,"col_no":7,"x":60,"y":198,"width":38,"height":34,"confidence":0.711728,"op":0,"hans":"\u554f","page_id":"29737aa7-3b1f-452c-9b48-390f8e83ddab", "valid": false}],
+        //     image_url: "http://oidgqmecg.bkt.clouddn.com/jiaodui/hint_image.png",
+        // }
         return {
             preCheckTotal: 100,
             postCheckTotal: 200,
