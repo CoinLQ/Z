@@ -1,12 +1,4 @@
 <template>
-    <input id="event_receiver" 
-           @keydown.up.down.left.right.prevent.exact="move"
-           @keydown.alt.up.down.left.right.prevent.exact="fill_out(0, $event)"
-           @keydown.shift.up.down.left.right.prevent.exact="diminish(0, $event)"
-           @keydown.space.prevent.exact="selected"
-           @keydown.alt.all.prevent.exact="fill_out(1, $event)"
-           @keydown.shift.all.prevent.exact="diminish(1, $event)"
-                />
 </template>
 
 <script>
@@ -22,6 +14,7 @@ Vue.config.keyCodes = {
     alt: 18,    //放大
     space: 32,   //选中
     all: 88,  //X 执行所有方向 X
+    directions: [38, 87, 37, 65, 40, 83, 39, 68]
 };
 
 export default {
@@ -35,26 +28,41 @@ export default {
     },
     mounted: function() {
         console.log('mounted1');
+        let _this = this;
         this.target = document.getElementById('event_receiver');
+        window.document.body.onkeydown = function(event) {
+            if (_this.current) {
+                // 操作区键盘事件
+                if (Vue.config.keyCodes.directions.includes(event.keyCode)) {
+                    if (!event.altKey && !event.shiftKey) {
+                        _this.move(event);
+                    } else if (event.altKey) {
+                        _this.fill_out(0, event);
+                    } else if (event.shiftKey) {
+                        _this.diminish(0, event);
+                    }
+                } else if ((event.keyCode == 32) && !event.altKey && !event.ctrlKey) {
+                    _this.selected(event);
+                } else if (event.keyCode == 88) {
+                    if (event.altKey) {
+                        _this.fill_out(1, event);
+                    } else if (event.shiftKey) {
+                        _this.diminish(1, event);
+                    }
+                }
+            } else {
+                // TODO：字块区键盘事件处理, release后控制字块区的选中
+            }
+
+        }
     },
     watch: {
-        current: function (val, oldval) {
-            console.log('watch current:'+val+'>'+this.target+ ", this.unit="+this.unit);
-            this.logCurRect();
-            if(val){ //选中
-                this.target.focus();
-                console.log('focus');
-            }
-            else { //释放
-                this.target.blur();
-            }
-        }
     },
     methods: {
         direction: function (code) {
             var keyCodes = Vue.config.keyCodes;
             for(var key in keyCodes){
-                if(keyCodes[key] instanceof Array && keyCodes[key].includes(code)){
+                if((keyCodes[key] instanceof Array) && keyCodes[key].includes(code)){
                     return key;
                 }
             }
@@ -129,6 +137,7 @@ export default {
             this.logCurRect('selected', this.direction(ev.keyCode));
             if(this.current){
                 this.current = null;  //置为空, 触发watch事件, 释放焦点.
+                this.$emit('releasenow');
                 //todo 向父组件发送 释放信号.
             }
             else {
@@ -145,7 +154,8 @@ export default {
         },
         redraw_canvas: function () {
             this.$emit('drawnow');
-        }
+        },
+
     }
 }
 </script>

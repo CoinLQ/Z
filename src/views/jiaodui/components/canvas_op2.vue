@@ -2,7 +2,7 @@
   <canvas ref="canvasBase" id="canvas-scope"
           :width="canvas_width"
           :height="canvas_height">
-      <keyeventopt :current="current" v-on:drawnow="toDrawNow"></keyeventopt>
+      <keyeventopt :current="current" v-on:drawnow="toDrawNow" v-on:releasenow="release_current"></keyeventopt>
   </canvas>
 </template>
 
@@ -164,6 +164,8 @@ export default {
                 _this.positive_rect(rect);
                 if (rect.selected) {
                     ctx.strokeStyle="rgba(255,0,0,1)";
+                } else if (rect == _this.current) {
+                    ctx.strokeStyle="rgba(0,255,0,1)";
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
@@ -232,7 +234,11 @@ export default {
         toDrawNow: function () {
             console.log('222toDrawNow');
             this.redraw_canvas();
-        }
+        },
+        release_current: function() {
+            this.current = {};
+            this.redraw_canvas();
+        },
     },
     mounted: function(){
         this.canvasImage()
