@@ -45,7 +45,7 @@ export default {
     name: 'bConfidence',
     components: {
         canvasOp,
-        glyphBlock,
+        glyphBlock, 
     },
     data () {
         // return {

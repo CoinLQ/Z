@@ -1,41 +1,22 @@
 <template>
   <canvas ref="canvasBase" id="canvas-scope"
-          tabindex="0"
           :width="canvas_width"
-          :height="canvas_height"
-          @keydown.up.down.left.right.prevent.exact="move"
-          @keydown.alt.up.down.left.right.prevent.exact="fill_out(0, $event)"
-          @keydown.shift.up.down.left.right.prevent.exact="diminish(0, $event)"
-          @keydown.space.prevent.exact="selected"
-          @keydown.alt.all.prevent.exact="fill_out(1, $event)"
-          @keydown.shift.all.prevent.exact="diminish(1, $event)"
-  ></canvas>
+          :height="canvas_height">
+      <keyeventopt :current="current" v-on:drawnow="toDrawNow" v-on:releasenow="release_current"></keyeventopt>
+  </canvas>
 </template>
 
 <script>
 import Cookies from 'js-cookie';
 import  _ from 'lodash';
-import Vue from 'vue';
-
-Vue.config.keyCodes = {
-    up: [38, 87],   //上, W
-    left: [37, 65], //左, A
-    down: [40, 83], //下, S
-    right: [39, 68],  //右, D
-    //ctrl: 17, //shift:16 //alt: 18, //meta|windows: 91, //space: 32,
-    shift: 16,   //缩小
-    alt: 18,    //放大
-    space: 32,   //选中
-    all: 88,  //X 执行所有方向 X
-}
+import keyeventopt from "./keyeventopt.vue";
 
 export default {
+    components: {keyeventopt},
     name: 'canvasOp',
     props: {
       rects: {},
       imageUrl: String,
-    },
-    directives: {
     },
     computed: {
         canvas_height(){
@@ -148,106 +129,10 @@ export default {
             }
         };
     },
-    watch:{
-        current: function (val, oldval) {
-            console.log('watch: current:'+val + ', =>' + this.target);
-            if(val){ //选中
-                this.target.focus();
-            }
-            else { //释放
-                this.target.blur();
-            }
-        }
+    mounted: function () {
+        this.current = this.rects[0];
     },
     methods: {
-        direction: function (code) {
-            var keyCodes = Vue.config.keyCodes;
-            for(var key in keyCodes){
-                if(keyCodes[key] instanceof Array && keyCodes[key].includes(code)){
-                    return key;
-                }
-            }
-            return '';
-        },
-        move: function (ev) { //移到
-            var d = this.direction(ev.keyCode);
-            if(this.current){
-                if(d == 'left' && this.current.x > this.unit){
-                    this.current.x -= this.unit;
-                }
-                else if(d == 'up' && this.current.y > this.unit){
-                    this.current.y -= this.unit;
-                }
-                else if(d == 'right'){
-                    this.current.x += this.unit;
-                }
-                else if(d == 'down'){
-                    this.current.y += this.unit;
-                }
-                this.redraw_canvas();
-                this.logCurRect('move', d);
-            }
-            return false;
-        },
-        diminish: function (f, ev) { //缩小
-            var d = this.direction(ev.keyCode)
-            if(this.current){
-                if(f || (d == 'left' && this.current.width > this.unit)){
-                    this.current.x += this.unit;
-                    this.current.width -= this.unit;
-                }
-                if(f || (d == 'up' && this.current.height > this.unit)){
-                    this.current.y += this.unit;
-                    this.current.height -= this.unit;
-                }
-                if(f || (d == 'right' && this.current.width > this.unit)){
-                    this.current.width -= this.unit;
-                }
-                if(f || (d == 'down' && this.current.height > this.unit)){
-                    this.current.height -= this.unit;
-                }
-                this.redraw_canvas();
-                this.logCurRect('diminish', d);
-            }
-        },
-        fill_out: function (f, ev) { //放大
-            var d = this.direction(ev.keyCode)
-            if(this.current){
-                if(f || (d == 'left' && this.current.x > this.unit)){
-                    this.current.x -= this.unit;
-                    this.current.width += this.unit;
-                }
-                if(f || (d == 'up' && this.current.y > this.unit)){
-                    this.current.y -= this.unit;
-                    this.current.height += this.unit;
-                }
-                if(f || d == 'right'){
-                    this.current.width += this.unit;
-                }
-                if(f || d == 'down'){
-                    this.current.height += this.unit;
-                }
-                this.redraw_canvas();
-                this.logCurRect('fill_out', d);
-            }
-        },
-        selected: function (ev) {
-            this.logCurRect('selected', this.direction(ev.keyCode));
-            if(this.current){
-                this.current = null;  //置为空, 触发watch事件, 释放焦点.
-            }
-            else {
-                //this.current = {};
-            }
-        },
-        logCurRect: function (opt, direct) {
-            if(this.current){
-                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.current.x+', y: '+this.current.y+', w: '+this.current.width+', h: '+this.current.height+'}');
-            }
-            else {
-                console.log(opt+'>>>'+direct+'>>>current='+null);
-            }
-        },
         canvasImage: function(){
             var canvas = this.$refs.canvasBase;
             var ctx = canvas.getContext("2d");
@@ -279,6 +164,8 @@ export default {
                 _this.positive_rect(rect);
                 if (rect.selected) {
                     ctx.strokeStyle="rgba(255,0,0,1)";
+                } else if (rect == _this.current) {
+                    ctx.strokeStyle="rgba(0,255,0,1)";
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
@@ -308,8 +195,8 @@ export default {
         contains_mouse: function(event) {
             let point= this.translat_point(event)
             var rect = _.find(this.rects, function(r) {
-              return r.x <= point.x && point.x<=r.x+r.width &&
-                     r.y <= point.y && point.y<=r.y+r.height;
+                return r.x <= point.x && point.x<=r.x+r.width &&
+                    r.y <= point.y && point.y<=r.y+r.height;
             });
             return rect;
         },
@@ -343,7 +230,15 @@ export default {
             if (rect.height <5){
                 rect.height = 5;
             }
-        }
+        },
+        toDrawNow: function () {
+            console.log('222toDrawNow');
+            this.redraw_canvas();
+        },
+        release_current: function() {
+            this.current = {};
+            this.redraw_canvas();
+        },
     },
     mounted: function(){
         this.canvasImage()
