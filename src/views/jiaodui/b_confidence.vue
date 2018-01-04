@@ -18,17 +18,17 @@
 </style>
 <template>
     <Row ref="mainrow">
-        <Col span="17" :xs="3" :sm="7" :md="11" :lg="15">
+        <Col span="17" :xs="3" :sm="7" :md="11" :lg="17">
             <div class="layout-content-main">
                 <div class="header" style="border-right: black 2px dotted;">待校对区域总数：{{preCheckTotal}}</div>
                 <div class="header">已完成区域总数：{{postCheckTotal}}</div>
             </div>
             <div v-for="(o,i) in splits.rects" style="float: left;">
-                <glyph-block :key="i" :imgData="getImgObj(o, splits.ocolumns)" :rectData="o"
+                <glyph-block :key="i" :imgData="getRectColumn(o)" :rectData="o"
                 :active=false @highlight="onHighlight"></glyph-block>
             </div>
         </Col>
-        <Col span="7">
+        <Col span="7" :xs="21" :sm="17" :md="13" :lg="7">
             <div class="canvas-layout">
                 <canvas-op :rects="rects" :imageUrl="image"></canvas-op>
             </div>
@@ -42,19 +42,30 @@ import util from '@/libs/util';
 import _ from 'lodash';
 
 export default {
-    name: 'bClassify',
+    name: 'bConfidence',
     components: {
         canvasOp,
-        glyphBlock,
+        glyphBlock, 
+    },
+    watch: {
+        current() {
+            let _this = this;
+            let _rect = _.find(this.splits.rects, function(n) {return n.x == _this.current.x && n.y == _this.current.y})
+            this.rects = this.offset_rects(_rect);
+            this.image = _this.getRectColumn(_rect).s3_uri;
+        }
+
+    },
+    computed: {
+        
     },
     data () {
         return {
+            current: {},
             preCheckTotal: 100,
             postCheckTotal: 200,
-            image: "https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GLZ/S00001/R001/GLZ_S00001_R001_T0025_L18.jpg",
-            rects: [{"id":"5e2841f9-e5c0-418c-973e-0e6adea7ee58","line_no":5,"col_no":7,"x":60,"y":155,"width":43,"height":34,"confidence":0.711728,"op":0,"hans":"\u554f","page_id":"29737aa7-3b1f-452c-9b48-390f8e83ddab", "valid": false},
-                    {"id":"5e2841f9-e5c0-418c-973e-0e6adea2ee58","line_no":5,"col_no":7,"x":60,"y":198,"width":38,"height":34,"confidence":0.711728,"op":0,"hans":"\u554f","page_id":"29737aa7-3b1f-452c-9b48-390f8e83ddab", "valid": false}],
-                    
+            image: "http://oidgqmecg.bkt.clouddn.com/jiaodui/hint_image.png",
+            rects: [],
             splits: {
                "rects": [
                     {
@@ -102,6 +113,7 @@ export default {
                         "y": "0"
                     }
                 ],
+                rect_columns: {},
                 "task_id": "b0883a29-ab6e-4d31-b748-69e70fa721e8"
             }
         }
@@ -117,27 +129,29 @@ export default {
     },
 
     methods: {
-        onHighlight() {
+        offset_rects(current_rect) {
+            let _this = this;
+            let _rect = function(n) {
+              let column = _this.getRectColumn(n);
+              n.x = n.x - column.x
+              return n;
+            }
+            return _.map(_.cloneDeep([current_rect]), _rect);
+        },
+        onHighlight(rect) {
             // Pop checking area
+
+            this.current = rect;
             
         },
+        getRectColumn(rect) {
+            window.mm = this
+            let column = this.splits.rect_columns[rect.cncode]
+            if (column) { return column; }
 
-        getImgObj(rect, imgs) {
-            let img_id = rect.cncode;
-            let obj = null;
-            _(imgs).forEach(function(i){
-                if (i.code === img_id) {
-                    obj = i;
-                    return true;
-                }
-            });
-
-            if (obj) {
-                return obj;
-            } else {
-                throw ("Split data incomplete! Contact data provider.");
-            }
-        }
+            this.splits.rect_columns[rect.cncode] = _.find(this.splits.ocolumns, function(n) { return n.code == rect.cncode});
+            return this.splits.rect_columns[rect.cncode];
+        },
     }
 }
 </script>
