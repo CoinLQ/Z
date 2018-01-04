@@ -93,19 +93,19 @@ export default {
             var d = this.direction(ev.keyCode);
             this.logCurRect('diminish', d);
             if(this.current){
-                if(f || (d == 'left' && this.current.width > this.unit)){
+                if(f || (d == 'left' && this.current.w > this.unit)){
                     this.current.x += this.unit;
-                    this.current.width -= this.unit;
+                    this.current.w -= this.unit;
                 }
-                if(f || (d == 'up' && this.current.height > this.unit)){
+                if(f || (d == 'up' && this.current.h > this.unit)){
                     this.current.y += this.unit;
-                    this.current.height -= this.unit;
+                    this.current.h -= this.unit;
                 }
-                if(f || (d == 'right' && this.current.width > this.unit)){
-                    this.current.width -= this.unit;
+                if(f || (d == 'right' && this.current.w > this.unit)){
+                    this.current.w -= this.unit;
                 }
-                if(f || (d == 'down' && this.current.height > this.unit)){
-                    this.current.height -= this.unit;
+                if(f || (d == 'down' && this.current.h > this.unit)){
+                    this.current.h -= this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('diminish', d);
@@ -117,17 +117,17 @@ export default {
             if(this.current){
                 if(f || (d == 'left' && this.current.x > this.unit)){
                     this.current.x -= this.unit;
-                    this.current.width += this.unit;
+                    this.current.w += this.unit;
                 }
                 if(f || (d == 'up' && this.current.y > this.unit)){
                     this.current.y -= this.unit;
-                    this.current.height += this.unit;
+                    this.current.h += this.unit;
                 }
                 if(f || d == 'right'){
-                    this.current.width += this.unit;
+                    this.current.w += this.unit;
                 }
                 if(f || d == 'down'){
-                    this.current.height += this.unit;
+                    this.current.h += this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('fill_out', d);
@@ -146,7 +146,7 @@ export default {
         },
         logCurRect: function (opt, direct) {
             if(this.current){
-                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.current.x+', y: '+this.current.y+', w: '+this.current.width+', h: '+this.current.height+'}');
+                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.current.x+', y: '+this.current.y+', w: '+this.current.w+', h: '+this.current.h+'}');
             }
             else {
                 console.log(opt+'>>>'+direct+'>>>current='+null);

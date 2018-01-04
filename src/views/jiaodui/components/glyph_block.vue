@@ -107,7 +107,7 @@
 		methods: {
 			onClick() {
 				this.isActive = true;
-				this.$emit('highlight');
+				this.$emit('highlight', this.rectData);
 				this.$store.commit('setFocusItem', this);
 			},
 
