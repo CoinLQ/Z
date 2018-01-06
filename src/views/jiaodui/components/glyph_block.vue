@@ -94,11 +94,11 @@
 		],
 
 		mounted() {
-	        let that = this;
 			let image = new Image();
-	        image.crossOrigin = "Anonymous";
-	        image.onload = function(){
-				this.glyphData = util.getImageClip(image, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
+	        image.crossOrigin = "*";
+	        image.onload = function(evt){
+				this.glyphData = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
+				image = null;
 	        }.bind(this);
 
 	        image.src = this.imgData.s3_uri;
