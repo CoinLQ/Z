@@ -22,14 +22,12 @@ export default {
     props: ['current'],
     data: function () {
         return {
-            target: null,
             unit: 5
         };
     },
     mounted: function() {
         console.log('mounted1');
         let _this = this;
-        this.target = document.getElementById('event_receiver');
         window.document.body.onkeydown = function(event) {
             if (_this.current) {
                 // 操作区键盘事件

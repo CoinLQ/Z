@@ -30,7 +30,7 @@
 	}
 
 	.char {
-		display: none;
+		/*display: none;*/
 	    width: 80px;
 	    height: 80px;
 	    text-align: center;

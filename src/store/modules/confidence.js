@@ -1,11 +1,9 @@
-const jiaodui = {
+const confidence = {
     state: {
-        confidence: {
-            focusedItem: null
-        }
+        focusedItem: null
     },
     mutations: {
-        setFocusItem ({confidence: c}, item) {
+        setFocusItem (c, item) {
             if (c.focusedItem) {
                 c.focusedItem.resetFocus();
             }
@@ -14,4 +12,4 @@ const jiaodui = {
     }
 };
 
-export default jiaodui;
+export default confidence;

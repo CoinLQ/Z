@@ -1,7 +1,5 @@
 <template>
-  <canvas id="canvas-scope"
-          :width="canvas_width"
-          :height="canvas_height">
+  <canvas id="canvas-scope">
       <keyeventopt :current="current" v-on:drawnow="toDrawNow" v-on:releasenow="release_current"></keyeventopt>
   </canvas>
 </template>
@@ -16,19 +14,21 @@ export default {
     name: 'canvasOp',
     props: {
       rects: {},
-      imageUrl: String,
+      img: {},
+      ratio: Number
     },
     computed: {
-        canvas_height(){
-            return this.window_height - this.topHeight;
+        canvas() {
+            return document.getElementById('canvas-scope');
         },
-        canvas_width() {
-            return (this.window_width -200) * 7 /24;
+
+        ctx() {
+            return this.canvas.getContext('2d');
         }
     },
     watch: {
-        imageUrl() {
-            this.redraw_canvas();
+        img() {
+            this.setCanvasImage();
         },
         rects() {
             if (!_.find(this.rects, function(n){ n.id == this.current.id}.bind(this))){
@@ -38,14 +38,8 @@ export default {
     },
     data () {
         return {
-            topHeight: 103,
+            last_img: null,
             current: {},
-            unit:5,
-            target: null, //canvas Dom元素, 在mounted时赋值.
-            window_height: window.innerHeight,
-            window_width: window.innerWidth,
-            x_ratio: 1.0,
-            y_ratio: 1.0,
             draw: {
                 drawing: false,
                 additions: [],
@@ -54,13 +48,11 @@ export default {
             drag: {
                 current: null,
                 draggable: false,
-                x_ratio: 1.0,
-                y_ratio: 1.0,
                 handle_size: 3,
                 point: function(x, y) { return {x: x, y: y} },
                 dist: function (p1, p2) {
                     return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
-                },
+                    },
                 getHandle: function (mouse, rect) {
                     if (this.dist(mouse, this.point(rect.x, rect.y)) <= this.handle_size) return 'topleft';
                     if (this.dist(mouse, this.point(rect.x + rect.w, rect.y)) <= this.handle_size) return 'topright';
@@ -73,17 +65,16 @@ export default {
                     return false;
                 },
                 mark_corner: function(mouse, rects) {
-                    let _this = this;
                     if (this.current) {
                         this.current.corner = false;
                     }
                     var rect = _.find(rects, function(r) {
-                        let corner = _this.getHandle(mouse, r)
+                        let corner = this.getHandle(mouse, r)
                         if (corner) {
                             r.corner = corner;
                         }
                         return corner;
-                    });
+                    }.bind(this));
                     this.current = rect;
                 },
                 clear_corner: function(rects) {
@@ -131,7 +122,7 @@ export default {
                         }
                         ctx.fillStyle = "#FF0000";
                         ctx.beginPath();
-                        ctx.arc(posHandle.x * this.x_ratio, posHandle.y * this.y_ratio, this.handle_size, 0, 2 * Math.PI);
+                        ctx.arc(posHandle.x * this.ratio, posHandle.y * this.ratio, this.handle_size, 0, 2 * Math.PI);
                         ctx.fill();
                     }
                 },
@@ -139,47 +130,37 @@ export default {
             }
         };
     },
-    mounted: function () {
-        this.current = this.rects[0];
-    },
     methods: {
-        canvasImage: function(){
-            var canvas = document.getElementById('canvas-scope');
-            var ctx = canvas.getContext("2d");
-            var image = new Image();
-            image.src = this.imageUrl;
+        setCanvasImage: function(){
+            let image = this.last_img = new Image();
+            image.src = this.img.s3_uri;
             image.addEventListener("load",function(){
-                this.resize_canvas(image, canvas)
+                this.redraw_canvas();
             }.bind(this),false);
         },
-        resize_canvas: function(img, canvas) {
-            function resize(prop1, prop2) {
-                void 0 !== canvas[prop1] && void 0 === canvas[prop2] && (canvas[prop2] = img[prop2] / img[prop1] * canvas[prop1]);
-            }
-            resize('width', 'height');
-            resize('height', 'width');
-            var ctx = canvas.getContext('2d');
-            this.x_ratio = this.drag.x_ratio = canvas.width/(img.naturalWidth || img.width);
-            this.y_ratio = this.drag.y_ratio = canvas.height/(img.naturalHeight || img.height);
-            ctx.drawImage(img, 0, 0, img.naturalWidth || img.width, img.naturalHeight || img.height, 0, 0, canvas.width, canvas.height);
-            this.drawAllRect();
+        redraw_canvas: function() {
+            let canvas = this.canvas;
+            let image = this.last_img;
+            let ctx = this.ctx;
+            canvas.width = image.width * this.ratio;
+            canvas.height = image.height * this.ratio;
+            ctx.drawImage(image, 0, 0, image.naturalWidth || image.width, image.naturalHeight || image.height, 0, 0, image.width * this.ratio, image.height * this.ratio);
+            this.drawAllRect(ctx);
         },
-        drawAllRect: function(){
-            var canvas = document.getElementById('canvas-scope');
-            var ctx = canvas.getContext("2d");
-            let _this = this;
+        drawAllRect: function(ctx){
             this.rects.forEach(function(rect,i){
-                _this.positive_rect(rect);
+                this.positive_rect(rect);
                 if (rect.selected) {
                     ctx.strokeStyle="rgba(255,0,0,1)";
-                } else if (rect == _this.current) {
+                } else if (rect == this.current) {
                     ctx.strokeStyle="rgba(0,255,0,1)";
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
-                ctx.strokeRect(rect.x*_this.x_ratio, rect.y*_this.y_ratio, rect.w*_this.x_ratio, rect.h*_this.y_ratio);
-                _this.drag.draw_corner(ctx, rect);
-            });
+                ctx.lineWidth=1.2*this.ratio;
+                ctx.strokeRect(rect.x*this.ratio, rect.y*this.ratio, rect.w*this.ratio, rect.h*this.ratio);
+                this.drag.draw_corner(ctx, rect);
+            }, this);
 
         },
         translat_point: function(event) {
@@ -194,10 +175,10 @@ export default {
             }
             let documentScrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
             let documentScrollLeft = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
-            let offsety = document.querySelector("#canvas-scope").getBoundingClientRect().top+documentScrollTop;
-            let offsetx = document.querySelector("#canvas-scope").getBoundingClientRect().left+documentScrollLeft;
-            let yy = (mouse.y-offsety)/this.y_ratio;
-            let xx = (mouse.x-offsetx)/this.x_ratio;
+            let offsety = this.canvas.getBoundingClientRect().top+documentScrollTop;
+            let offsetx = this.canvas.getBoundingClientRect().left+documentScrollLeft;
+            let yy = (mouse.y-offsety)/this.ratio;
+            let xx = (mouse.x-offsetx)/this.ratio;
             return {x: xx, y: yy}
         },
         contains_mouse: function(event) {
@@ -219,9 +200,6 @@ export default {
             this.current = rect;
             this.current.selected = true;
             this.redraw_canvas()
-        },
-        redraw_canvas: function() {
-            this.canvasImage()
         },
         positive_rect: function(rect) {
             if (rect.w<0) {
@@ -249,27 +227,20 @@ export default {
         },
     },
     mounted: function(){
-        this.canvasImage()
-        let _this = this
-        window.onresize = _.debounce(() => {
-            _this.window_height = document.body.clientHeight;
-            _this.window_width = document.body.clientWidth;
-            _this.canvasImage();
-        }, 100)
-        this.target = document.getElementById('canvas-scope');
-        this.target.onselectstart = function(e) { e.preventDefault(); return false; };
-        this.target.onmousedown = function (event) {
-            if (_this.drag.current && _this.drag.current.corner) {
-                _this.drag.draggable = true;
+        this.setCanvasImage()
+        this.canvas.onselectstart = function(e) { e.preventDefault(); return false; };
+        this.canvas.onmousedown = function (event) {
+            if (this.drag.current && this.drag.current.corner) {
+                this.drag.draggable = true;
             } else {
-                let rect = _this.contains_mouse(event);
-                _this.choice_rect(rect);
+                let rect = this.contains_mouse(event);
+                this.choice_rect(rect);
 
                 console.log(1);
-                if (!rect && _this.draw.enable) {
-                    _this.draw.drawing = true;
-                    let mouse= _this.translat_point(event);
-                    let new_rect = Object.assign({}, _this.rects[0]);
+                if (!rect && this.draw.enable) {
+                    this.draw.drawing = true;
+                    let mouse= this.translat_point(event);
+                    let new_rect = Object.assign({}, this.rects[0]);
                     new_rect.id = '';
                     new_rect.hans = '';
                     new_rect.confidence = 1.0;
@@ -277,25 +248,25 @@ export default {
                     new_rect.y = mouse.y;
                     new_rect.w = 5;
                     new_rect.h = 5;
-                    _this.draw.additions.push(new_rect)
-                    _this.rects.push(new_rect);
+                    this.draw.additions.push(new_rect)
+                    this.rects.push(new_rect);
                 }
             }
-        };
-        this.target.onmousemove = function (event) {
-            window.nn = _this;
-            if (_this.draw.drawing) {
-                let point= _this.translat_point(event)
-                let _new = _this.draw.additions[_this.draw.additions.length-1]
+        }.bind(this);
+        this.canvas.onmousemove = function (event) {
+            window.nn = this;
+            if (this.draw.drawing) {
+                let point= this.translat_point(event)
+                let _new = this.draw.additions[this.draw.additions.length-1]
                 _new.w = point.x - _new.x;
                 _new.h = point.y - _new.y;
-                _this.redraw_canvas();
-                _.debounce(() => {  _this.draw.drawing = false; _this.redraw_canvas(); }, 100)
+                this.redraw_canvas();
+                _.debounce(() => {  this.draw.drawing = false; this.redraw_canvas(); }, 100)
             }
-            else if (_this.drag.draggable) {
-                let rect = _this.drag.current;
-                let mouse= _this.translat_point(event);
-                switch (_this.drag.current.corner) {
+            else if (this.drag.draggable) {
+                let rect = this.drag.current;
+                let mouse= this.translat_point(event);
+                switch (this.drag.current.corner) {
                     case 'topleft':
                         rect.w += rect.x - mouse.x;
                         rect.h += rect.y - mouse.y;
@@ -335,36 +306,36 @@ export default {
                         rect.w = mouse.x - rect.x;
                         break;
                 }
-                _this.redraw_canvas();
-                _.debounce(() => {  _this.drag.draggable = false; this.drag.current = none; _this.redraw_canvas(); }, 100)
+                this.redraw_canvas();
+                _.debounce(() => {  this.drag.draggable = false; this.drag.current = none; this.redraw_canvas(); }, 100)
             }
-            else if (_this.current.selected) {
-                let point= _this.translat_point(event)
-                _this.current.x = point.x;
-                _this.current.y = point.y;
-                _this.redraw_canvas();
+            else if (this.current.selected) {
+                let point= this.translat_point(event)
+                this.current.x = point.x;
+                this.current.y = point.y;
+                this.redraw_canvas();
 
             } else {
-                let point= _this.translat_point(event)
-                _this.drag.mark_corner(point,_this.rects);
-                _this.redraw_canvas();
+                let point= this.translat_point(event)
+                this.drag.mark_corner(point,this.rects);
+                this.redraw_canvas();
                 return false;
             }
             if (event.preventDefault) {
                 event.preventDefault()
             }
             return false
-        };
-        this.target.onmouseup = function (event) {
-            if (_this.drag.draggable) {
-                _this.drag.draggable = false;
-            } else if (_this.current.selected){
-                _this.current.selected = false;
+        }.bind(this);
+        this.canvas.onmouseup = function (event) {
+            if (this.drag.draggable) {
+                this.drag.draggable = false;
+            } else if (this.current.selected){
+                this.current.selected = false;
             }
-            _this.draw.drawing = false;
+            this.draw.drawing = false;
 
-            _this.redraw_canvas()
-        };
+            this.redraw_canvas()
+        }.bind(this);
 
     }
 };
