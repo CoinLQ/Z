@@ -64,7 +64,7 @@
 	<div class="outer-wrapper">
 		<div class="inner-wrapper" @click="onClick">
 			<div class="glyph-wrapper">
-				<div class="glyph"><img :src="glyphData"></div>
+				<div class="glyph"><img :src="clip"></div>
 				<div class="glyph char"><div class="char-wrapper">{{rectData.word}}</div></div>
 			</div>
 			<div class="confidence" :class="{active:isActive}">
@@ -82,8 +82,10 @@
 
 		data() {
 			return {
-				'glyphData': '',
+				'clip': '',
 				'isActive': this.active,
+				'image': {},
+				'rect': {x: this.rectData.x, y: this.rectData.y, w:this.rectData.w, h: this.rectData.h}
 			}
 		},
 
@@ -94,25 +96,29 @@
 		],
 
 		mounted() {
-			let image = new Image();
-	        image.crossOrigin = "*";
-	        image.onload = function(evt){
-				this.glyphData = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
-				image = null;
+			this.image = new Image();
+	        this.image.crossOrigin = "*";
+	        this.image.onload = function(evt){
+				this.clip = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
 	        }.bind(this);
 
-	        image.src = this.imgData.s3_uri;
+	        this.image.src = this.imgData.s3_uri;
 		},
 
 		methods: {
 			onClick() {
 				this.isActive = true;
 				this.$emit('highlight', this.rectData);
-				this.$store.commit('setFocusItem', this);
+				this.$store.commit('setFocusItem', {item: this});
 			},
 
 			resetFocus() {
 				this.isActive = false;
+			},
+
+			updateClip(rect) {
+				// this.clip = util.getImageClip(this.image, rect.w, rect.h, rect.x-this.imgData.x, rect.y-this.imgData.y, 1);
+				this.clip = util.getImageClip(this.image, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
 			}
 		}
 	}

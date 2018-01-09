@@ -7,7 +7,7 @@
 <script>
 import Cookies from 'js-cookie';
 import  _ from 'lodash';
-import keyeventopt from "./keyeventopt.vue";
+import keyeventopt from "./keyeventopt2.vue";
 
 export default {
     components: {keyeventopt},
@@ -35,6 +35,9 @@ export default {
                     this.current = this.rects[0];
             }
         },
+        current() {
+            this.$store.commit('setNewRect', {rect:this.current});
+        }
     },
     data () {
         return {
@@ -139,6 +142,8 @@ export default {
             }.bind(this),false);
         },
         redraw_canvas: function() {
+            this.$store.commit('setNewRect', {rect:this.current});
+
             let canvas = this.canvas;
             let image = this.last_img;
             let ctx = this.ctx;

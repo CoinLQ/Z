@@ -1,13 +1,20 @@
 const confidence = {
     state: {
-        focusedItem: null
+        focusedItem: null,
     },
     mutations: {
-        setFocusItem (c, item) {
-            if (c.focusedItem) {
-                c.focusedItem.resetFocus();
+        setFocusItem (state, payload) {
+            if (state.focusedItem) {
+                state.focusedItem.resetFocus();
             }
-            c.focusedItem = item;
+            state.focusedItem = payload.item;
+        },
+
+        setNewRect (state, payload) {
+            if (state.focusedItem) {
+                state.focusedItem.rect = payload.rect;
+                state.focusedItem.updateClip(payload.rect);
+            }
         }
     }
 };
