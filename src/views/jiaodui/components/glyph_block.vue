@@ -85,7 +85,7 @@
 				'clip': '',
 				'isActive': this.active,
 				'image': {},
-				'rect': {x: this.rectData.x, y: this.rectData.y, w:this.rectData.w, h: this.rectData.h}
+				'rect': {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h}
 			}
 		},
 
@@ -108,8 +108,8 @@
 		methods: {
 			onClick() {
 				this.isActive = true;
-				this.$emit('highlight', this.rectData);
 				this.$store.commit('setFocusItem', {item: this});
+				this.$emit('highlight', this);
 			},
 
 			resetFocus() {
@@ -117,8 +117,25 @@
 			},
 
 			updateClip(rect) {
-				// this.clip = util.getImageClip(this.image, rect.w, rect.h, rect.x-this.imgData.x, rect.y-this.imgData.y, 1);
-				this.clip = util.getImageClip(this.image, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
+				if (rect && rect.x && rect.y && rect.w && rect.h) {
+					this.rect.x = rect.x;
+					this.rect.y = rect.y;
+					this.rect.w = rect.w;
+					this.rect.h = rect.h;
+					this.clip = util.getImageClip(this.image, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
+				}
+			},
+
+			getImageObj() {
+				return this.image;
+			},
+
+			getImageCoordOrigin() {
+				return {x: this.imgData.x, y: this.imgData.y};
+			},
+
+			getTransRect() {
+				return this.rect;
 			}
 		}
 	}

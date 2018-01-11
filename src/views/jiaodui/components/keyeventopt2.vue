@@ -19,18 +19,20 @@ Vue.config.keyCodes = {
 
 export default {
     name: 'optkeyevent',
-    props: ['current'],
+    props: ['ratio'],
     data: function () {
         return {
             unit: 5,
-            cur: this.current
+            curRect: {}
         };
     },
     mounted: function() {
-        console.log('mounted1');
+        console.log('keyevent mounted');
         let _this = this;
+        _this.unit = (_this.unit / _this.$store.getters.ratio) |0;
         window.document.body.onkeydown = function(event) {
-            if (_this.cur) {
+            _this.curRect = _this.$store.getters.curRect;
+            if (_this.curRect) {
                 // 操作区键盘事件
                 if (Vue.config.keyCodes.directions.includes(event.keyCode)) {
                     if (!event.altKey && !event.shiftKey) {
@@ -53,6 +55,8 @@ export default {
                 // TODO：字块区键盘事件处理, release后控制字块区的选中
             }
 
+            if (event.preventDefault) event.preventDefault();
+
         }
     },
     watch: {
@@ -70,18 +74,18 @@ export default {
         move: function (ev) { //移到
             var d = this.direction(ev.keyCode);
             this.logCurRect('move', d);
-            if(this.cur){
-                if(d == 'left' && this.cur.x > this.unit){
-                    this.cur.x -= this.unit;
+            if(this.curRect){
+                if(d == 'left' && this.curRect.x > this.unit){
+                    this.curRect.x -= this.unit;
                 }
-                else if(d == 'up' && this.cur.y > this.unit){
-                    this.cur.y -= this.unit;
+                else if(d == 'up' && this.curRect.y > this.unit){
+                    this.curRect.y -= this.unit;
                 }
                 else if(d == 'right'){
-                    this.cur.x += this.unit;
+                    this.curRect.x += this.unit;
                 }
                 else if(d == 'down'){
-                    this.cur.y += this.unit;
+                    this.curRect.y += this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('move', d);
@@ -91,20 +95,20 @@ export default {
         shrink: function (f, ev) { //缩小
             var d = this.direction(ev.keyCode);
             this.logCurRect('shrink', d);
-            if(this.cur){
-                if(f || (d == 'left' && this.cur.w > this.unit)){
-                    this.cur.x += this.unit;
-                    this.cur.w -= this.unit;
+            if(this.curRect){
+                if(f || (d == 'left' && this.curRect.w > this.unit)){
+                    this.curRect.w -= this.unit;
                 }
-                if(f || (d == 'up' && this.cur.h > this.unit)){
-                    this.cur.y += this.unit;
-                    this.cur.h -= this.unit;
+                if(f || (d == 'up' && this.curRect.h > this.unit)){
+                    this.curRect.h -= this.unit;
                 }
-                if(f || (d == 'right' && this.cur.w > this.unit)){
-                    this.cur.w -= this.unit;
+                if(f || (d == 'right' && this.curRect.w > this.unit)){
+                    this.curRect.w -= this.unit;
+                    this.curRect.x += this.unit;
                 }
-                if(f || (d == 'down' && this.cur.h > this.unit)){
-                    this.cur.h -= this.unit;
+                if(f || (d == 'down' && this.curRect.h > this.unit)){
+                    this.curRect.h -= this.unit;
+                    this.curRect.y += this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('shrink', d);
@@ -113,20 +117,20 @@ export default {
         enlarge: function (f, ev) { //放大
             var d = this.direction(ev.keyCode);
             this.logCurRect('enlarge', d);
-            if(this.cur){
-                if(f || (d == 'left' && this.cur.x > this.unit)){
-                    this.cur.x -= this.unit;
-                    this.cur.w += this.unit;
+            if(this.curRect){
+                if(f || (d == 'left' && this.curRect.x > this.unit)){
+                    this.curRect.x -= this.unit;
+                    this.curRect.w += this.unit;
                 }
-                if(f || (d == 'up' && this.cur.y > this.unit)){
-                    this.cur.y -= this.unit;
-                    this.cur.h += this.unit;
+                if(f || (d == 'up' && this.curRect.y > this.unit)){
+                    this.curRect.y -= this.unit;
+                    this.curRect.h += this.unit;
                 }
                 if(f || d == 'right'){
-                    this.cur.w += this.unit;
+                    this.curRect.w += this.unit;
                 }
                 if(f || d == 'down'){
-                    this.cur.h += this.unit;
+                    this.curRect.h += this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('enlarge', d);
@@ -134,26 +138,25 @@ export default {
         },
         selected: function (ev) {
             this.logCurRect('selected', this.direction(ev.keyCode));
-            if(this.cur){
-                this.cur = null;  //置为空, 触发watch事件, 释放焦点.
+            if(this.curRect){
+                this.curRect = null;  //置为空, 触发watch事件, 释放焦点.
                 this.$emit('releasenow');
                 //todo 向父组件发送 释放信号.
             }
             else {
-                //this.cur = {};
+                //this.curRect = {};
             }
         },
         logCurRect: function (opt, direct) {
-            if(this.cur){
-                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.cur.x+', y: '+this.current.y+', w: '+this.cur.w+', h: '+this.cur.h+'}');
+            if(this.curRect){
+                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.curRect.x+', y: '+this.curRect.y+', w: '+this.curRect.w+', h: '+this.curRect.h+'}');
             }
             else {
                 console.log(opt+'>>>'+direct+'>>>current='+null);
             }
         },
-        redraw_canvas: function () {            
-            this.$emit('drawnow');
-            this.$store.commit('setNewRect', this.cur);            
+        redraw_canvas: function () {
+            this.$emit('drawnow', this.curRect);
         },
 
     }
