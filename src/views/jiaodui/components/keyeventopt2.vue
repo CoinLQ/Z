@@ -19,38 +19,43 @@ Vue.config.keyCodes = {
 
 export default {
     name: 'optkeyevent',
-    props: ['current'],
+    props: ['ratio'],
     data: function () {
         return {
-            unit: 5
+            unit: 5,
+            curRect: {}
         };
     },
     mounted: function() {
-        console.log('mounted1');
+        console.log('keyevent mounted');
         let _this = this;
+        _this.unit = (_this.unit / _this.$store.getters.ratio) |0;
         window.document.body.onkeydown = function(event) {
-            if (_this.current) {
+            _this.curRect = _this.$store.getters.curRect;
+            if (_this.curRect) {
                 // 操作区键盘事件
                 if (Vue.config.keyCodes.directions.includes(event.keyCode)) {
                     if (!event.altKey && !event.shiftKey) {
                         _this.move(event);
                     } else if (event.altKey) {
-                        _this.fill_out(0, event);
+                        _this.enlarge(0, event);
                     } else if (event.shiftKey) {
-                        _this.diminish(0, event);
+                        _this.shrink(0, event);
                     }
                 } else if ((event.keyCode == 32) && !event.altKey && !event.ctrlKey) {
                     _this.selected(event);
                 } else if (event.keyCode == 88) {
                     if (event.altKey) {
-                        _this.fill_out(1, event);
+                        _this.enlarge(1, event);
                     } else if (event.shiftKey) {
-                        _this.diminish(1, event);
+                        _this.shrink(1, event);
                     }
                 }
             } else {
                 // TODO：字块区键盘事件处理, release后控制字块区的选中
             }
+
+            if (event.preventDefault) event.preventDefault();
 
         }
     },
@@ -69,89 +74,89 @@ export default {
         move: function (ev) { //移到
             var d = this.direction(ev.keyCode);
             this.logCurRect('move', d);
-            if(this.current){
-                if(d == 'left' && this.current.x > this.unit){
-                    this.current.x -= this.unit;
+            if(this.curRect){
+                if(d == 'left' && this.curRect.x > this.unit){
+                    this.curRect.x -= this.unit;
                 }
-                else if(d == 'up' && this.current.y > this.unit){
-                    this.current.y -= this.unit;
+                else if(d == 'up' && this.curRect.y > this.unit){
+                    this.curRect.y -= this.unit;
                 }
                 else if(d == 'right'){
-                    this.current.x += this.unit;
+                    this.curRect.x += this.unit;
                 }
                 else if(d == 'down'){
-                    this.current.y += this.unit;
+                    this.curRect.y += this.unit;
                 }
                 this.redraw_canvas();
                 this.logCurRect('move', d);
             }
             return false;
         },
-        diminish: function (f, ev) { //缩小
+        shrink: function (f, ev) { //缩小
             var d = this.direction(ev.keyCode);
-            this.logCurRect('diminish', d);
-            if(this.current){
-                if(f || (d == 'left' && this.current.w > this.unit)){
-                    this.current.x += this.unit;
-                    this.current.w -= this.unit;
+            this.logCurRect('shrink', d);
+            if(this.curRect){
+                if(f || (d == 'left' && this.curRect.w > this.unit)){
+                    this.curRect.w -= this.unit;
                 }
-                if(f || (d == 'up' && this.current.h > this.unit)){
-                    this.current.y += this.unit;
-                    this.current.h -= this.unit;
+                if(f || (d == 'up' && this.curRect.h > this.unit)){
+                    this.curRect.h -= this.unit;
                 }
-                if(f || (d == 'right' && this.current.w > this.unit)){
-                    this.current.w -= this.unit;
+                if(f || (d == 'right' && this.curRect.w > this.unit)){
+                    this.curRect.w -= this.unit;
+                    this.curRect.x += this.unit;
                 }
-                if(f || (d == 'down' && this.current.h > this.unit)){
-                    this.current.h -= this.unit;
+                if(f || (d == 'down' && this.curRect.h > this.unit)){
+                    this.curRect.h -= this.unit;
+                    this.curRect.y += this.unit;
                 }
                 this.redraw_canvas();
-                this.logCurRect('diminish', d);
+                this.logCurRect('shrink', d);
             }
         },
-        fill_out: function (f, ev) { //放大
+        enlarge: function (f, ev) { //放大
             var d = this.direction(ev.keyCode);
-            this.logCurRect('fill_out', d);
-            if(this.current){
-                if(f || (d == 'left' && this.current.x > this.unit)){
-                    this.current.x -= this.unit;
-                    this.current.w += this.unit;
+            this.logCurRect('enlarge', d);
+            if(this.curRect){
+                if(f || (d == 'left' && this.curRect.x > this.unit)){
+                    this.curRect.x -= this.unit;
+                    this.curRect.w += this.unit;
                 }
-                if(f || (d == 'up' && this.current.y > this.unit)){
-                    this.current.y -= this.unit;
-                    this.current.h += this.unit;
+                if(f || (d == 'up' && this.curRect.y > this.unit)){
+                    this.curRect.y -= this.unit;
+                    this.curRect.h += this.unit;
                 }
                 if(f || d == 'right'){
-                    this.current.w += this.unit;
+                    this.curRect.w += this.unit;
                 }
                 if(f || d == 'down'){
-                    this.current.h += this.unit;
+                    this.curRect.h += this.unit;
                 }
                 this.redraw_canvas();
-                this.logCurRect('fill_out', d);
+                this.logCurRect('enlarge', d);
             }
         },
         selected: function (ev) {
             this.logCurRect('selected', this.direction(ev.keyCode));
-            if(this.current){
-                this.current = null;  //置为空, 触发watch事件, 释放焦点.
+            if(this.curRect){
+                this.curRect = null;  //置为空, 触发watch事件, 释放焦点.
                 this.$emit('releasenow');
                 //todo 向父组件发送 释放信号.
             }
             else {
-                //this.current = {};
+                //this.curRect = {};
             }
         },
         logCurRect: function (opt, direct) {
-            if(this.current){
-                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.current.x+', y: '+this.current.y+', w: '+this.current.w+', h: '+this.current.h+'}');
+            if(this.curRect){
+                console.log(opt+'>>>'+direct+'>>>current{ x: '+this.curRect.x+', y: '+this.curRect.y+', w: '+this.curRect.w+', h: '+this.curRect.h+'}');
             }
             else {
                 console.log(opt+'>>>'+direct+'>>>current='+null);
             }
         },
         redraw_canvas: function () {
-            this.$emit('drawnow');
+            this.$emit('drawnow', this.curRect);
         },
 
     }
