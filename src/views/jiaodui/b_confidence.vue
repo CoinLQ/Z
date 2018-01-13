@@ -45,7 +45,7 @@
             </Col>
             <Col span="7" :xs="19" :sm="15" :md="12" :lg="5">
                 <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
-                    <div><canvas-op :canvasdata="canvasData" :ratio="ratio"></canvas-op></div>
+                    <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
                 </div>
             </Col>
         </Row>
@@ -77,7 +77,7 @@ export default {
             ratio: 4, // magnified factor
             preCheckTotal: 100,
             postCheckTotal: 200,
-            canvasData: { image: null, rects: [] },
+            updateCanvas: 1,
             splits: {}
         }
     },
@@ -99,6 +99,8 @@ export default {
             //     desc: error.message
             // });
         // });
+            this.$store.commit('resetAll');
+
             this.splits = {
                "rects": [
                     {
@@ -152,7 +154,7 @@ export default {
         },
 
         onHighlight(item) {
-            this.canvasData = {image: item.getImageObj(), rects: [item.getTransRect()]};
+            this.updateCanvas +=1;
 
             // Make sure show the exact part of canvas
             this.$refs.wrapper.scrollTo(0, Math.abs(item.rect.y * this.ratio - (window.innerHeight/2)));

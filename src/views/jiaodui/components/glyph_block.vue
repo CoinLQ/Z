@@ -7,10 +7,6 @@
 
 	.outer-wrapper {
 		margin: 20px 10px;
-
-	}
-
-	.glyph-wrapper {
 	}
 
 	.inner-wrapper {
@@ -96,19 +92,26 @@
 		],
 
 		mounted() {
-			this.image = new Image();
-	        this.image.crossOrigin = "*";
-	        this.image.onload = function(evt){
-				this.clip = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
-	        }.bind(this);
+			util.createImgObjWithUrl(this.imgData.s3_uri)
+			.then(function(v){
+				this.image = v.target;
+				this.clip = util.getImageClip(v.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
+			}.bind(this)).catch(function(v) {
+				console.log("Image failed to load! " + v);
+			})
+			// this.image = new Image();
+	        // // this.image.crossOrigin = "*";
+	        // this.image.onload = function(evt){
+			// 	this.clip = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
+	        // }.bind(this);
 
-	        this.image.src = this.imgData.s3_uri;
+	        // this.image.src = this.imgData.s3_uri;
 		},
 
 		methods: {
 			onClick() {
 				this.isActive = true;
-				this.$store.commit('setFocusItem', {item: this});
+				this.$store.commit('setFocusItem', {item: this, curRect: this.rect, image:this.image});
 				this.$emit('highlight', this);
 			},
 
@@ -126,7 +129,7 @@
 				}
 			},
 
-			getImageObj() {
+			getImage() {
 				return this.image;
 			},
 

@@ -6,15 +6,11 @@
 import  _ from 'lodash';
 
 export default {
-	props:["canvasId"],
+	props:["canvasId", "ratio"],
 
     computed: {
         canvas() {
             return document.getElementById(this.canvasId);
-        },
-
-        ratio() {
-            return this.$store.getters.ratio;
         }
     },
 
@@ -104,15 +100,14 @@ export default {
             }
             window.nn = this;
             if (this.current.id) {
-                this.current.selected = false;
+                this.current.mselected = false;
             }
             this.current = rect;
-            this.current.selected = true;
+            this.current.mselected = true;
             this.current.$ = point;
-            this.redraw_canvas()
         },
         redraw_canvas() {
-            this.$emit('updatecanvas', this.current);
+            this.$emit('drawnow', this.current);
         }
     },
     mounted: function(){
@@ -140,10 +135,10 @@ export default {
                     new_rect.w = 5;
                     new_rect.h = 5;
                     _this.draw.additions.push(new_rect)
-                    // _this.$store.commit('pushRects': {rect:new_rect});
-                    rects.push(new_rect);
+                    _this.$store.commit('pushRects', {rect:new_rect});
                 }
             }
+            _this.redraw_canvas()            
         };
         _this.canvas.onmousemove = _.throttle(function (event) {
             window.nn = _this;
@@ -201,7 +196,7 @@ export default {
                 _this.redraw_canvas();
                 _.debounce(() => {  _this.drag.draggable = false; _this.drag.current = none; _this.redraw_canvas(); }, 100)
             }
-            else if (_this.current.selected) {
+            else if (_this.current.mselected) {
                 _this.current.x += point.x - _this.current.$.x;
                 _this.current.y += point.y - _this.current.$.y;
                 _this.current.$.x = point.x;
@@ -222,8 +217,8 @@ export default {
         _this.canvas.onmouseup = function (event) {
             if (_this.drag.draggable) {
                 _this.drag.draggable = false;
-            } else if (_this.current.selected){
-                _this.current.selected = false;
+            } else if (_this.current.mselected){
+                _this.current.mselected = false;
             }
             _this.draw.drawing = false;
 

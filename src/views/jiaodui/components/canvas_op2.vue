@@ -1,7 +1,7 @@
 <template>
   <canvas :id="canvasId">
-      <keyeventopt :ration="ratio" @drawnow="update_canvas" v-on:releasenow="release_current"></keyeventopt>
-      <mouseevtopt :canvasId="canvasId" @updatecanvas="update_canvas"></mouseevtopt>
+      <keyeventopt :ratio="ratio" @drawnow="update_canvas"></keyeventopt>
+      <mouseevtopt :ratio="ratio" :canvasId="canvasId" @drawnow="update_canvas"></mouseevtopt>
   </canvas>
 </template>
 
@@ -17,7 +17,7 @@ export default {
     components: {keyeventopt, mouseevtopt},
 
     // Canvas accepts 3 parameters to show marks of [rect] on {image} to the ratio scale of size.
-    props: ["canvasdata", "ratio"],
+    props: ["redraw", "ratio"],
 
     computed: {
         canvasId() {
@@ -26,42 +26,33 @@ export default {
     },
 
     watch: {
-        canvasdata () {
-            this.rects = this.canvasdata.rects;
-            this.image = this.canvasdata.image;
-            // Used for showing large number of rects
-            if (!_.find(this.rects, function(n){ n.id == this.current.id}.bind(this))){
-                    this.current = this.rects[0];
-            }
-            this.$store.commit('setRatio', {ratio: this.ratio});
-            this.$store.commit('setRects', {rects: this.rects});
-            this.$store.dispatch('setCurRect', {rect: this.current});
+        redraw() {
             this.redraw_canvas();
         }
     },
 
-    data () {
+    data() {
         return {
-            rects: [],
-            image: null,
-            current: {},
-        };
+            image: null
+        }
     },
 
     methods: {
         setInitCanvasImage: function(){
-            this.image = new Image();
-            this.image.crossOrigin = "*";
-            this.image.onload = function(evt){
+            let url = "http://oidgqmecg.bkt.clouddn.com/jiaodui/hint_image.png";
+            util.createImgObjWithUrl(url).then(function(v) {
+                this.image = v.target;
                 this.redraw_canvas();
-            }.bind(this);
-
-            this.image.src = "http://oidgqmecg.bkt.clouddn.com/jiaodui/hint_image.png";
+            }.bind(this)).catch(function(v) {
+                console.log("Image failed to load! " + v);
+            });
         },
         redraw_canvas: function() {
             let canvas = document.getElementById('canvas-scope');
             let ctx = canvas.getContext('2d');
-            this.updateCanvas(this.image, canvas, ctx);
+            let image = this.$store.getters.image;
+            image = image.empty? this.image : image;
+            this.updateCanvas(image, canvas, ctx);
         },
         updateCanvas: function(image, canvas, ctx) {
             canvas.width = image.width * this.ratio;
@@ -70,16 +61,22 @@ export default {
             this.drawAllRect(ctx);
         },
         drawAllRect: function(ctx){
-            this.rects.forEach(function(rect,i){
+            let current = this.$store.getters.curRect;
+            let rects = this.$store.getters.rects;
+            rects.forEach(function(rect,i){
                 this.positive_rect(rect);
-                if (rect.selected) {
+                if (rect.mselected && rect.kselected) {
+                    ctx.strokeStyle="rgba(255,0,255,1)";
+                } else if (rect.mselected) {
                     ctx.strokeStyle="rgba(255,0,0,1)";
-                } else if (rect == this.current) {
+                } else if (rect.kselected) {
+                    ctx.strokeStyle="rgba(255,255,0,1)";
+                } else if (rect == current) {
                     ctx.strokeStyle="rgba(0,255,0,1)";
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
-                ctx.lineWidth=1.2*this.ratio;
+                ctx.lineWidth=1.5*this.ratio;
                 ctx.strokeRect(rect.x*this.ratio, rect.y*this.ratio, rect.w*this.ratio, rect.h*this.ratio);
                 this.draw_corner(ctx, rect);
             }, this);
@@ -145,14 +142,8 @@ export default {
                 ctx.fill();
             }
         },
-        release_current: function() {
-            this.current = {};
-            this.$store.dispatch('setCurRect', {rect: this.current});
-            this.redraw_canvas();
-        },
         update_canvas: function (current) {
-            this.current = current;
-            this.$store.dispatch('setCurRect', {rect: this.current});
+            this.$store.dispatch('setCurRect', {rect: current});
             this.redraw_canvas();
         }
     },

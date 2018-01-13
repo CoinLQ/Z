@@ -304,4 +304,18 @@ util.getImageClip = function(imgObj, newWidth, newHeight, startX, startY, ratio)
     return tnCanvas.toDataURL("image/png");
 }
 
+util.createImgObjWithUrl = function(url) {
+    return new Promise(function(resolve, reject){
+        let image = new Image();
+        image.crossOrigin = "*";
+        image.onload = function(e){
+            resolve(e);
+        };
+        image.onerror = function(e) {
+            reject(e);
+        }
+        image.src = url;
+    });
+}
+
 export default util;
