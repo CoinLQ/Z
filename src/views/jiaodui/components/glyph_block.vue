@@ -1,7 +1,7 @@
 <style type="text/css" scoped>
 	img {
-		width: 80px;
-		height: 80px;
+		width: 100%;
+		height: 100%;
 		border-radius: 3px 3px 0 0;
 	}
 
@@ -10,29 +10,27 @@
 	}
 
 	.inner-wrapper {
-		box-shadow: -3px -2px 9px 0px #363E4E;
+		box-shadow: 2px 2px 1px 0px #363E4E;
 		border-radius: 3px;
+		/*width: 240px;*/
 	}
 
 	.inner-wrapper:hover {
-		box-shadow: -3px -2px 30px 2px #363E4E;	
+		box-shadow: 0px 0px 3px 3px #363E4E;
 	}
 
 	.glyph {
-		float: left;
-		width: 80px;
-		height: 80px;
+		width: 120px;
+		height: 120px;
 		border-radius: 3px 3px 0 0;
 	}
 
 	.char {
-		/*display: none;*/
-	    width: 80px;
-	    height: 80px;
+		display: none;
 	    text-align: center;
 	    background-color: #2E363F;
 	    color: white;
-	    font-size: 60px;
+	    font-size: 80px;
 	}
 
 	.char-wrapper {
@@ -40,15 +38,15 @@
 	}
 
 	.confidence {
-		height: 26px;
+		/*height: 26px;*/
 		background-color: #404040;
 		opacity: 1;
 		color: white;
-		margin-top: -5px;
 		padding-top: 3px;
 		text-align: center;
 		border-radius: 0 0 3px 3px;
-		clear: left;
+		font-family: monospace;
+		font-size: large;
 	}
 
 	.active {

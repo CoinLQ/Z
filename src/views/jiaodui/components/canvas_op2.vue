@@ -33,25 +33,34 @@ export default {
 
     data() {
         return {
-            image: null
         }
     },
 
     methods: {
         setInitCanvasImage: function(){
-            let url = "http://oidgqmecg.bkt.clouddn.com/jiaodui/hint_image.png";
-            util.createImgObjWithUrl(url).then(function(v) {
-                this.image = v.target;
-                this.redraw_canvas();
-            }.bind(this)).catch(function(v) {
-                console.log("Image failed to load! " + v);
-            });
+            let canvas = document.getElementById('canvas-scope');
+            canvas.width = 300;
+            canvas.height = window.innerHeight;
+            let ctx = canvas.getContext('2d');
+            let gradient = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
+            gradient.addColorStop(0, '#606E9A');
+            gradient.addColorStop(1, '#386093');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0,0, 300, window.innerHeight);
+            ctx.strokeStyle='white';
+            ctx.font="30px Verdana";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.strokeText("Operate Area", 150, window.innerHeight/2, 300);
+            ctx.save();
         },
         redraw_canvas: function() {
             let canvas = document.getElementById('canvas-scope');
             let ctx = canvas.getContext('2d');
             let image = this.$store.getters.image;
-            image = image.empty? this.image : image;
+            if (image.empty) {
+                return ctx.restore();
+            }
             this.updateCanvas(image, canvas, ctx);
         },
         updateCanvas: function(image, canvas, ctx) {

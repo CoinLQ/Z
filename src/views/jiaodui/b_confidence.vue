@@ -4,37 +4,44 @@
         border: 1px;
         text-align: center;
         color: #9ea7b4;
+        display: flex;
     }
 
     .header {
-        float: left;
         width: 50%;
         height: 26px;
         text-align: center;
         background-color: #2E363F;
-        color: #8B8B8C;
+        /*color: #8B8B8C;*/
         padding-top: 4px;
         overflow: hidden;
+        box-shadow: 2px 2px 1px 0px #363E4E;
     }
 
     .canvas-layout {
         overflow: scroll;
         text-align: center;
+        padding: 4px;
+        margin: 10px;
+        background-color: #cccccc;
+        box-shadow: 0px 0px 3px 3px #363E4E;
     }
 </style>
 <template>
 <div class="layout">
     <Content>
         <Row ref="mainrow">
-            <Col span="17" :xs="5" :sm="9" :md="12" :lg="19">
+            <Col span="17" :xs="10" :sm="13" :md="15" :lg="18">
                 <Row>
-                <div class="layout-content-main">
-                    <div class="header" style="border-right: black 2px dotted;">待校对区域总数：{{preCheckTotal}}</div>
-                    <div class="header">已完成区域总数：{{postCheckTotal}}</div>
-                </div>
-                <div v-for="r in splits.rects" style="float: left;">
-                    <glyph-block :imgData="getRectColumn(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
-                </div>
+                    <div class="layout-content-main">
+                        <div class="header" style="border-right: 2px dotted #909090">待校对区域总数：{{preCheckTotal}}</div>
+                        <div class="header">已完成区域总数：{{postCheckTotal}}</div>
+                    </div>
+                </Row>
+                <Row type="flex" justify="start" class="code-row-bg">
+                    <div v-for="r in splits.rects">
+                        <glyph-block :imgData="getRectColumn(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
+                    </div>
                 </Row>
                 <Row type="flex" align="bottom" justify="center">
                     <Button type="success" size="large" shape="circle" style="width:98%;" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
@@ -43,10 +50,12 @@
                     </Button>
                 </Row>
             </Col>
-            <Col span="7" :xs="19" :sm="15" :md="12" :lg="5">
-                <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
-                    <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
-                </div>
+            <Col span="7" :xs="14" :sm="11" :md="9" :lg="6">
+                <Row>
+                    <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
+                        <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
+                    </div>
+                </Row>
             </Col>
         </Row>
     </Content>
@@ -68,13 +77,13 @@ export default {
     computed: {
         // Make sure canvas is properly displayed within the window height.
         getHeight: function () {
-            return window.innerHeight - 100 + 'px';
+            return window.innerHeight + 'px';
         }
     },
     data () {
         return {
             isBtnLoading: false,
-            ratio: 4, // magnified factor
+            ratio: 6, // magnified factor
             preCheckTotal: 100,
             postCheckTotal: 200,
             updateCanvas: 1,
@@ -132,7 +141,277 @@ export default {
                         "ln": 5,
                         "h": 39,
                         "y": 639
-                    }
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0025_L18",
+                        "w": 40,
+                        "cn": 18,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999999,
+                        "x": 317,
+                        "id": "eda87c6a-6991-43a8-bfdc-1d99d41f876f",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 32,
+                        "y": 525
+                    },
+                    {
+                        "cncode": "GLZ_S00001_R001_T0018_L07",
+                        "w": 40,
+                        "cn": 7,
+                        "word": "氣",
+                        "wcc": null,
+                        "op": 1,
+                        "cc": 0.999993,
+                        "x": 797,
+                        "id": "5ba9f327-7a5b-4d16-b861-50405f0a51d0",
+                        "ts": "",
+                        "ln": 5,
+                        "h": 39,
+                        "y": 639
+                    },
                 ],
                 "ocolumns": [
                     {
@@ -157,7 +436,9 @@ export default {
             this.updateCanvas +=1;
 
             // Make sure show the exact part of canvas
-            this.$refs.wrapper.scrollTo(0, Math.abs(item.rect.y * this.ratio - (window.innerHeight/2)));
+            setImmediate(function () {
+                this.$refs.wrapper.scrollTo(0, Math.abs(item.rect.y * this.ratio - (window.innerHeight/3)));
+            }.bind(this))
         },
 
         getRectColumn(rect) {

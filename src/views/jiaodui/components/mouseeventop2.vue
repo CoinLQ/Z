@@ -25,7 +25,7 @@ export default {
             drag: {
                 current: null,
                 draggable: false,
-                handle_size: 3,
+                handle_size: 5,
                 point: function(x, y) { return {x: x, y: y} },
                 dist: function (p1, p2) {
                     return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
@@ -112,7 +112,7 @@ export default {
     },
     mounted: function(){
         let _this = this;
-        this.drag.handle_size *= this.ratio;
+        /* this.drag.handle_size *= this.ratio; */
 
         _this.canvas.onselectstart = function(e) { e.preventDefault(); return false; };
         _this.canvas.onmousedown = function (event) {
