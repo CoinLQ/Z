@@ -5,11 +5,25 @@
   text-align: center;
   color: #9ea7b4;
 }
+
+.canvas-layout {
+    overflow: scroll;
+    text-align: center;
+    padding: 4px;
+    margin: 10px;
+    background-color: #cccccc;
+    box-shadow: 0px 0px 3px 3px #363E4E;
+}
+
+.button-wrapper {
+  width: 95%;
+}
+
 </style>
 <template>
 <Content>
-<div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
-<div><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+<div class="canvas-layout"><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
+<div class="button-wrapper"><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
     <span v-if="!isBtnLoading">提交</span>
     <span v-else>进行中</span>
 </Button></div>
