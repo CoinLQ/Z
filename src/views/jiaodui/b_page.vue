@@ -15,10 +15,6 @@
     box-shadow: 0px 0px 3px 3px #363E4E;
 }
 
-.button-wrapper {
-  width: 95%;
-}
-
 </style>
 <template>
 <Content>

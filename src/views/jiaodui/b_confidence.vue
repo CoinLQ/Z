@@ -29,36 +29,34 @@
 </style>
 <template>
 <div class="layout">
-    <Content>
-        <Row ref="mainrow">
-            <Col span="17" :xs="10" :sm="13" :md="15" :lg="18">
-                <Row>
-                    <div class="layout-content-main">
-                        <div class="header" style="border-right: 2px dotted #909090">待校对区域总数：{{preCheckTotal}}</div>
-                        <div class="header">已完成区域总数：{{postCheckTotal}}</div>
-                    </div>
-                </Row>
-                <Row type="flex" justify="start" class="code-row-bg">
-                    <div v-for="r in splits.rects">
-                        <glyph-block :imgData="getRectColumn(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
-                    </div>
-                </Row>
-                <Row type="flex" align="bottom" justify="center">
-                    <Button type="success" size="large" shape="circle" style="width:98%;" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
-                        <span v-if="!isBtnLoading">提交</span>
-                        <span v-else>进行中</span>
-                    </Button>
-                </Row>
-            </Col>
-            <Col span="7" :xs="14" :sm="11" :md="9" :lg="6">
-                <Row>
-                    <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
-                        <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
-                    </div>
-                </Row>
-            </Col>
-        </Row>
-    </Content>
+    <Row ref="mainrow">
+        <Col span="17" :xs="10" :sm="13" :md="15" :lg="18">
+            <Row>
+                <div class="layout-content-main">
+                    <div class="header" style="border-right: 2px dotted #909090">待校对区域总数：{{preCheckTotal}}</div>
+                    <div class="header">已完成区域总数：{{postCheckTotal}}</div>
+                </div>
+            </Row>
+            <Row type="flex" justify="start" class="code-row-bg">
+                <div v-for="r in splits.rects">
+                    <glyph-block :imgData="getRectColumn(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
+                </div>
+            </Row>
+            <Row type="flex" align="bottom" justify="center">
+                <Button type="success" size="large" shape="circle" style="width:98%;" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+                    <span v-if="!isBtnLoading">提交</span>
+                    <span v-else>进行中</span>
+                </Button>
+            </Row>
+        </Col>
+        <Col span="7" :xs="14" :sm="11" :md="9" :lg="6">
+            <Row>
+                <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
+                    <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
+                </div>
+            </Row>
+        </Col>
+    </Row>
 </div>
 </template>
 
