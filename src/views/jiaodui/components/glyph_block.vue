@@ -79,7 +79,7 @@
 				'clip': '',
 				'isActive': this.active,
 				'image': {},
-				'rect': {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h}
+				'rect': {}
 			}
 		},
 
@@ -90,20 +90,17 @@
 		],
 
 		mounted() {
+			this.rect = {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h};
+
+			this.rect = this.correct(this.rect);
+
 			util.createImgObjWithUrl(this.imgData.s3_uri)
 			.then(function(v){
 				this.image = v.target;
-				this.clip = util.getImageClip(v.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
+				this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
 			}.bind(this)).catch(function(v) {
 				console.log("Image failed to load! " + v);
 			})
-			// this.image = new Image();
-	        // // this.image.crossOrigin = "*";
-	        // this.image.onload = function(evt){
-			// 	this.clip = util.getImageClip(evt.target, this.rectData.w, this.rectData.h, this.rectData.x - this.imgData.x, this.rectData.y - this.imgData.y, 1);
-	        // }.bind(this);
-
-	        // this.image.src = this.imgData.s3_uri;
 		},
 
 		methods: {
@@ -137,6 +134,24 @@
 
 			getTransRect() {
 				return this.rect;
+			},
+
+			correct(rect) {
+				if (rect.w<0) {
+                    rect.x = rect.x + rect.w
+                    rect.w = Math.abs(rect.w)
+                }
+                if (rect.h<0) {
+                    rect.y = rect.y + rect.h
+                    rect.h = Math.abs(rect.h)
+                }
+                if (rect.w <5) {
+                    rect.w = 5;
+                }
+                if (rect.h <5){
+                    rect.h = 5;
+                }
+                return rect;
 			}
 		}
 	}

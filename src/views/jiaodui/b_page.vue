@@ -17,16 +17,16 @@
 
 </style>
 <template>
-<Content>
+<div>
 <div class="canvas-layout"><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
 <div class="button-wrapper"><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
     <span v-if="!isBtnLoading">提交</span>
     <span v-else>进行中</span>
 </Button></div>
-</Content>
+</div>
 </template>
 <script>
-import canvasOp from "./components/canvas_op2.vue";
+import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 
 export default {

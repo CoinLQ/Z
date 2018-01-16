@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import canvasOp from './components/canvas_op2.vue';
+import canvasOp from './components/canvas_op3.vue';
 import glyphBlock from './components/glyph_block.vue';
 import util from '@/libs/util';
 import _ from 'lodash';
