@@ -81,7 +81,7 @@ export default {
                 menuTheme = 'light';
             }
             let path = '';
-            let themeLink = document.querySelector('link[name="theme"]');
+            // let themeLink = document.querySelector('link[name="theme"]');
             let userName = Cookies.get('user');
             if (localStorage.theme) {
                 let themeList = JSON.parse(localStorage.theme);
@@ -123,7 +123,7 @@ export default {
             } else {
                 path = '';
             }
-            themeLink.setAttribute('href', path);
+            // themeLink.setAttribute('href', path);
         }
     },
     created () {
@@ -153,11 +153,11 @@ export default {
             this.$store.commit('changeMainTheme', 'b');
         }
         // 根据用户设置主题
-        if (this.$store.state.app.themeColor !== 'b') {
-            let stylesheetPath = path + this.$store.state.app.themeColor + '.css';
-            let themeLink = document.querySelector('link[name="theme"]');
-            themeLink.setAttribute('href', stylesheetPath);
-        }
+        // if (this.$store.state.app.themeColor !== 'b') {
+            // let stylesheetPath = path + this.$store.state.app.themeColor + '.css';
+            // let themeLink = document.querySelector('link[name="theme"]');
+            // themeLink.setAttribute('href', stylesheetPath);
+        // }
     }
 };
 </script>
