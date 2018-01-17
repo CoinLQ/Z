@@ -134,6 +134,7 @@ export default {
         handleKeyEvent: function (event) {
             this.$store.dispatch('handleKeyEvent', event);
             this.redraw_canvas();
+            this.$emit('scrollToRect');
         },
     },
     mounted: function(){

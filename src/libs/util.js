@@ -318,4 +318,17 @@ util.createImgObjWithUrl = function(url) {
     });
 }
 
+util.getImageUrlFromCode = function(code) {
+    /*  e.g. code = GZ000790v030p0010005
+        url = https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
+    */
+    // TODO: write with regexp by group match
+    if (typeof(code) != typeof('')) return '';
+
+    let dir1 = code.substr(0, 2);
+    let dir2 = code.substr(2, 6);
+    let dir3 = code.substr(8, 4);
+    return 'https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/' + dir1 + '/' + dir2 + '/' + dir3 + '/' + code + '.jpg';
+}
+
 export default util;

@@ -22,6 +22,9 @@ const canvas = {
         },
         image: state => {
             return state.image;
+        },
+        delRects: state => {
+            return state.rectsOfDel;
         }
 
     },
@@ -47,7 +50,7 @@ const canvas = {
 
         updateItemRect (state, payload) {
             if (state.focusedItem) {
-                state.focusedItem.updateClip(payload.rect);
+                state.focusedItem.updateClip(state.curRect);
             }
         },
 
@@ -177,8 +180,8 @@ const canvas = {
             // validate and correct rect parameters
             if (cur.x < 0 ) cur.x = 0;
             if (cur.y < 0 ) cur.y = 0;
-            if (cur.h > state.image.height) cur.h = state.image.height;
-            if (cur.w > state.image.width) cur.w = state.image.width;
+            if (cur.y + cur.h > state.image.height) cur.y = state.image.height - cur.h;
+            if (cur.x + cur.w > state.image.width) cur.x = state.image.width - cur.w;
         },
 
         deleteCurRect(state, payload) {
@@ -197,11 +200,6 @@ const canvas = {
         }
     },
     actions: {
-        setCurRect({commit}, payload) {
-            commit('updateItemRect', payload);
-            commit('setCurRect', payload)
-        },
-
         handleKeyEvent({commit, state}, payload) {
             let action = payload.action;
             if (_(action).startsWith('scale')) {
@@ -255,6 +253,8 @@ const canvas = {
             } else { // Move
                 commit('moveRect', {action: action, unit: unit});
             }
+            commit('correctCurRect');
+            commit('updateItemRect');
         }
     }
 };

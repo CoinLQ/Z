@@ -94,7 +94,7 @@
 
 			this.rect = this.correct(this.rect);
 
-			util.createImgObjWithUrl(this.imgData.s3_uri)
+			util.createImgObjWithUrl(this.imgData.url)
 			.then(function(v){
 				this.image = v.target;
 				this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);

@@ -106,6 +106,8 @@ export default {
         },
         redraw_canvas() {
             this.$emit('drawnow', this.current);
+            this.$store.commit('correctCurRect');
+            this.$store.commit('updateItemRect');
         }
     },
     mounted: function(){
@@ -221,12 +223,15 @@ export default {
             } else if (_this.current.mselected){
                 _this.current.mselected = false;
             }
-            _this.draw.drawing = false;
-            let r = _this.draw.additions;
-            if (r.w * r.h <= 25) {
-                _this.$store.commit('pullRect', {rect: r});
-            } else {
-                _this.$store.commit('setCurRect', {rect: r});
+
+            if (_this.draw.drawing) {
+                _this.draw.drawing = false;
+                let r = _this.draw.additions;
+                if (r.w * r.h <= 25) {
+                    _this.$store.commit('pullRect', {rect: r});
+                } else {
+                    _this.$store.commit('setCurRect', {rect: r});
+                }
             }
 
             _this.redraw_canvas()

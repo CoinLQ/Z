@@ -18,8 +18,8 @@
 </style>
 <template>
 <div>
-<div class="canvas-layout" :style="{height: getHeight}">
-  <div><canvas-op :redraw="updateCanvas"></canvas-op></div>
+<div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
+  <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
 </div>
 <div class="button-wrapper"><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
     <span v-if="!isBtnLoading">提交</span>
@@ -102,8 +102,6 @@ export default {
   },
   methods: {
     getWorkData() {
-
-
       util.createImgObjWithUrl(this.image_url).then(
           function(v) {
             this.$store.commit('setImageAndRects', {image: v.target, rects: this.rects})
@@ -114,37 +112,18 @@ export default {
         });
     },
     submit() {
-      let that = this;
-    //   this.isBtnLoading = true;
-    //   util.ajax
-    //     .post("/api/cctask/done", {})
-    //     .then(function(response) {
-    //       // that.$Notice.success({
-    //       //     title: '',
-    //       //     desc: ''
-    //       // });
-    //       that.isBtnLoading = false;
-    //       that.getWorkingData();
-    //     })
-    //     .catch(function(error) {
-    //       that.isBtnLoading = false;
-    //       that.$Notice.error({
-    //         title: "Something went wrong.",
-    //         desc: error.message
-    //       });
-    //     });
-        let a = this.$store.getters.curRect;
-        that.$Notice.error({
-            title: "Something went wrong.",
-            desc: 'asdf' + a.x
-          });
-          a.x = 1000;
+    },
 
-          that.$Notice.error({
-            title: "Something went wrong.",
-            desc: this.$store.getters.curRect.x
-          });
-    }
+    scrollToRect() {
+      let scale = this.$store.getters.scale;
+      let rect = this.$store.getters.curRect;
+      let x = Math.max(rect.x * scale - (window.innerWidth/3), rect.x);
+      let y = Math.max(rect.y * scale - (window.innerHeight/3), rect.y);
+      setImmediate(function() {
+          this.$refs.wrapper.scrollTo(x, y);
+      }.bind(this));
+      window.wrapper = this.$refs.wrapper;
+    },
   }
 };
 </script>
