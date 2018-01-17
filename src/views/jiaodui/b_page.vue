@@ -18,7 +18,9 @@
 </style>
 <template>
 <div>
-<div class="canvas-layout"><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
+<div class="canvas-layout" :style="{height: getHeight}">
+  <div><canvas-op :redraw="updateCanvas"></canvas-op></div>
+</div>
 <div class="button-wrapper"><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
     <span v-if="!isBtnLoading">提交</span>
     <span v-else>进行中</span>
@@ -85,12 +87,18 @@ export default {
       image_url:
         "https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v001/GZ000790v001p00010.jpg",
       updateCanvas: 1,
-      ratio: 1,
       isBtnLoading: false
     };
   },
+  computed: {
+      // Make sure canvas is properly displayed within the window height.
+      getHeight: function () {
+          return window.innerHeight + 'px';
+      }
+  },
   mounted() {
     this.getWorkData();
+    this.$store.commit('setScale', {scale: 1});
   },
   methods: {
     getWorkData() {
@@ -98,7 +106,7 @@ export default {
 
       util.createImgObjWithUrl(this.image_url).then(
           function(v) {
-            this.$store.commit('setImageAndRects', {image: v.target, rects: this.rects, ratio:1})
+            this.$store.commit('setImageAndRects', {image: v.target, rects: this.rects})
             this.updateCanvas += 1;
           }.bind(this)
         ).catch(function(v) {

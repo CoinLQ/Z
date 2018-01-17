@@ -52,7 +52,7 @@
         <Col span="7" :xs="14" :sm="11" :md="9" :lg="6">
             <Row>
                 <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
-                    <div><canvas-op :redraw="updateCanvas" :ratio="ratio"></canvas-op></div>
+                    <div><canvas-op :redraw="updateCanvas"></canvas-op></div>
                 </div>
             </Row>
         </Col>
@@ -81,7 +81,7 @@ export default {
     data () {
         return {
             isBtnLoading: false,
-            ratio: 6, // magnified factor
+            scale: 6, // magnified factor
             preCheckTotal: 100,
             postCheckTotal: 200,
             updateCanvas: 1,
@@ -91,6 +91,7 @@ export default {
 
     mounted() {
         this.getWorkingData();
+        this.$store.commit('setScale', {scale: 6});
     },
 
     methods: {
@@ -435,7 +436,7 @@ export default {
 
             // Make sure show the exact part of canvas
             setImmediate(function () {
-                this.$refs.wrapper.scrollTo(0, Math.abs(item.rect.y * this.ratio - (window.innerHeight/3)));
+                this.$refs.wrapper.scrollTo(0, Math.abs(item.rect.y * this.scale - (window.innerHeight/3)));
             }.bind(this))
         },
 

@@ -7,7 +7,7 @@ const canvas = {
         curRect: {empty: true},
         rects: [],
         rectsOfDel: [],
-        ratio: 1, // TODO: to be removed
+        scale: 1,
         image: {empty: true}
     },
     getters: {
@@ -17,8 +17,8 @@ const canvas = {
         rects: state => {
             return state.rects;
         },
-        ratio: state => {
-            return state.ratio;
+        scale: state => {
+            return state.scale;
         },
         image: state => {
             return state.image;
@@ -29,7 +29,7 @@ const canvas = {
         resetAll (state) {
             state.curRect = {empty: true};
             state.rects.length = 0;
-            state.ratio = 1;
+            state.scale = 1;
             state.image = {empty: true};
         },
 
@@ -76,12 +76,16 @@ const canvas = {
             state.rects = rects;
         },
 
-        setRatio(state, payload) {
-            state.ratio = payload.ratio;
+        setScale(state, payload) {
+            state.scale = payload.scale;
         },
 
         pushRects(state, payload) {
             state.rects.push(payload.rect);
+        },
+
+        pullRect(state, payload) {
+            _.pull(state.rects, payload.rect);
         },
 
         setImage(state, payload) {
@@ -99,6 +103,97 @@ const canvas = {
             state.rects = payload.rects;
             state.image = payload.image;
             state.curRect = state.rects[0];
+        },
+
+        enlargeRect(state, payload) {
+            let cur = state.curRect;
+            let unit = payload.unit;
+            let action = payload.action;
+
+            if (all || action == 'mov-up') {
+                cur.y -= unit;
+                cur.h += unit;
+            }
+            if (all || action == 'mov-right') {
+                cur.w += unit;
+            }
+            if (all || action == 'mov-down') {
+                cur.h += unit;
+            }
+            if (all || action == 'mov-left') {
+                cur.x -= unit;
+                cur.w += unit;
+            }
+
+            cur.op = 2; // mark for changed
+        },
+
+        shrinkRect(state, payload) {
+            let cur = state.curRect;
+            let unit = payload.unit;
+            let action = payload.action;
+
+            if (all || action == 'mov-up') {
+                cur.h -= unit;
+            }
+            if (all || action == 'mov-right') {
+                cur.w -= unit;
+                cur.x += unit;
+            }
+            if (all || action == 'mov-down') {
+                cur.y += unit;
+                cur.h -= unit;
+            }
+            if (all || action == 'mov-left') {
+                cur.w -= unit;
+            }
+
+            cur.op = 2;
+        },
+
+        moveRect(state, payload) {
+            let cur = state.curRect;
+            let unit = payload.unit;
+            let action = payload.action;
+
+            if (action == 'mov-up') {
+                cur.y -= unit;
+            }
+            if (action == 'mov-right') {
+                cur.x += unit;
+            }
+            if (action == 'mov-down') {
+                cur.y += unit;
+            }
+            if (action == 'mov-left') {
+                cur.x -= unit;
+            }
+
+            cur.op = 2;
+        },
+
+        correctCurRect(state, payload) {
+            let cur = state.curRect;
+            // validate and correct rect parameters
+            if (cur.x < 0 ) cur.x = 0;
+            if (cur.y < 0 ) cur.y = 0;
+            if (cur.h > state.image.height) cur.h = state.image.height;
+            if (cur.w > state.image.width) cur.w = state.image.width;
+        },
+
+        deleteCurRect(state, payload) {
+            let cur = state.curRect;
+            let index = _(state.rects).indexOf(cur)
+
+            cur.op = 3;
+
+            _.pull(state.rects, cur);
+
+            index = index >= state.rects.length? state.rects.length -1 : index;
+
+            state.rectsOfDel.push(cur);
+
+            state.curRect = state.rects[index] || {empty:true};
         }
     },
     actions: {
@@ -108,12 +203,18 @@ const canvas = {
         },
 
         handleKeyEvent({commit, state}, payload) {
-            let cur = state.curRect || state.rects[0] || {empty:true};
-            if (cur.empty) return;
-
-
-            let unit = payload.modify.scale ? 10 : 2;
             let action = payload.action;
+            if (_(action).startsWith('scale')) {
+                commit('setScale', {scale: parseInt(action[action.length-1])});
+                return;
+            }
+
+            // TODO: move below code into commits.
+            let cur = state.curRect.empty? state.rects[0] : state.curRect;
+            if (!cur) return;
+
+
+            let unit = payload.modify.step ? 10 : 2;
             let all = action == 'drul';
 
             if (action == 'select') {
@@ -139,75 +240,21 @@ const canvas = {
             }
 
             if (action == 'delete') {
-                cur.op = 3;
-
-                let index = _(state.rects).indexOf(cur)
-
-                _.pull(state.rects, cur);
-
-                index = index >= state.rects.length? state.rects.length -1 : index;
-
-                state.rectsOfDel.push(cur);
-
-                state.curRect = state.rects[index] || {empty:true};
+                commit('deleteCurRect');
 
                 return
             }
 
 
-            cur.op = 2; // modified
             if (payload.modify.enlarge) {
-                if (all || action == 'mov-up') {
-                    cur.y -= unit;
-                    cur.h += unit;
-                }
-                if (all || action == 'mov-right') {
-                    cur.w += unit;
-                }
-                if (all || action == 'mov-down') {
-                    cur.h += unit;
-                }
-                if (all || action == 'mov-left') {
-                    cur.x -= unit;
-                    cur.w += unit;
-                }
+                commit('enlargeRect', {action: action, unit: unit});
 
             } else if (payload.modify.shrink) {
-                if (all || action == 'mov-up') {
-                    cur.h -= unit;
-                }
-                if (all || action == 'mov-right') {
-                    cur.w -= unit;
-                    cur.x += unit;
-                }
-                if (all || action == 'mov-down') {
-                    cur.y += unit;
-                    cur.h -= unit;
-                }
-                if (all || action == 'mov-left') {
-                    cur.w -= unit;
-                }
+                commit('shrinkRect', {action: action, unit: unit});
 
             } else { // Move
-                if (action == 'mov-up') {
-                    cur.y -= unit;
-                }
-                if (action == 'mov-right') {
-                    cur.x += unit;
-                }
-                if (action == 'mov-down') {
-                    cur.y += unit;
-                }
-                if (action == 'mov-left') {
-                    cur.x -= unit;
-                }
-
+                commit('moveRect', {action: action, unit: unit});
             }
-            // validate and correct rect parameters
-            if (cur.x < 0 ) cur.x = 0;
-            if (cur.y < 0 ) cur.y = 0;
-            if (cur.h > state.image.height) cur.h = state.image.height;
-            if (cur.w > state.image.width) cur.w = state.image.width;
         }
     }
 };

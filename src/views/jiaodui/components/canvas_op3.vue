@@ -1,7 +1,7 @@
 <template>
   <canvas :id="canvasId">
       <KeyEventOpt @keyEvent="handleKeyEvent"></KeyEventOpt>
-      <MouseEventOpt :ratio="ratio" :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
+      <MouseEventOpt :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
   </canvas>
 </template>
 
@@ -16,7 +16,7 @@ export default {
     name: 'canvasOp',
     components: {KeyEventOpt, MouseEventOpt},
 
-    props: ["redraw", "ratio"],
+    props: ["redraw"],
 
     computed: {
         canvasId() {
@@ -27,11 +27,6 @@ export default {
     watch: {
         redraw() {
             this.redraw_canvas();
-        }
-    },
-
-    data() {
-        return {
         }
     },
 
@@ -57,18 +52,19 @@ export default {
             let canvas = document.getElementById('canvas-scope');
             let ctx = canvas.getContext('2d');
             let image = this.$store.getters.image;
+            let scale = this.$store.getters.scale;
             if (image.empty) {
                 return ctx.restore();
             }
-            this.updateCanvas(image, canvas, ctx);
+            this.updateCanvas(image, canvas, ctx, scale);
         },
-        updateCanvas: function(image, canvas, ctx) {
-            canvas.width = image.width * this.ratio;
-            canvas.height = image.height * this.ratio;
-            ctx.drawImage(image, 0, 0, image.naturalWidth || image.width, image.naturalHeight || image.height, 0, 0, image.width * this.ratio, image.height * this.ratio);
-            this.drawAllRect(ctx);
+        updateCanvas: function(image, canvas, ctx, scale) {
+            canvas.width = image.width * scale;
+            canvas.height = image.height * scale;
+            ctx.drawImage(image, 0, 0, image.naturalWidth || image.width, image.naturalHeight || image.height, 0, 0, image.width * scale, image.height * scale);
+            this.drawAllRect(ctx, scale);
         },
-        drawAllRect: function(ctx){
+        drawAllRect: function(ctx, scale){
             let current = this.$store.getters.curRect;
             let rects = this.$store.getters.rects;
             rects.forEach(function(rect,i){
@@ -83,13 +79,13 @@ export default {
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
-                ctx.lineWidth=1.5*this.ratio;
-                ctx.strokeRect(rect.x*this.ratio, rect.y*this.ratio, rect.w*this.ratio, rect.h*this.ratio);
-                this.draw_corner(ctx, rect);
+                ctx.lineWidth=1.5*scale;
+                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                this.draw_corner(ctx, rect, scale);
             }, this);
         },
 
-        draw_corner: function(ctx, rect) {
+        draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
                 let posHandle = {x:0, y:0};
                 switch (rect.corner) {
@@ -128,18 +124,17 @@ export default {
                 }
                 ctx.fillStyle = "#FF0000";
                 ctx.beginPath();
-                ctx.arc(posHandle.x * this.ratio, posHandle.y * this.ratio, 3, 0, 2 * Math.PI);
+                ctx.arc(posHandle.x * scale, posHandle.y * scale, 3, 0, 2 * Math.PI);
                 ctx.fill();
             }
         },
         update_canvas: function (current) {
-            this.$store.dispatch('setCurRect', {rect: current});
             this.redraw_canvas();
         },
         handleKeyEvent: function (event) {
             this.$store.dispatch('handleKeyEvent', event);
             this.redraw_canvas();
-        }
+        },
     },
     mounted: function(){
         this.setInitCanvasImage()

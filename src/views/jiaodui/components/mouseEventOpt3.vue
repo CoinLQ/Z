@@ -6,7 +6,7 @@
 import  _ from 'lodash';
 
 export default {
-	props:["canvasId", "ratio"],
+	props:["canvasId"],
 
     computed: {
         canvas() {
@@ -19,7 +19,7 @@ export default {
             current: {},
             draw: {
                 drawing: false,
-                additions: [],
+                additions: null,
                 enable: true,
             },
             drag: {
@@ -75,28 +75,26 @@ export default {
                 mouse.x = ev.clientX;
                 mouse.y = ev.clientY;
             }
+            let scale = this.$store.getters.scale;
             let documentScrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
             let documentScrollLeft = document.documentElement.scrollLeft || window.pageXOffset || document.body.scrollLeft;
             let offsety = this.canvas.getBoundingClientRect().top+documentScrollTop;
             let offsetx = this.canvas.getBoundingClientRect().left+documentScrollLeft;
-            let yy = (mouse.y-offsety)/this.ratio;
-            let xx = (mouse.x-offsetx)/this.ratio;
+            let yy = (mouse.y-offsety)/scale;
+            let xx = (mouse.x-offsetx)/scale;
             return {x: xx, y: yy}
         },
-        contains_mouse: function(point, rects) {
-            var rect = _.find(rects, function(r) {
+        getRectOverByPoint: function(point, rects) {
+            return _.find(rects, function(r) {
                 let dx = point.x - r.x;
                 let dy = point.y - r.y;
                 return 0 <= dx && dx<=r.w &&
                     0 <= dy && dy<=r.h;
             });
-            return rect;
         },
-        getRectOverByPoint: function(rects, point) {
-            let rect;
-
-            if (!(rect = this.contains_mouse(point, rects))) {
-                return null;
+        markRectSelected: function(rect, point) {
+            if (!rect) {
+                return;
             }
             window.nn = this;
             if (this.current.id) {
@@ -112,7 +110,6 @@ export default {
     },
     mounted: function(){
         let _this = this;
-        /* this.drag.handle_size *= this.ratio; */
 
         _this.canvas.onselectstart = function(e) { e.preventDefault(); return false; };
         _this.canvas.onmousedown = function (event) {
@@ -121,7 +118,8 @@ export default {
                 _this.drag.draggable = true;
             } else {
                 let point= _this.translat_point(event)
-                let rect = _this.getRectOverByPoint(rects, point);
+                let rect = _this.getRectOverByPoint(point, rects);
+                _this.markRectSelected(rect, point);
 
                 console.log("mouse key pressed");
                 if (!rect && _this.draw.enable) {
@@ -130,22 +128,25 @@ export default {
                     new_rect.id = '';
                     new_rect.hans = '';
                     new_rect.confidence = 1.0;
-                    new_rect.x = point.x;
-                    new_rect.y = point.y;
+                    new_rect.x = point.x -5;
+                    new_rect.y = point.y -5;
                     new_rect.w = 5;
                     new_rect.h = 5;
-                    _this.draw.additions.push(new_rect)
+                    new_rect.op = 4;
+                    new_rect.cc = 0.5;
+                    new_rect.char = '';
+                    _this.draw.additions = new_rect;
                     _this.$store.commit('pushRects', {rect:new_rect});
                 }
             }
-            _this.redraw_canvas()            
+            _this.redraw_canvas()
         };
         _this.canvas.onmousemove = _.throttle(function (event) {
             window.nn = _this;
             _this.current = _this.$store.getters.curRect;
             let point= _this.translat_point(event)
             if (_this.draw.drawing) {
-                let _new = _this.draw.additions[_this.draw.additions.length-1]
+                let _new = _this.draw.additions;
                 _new.w = point.x - _new.x;
                 _new.h = point.y - _new.y;
                 _this.redraw_canvas();
@@ -221,6 +222,12 @@ export default {
                 _this.current.mselected = false;
             }
             _this.draw.drawing = false;
+            let r = _this.draw.additions;
+            if (r.w * r.h <= 25) {
+                _this.$store.commit('pullRect', {rect: r});
+            } else {
+                _this.$store.commit('setCurRect', {rect: r});
+            }
 
             _this.redraw_canvas()
         };

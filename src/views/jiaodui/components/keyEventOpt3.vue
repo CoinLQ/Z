@@ -20,14 +20,19 @@ export default {
 			        32: 'select', // space
 			        88: 'drul', // x for down right up left
 			        75: 'delete', // k
+			        49: 'scale-1', // 1
+			        50: 'scale-2', // 2
+			        51: 'scale-3', // 3
+			        52: 'scale-4', // 4
+			        53: 'scale-5', // 5
+			        54: 'scale-6', // 6
 			    }
 
 			    let action = actionMap[event.keyCode];
 			    if (action) {
 			        event.preventDefault()
-			        _this.$emit('keyEvent', {action: action, modify:{enlarge: event.shiftKey, shrink: event.altKey, scale: event.ctrlKey}});
+			        _this.$emit('keyEvent', {action: action, modify:{enlarge: event.shiftKey, shrink: event.altKey, step: event.ctrlKey}});
 			    }
-            return;
         }, 100);
     }
 }
