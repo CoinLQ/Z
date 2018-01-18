@@ -23,7 +23,8 @@ export default {
     data: function () {
         return {
             unit: 5,
-            curRect: {}
+            curRect: {},
+            rects: []
         };
     },
     mounted: function() {
@@ -31,32 +32,29 @@ export default {
         let _this = this;
         _this.unit = (_this.unit / _this.$store.getters.ratio) |0;
         window.document.body.onkeydown = function(event) {
+            let eat=false;
             _this.curRect = _this.$store.getters.curRect;
-            if (_this.curRect) {
-                // 操作区键盘事件
-                if (Vue.config.keyCodes.directions.includes(event.keyCode)) {
-                    if (!event.altKey && !event.shiftKey) {
-                        _this.move(event);
-                    } else if (event.altKey) {
-                        _this.enlarge(0, event);
-                    } else if (event.shiftKey) {
-                        _this.shrink(0, event);
-                    }
-                } else if ((event.keyCode == 32) && !event.altKey && !event.ctrlKey) {
-                    _this.selected(event);
-                } else if (event.keyCode == 88) {
-                    if (event.altKey) {
-                        _this.enlarge(1, event);
-                    } else if (event.shiftKey) {
-                        _this.shrink(1, event);
-                    }
+            _this.rects = _this.$store.getters.rects;
+            if (Vue.config.keyCodes.directions.includes(event.keyCode)) {
+                if (!event.altKey && !event.shiftKey) {
+                    _this.move(event); eat=true;
+                } else if (event.altKey) {
+                    _this.enlarge(0, event); eat=true;
+                } else if (event.shiftKey) {
+                    _this.shrink(0, event); eat=true;
                 }
-            } else {
-                // TODO：字块区键盘事件处理, release后控制字块区的选中
+            } else if ((event.keyCode == 32) && !event.altKey && !event.ctrlKey) {
+                _this.selected(event); eat=true;
+            } else if (event.keyCode == 88) {
+                if (event.altKey) {
+                    _this.enlarge(1, event); eat=true;
+                } else if (event.shiftKey) {
+                    _this.shrink(1, event); eat=true;
+                }
             }
-
-            if (event.preventDefault) event.preventDefault();
-
+            // if for sure that key combo conflicts with other action, enable event filter.
+            // if (event.preventDefault) event.preventDefault();
+            if (eat) event.preventDefault();
         }
     },
     watch: {
@@ -74,7 +72,7 @@ export default {
         move: function (ev) { //移到
             var d = this.direction(ev.keyCode);
             this.logCurRect('move', d);
-            if(this.curRect){
+            if(this.curRect.kselected){
                 if(d == 'left' && this.curRect.x > this.unit){
                     this.curRect.x -= this.unit;
                 }
@@ -87,15 +85,28 @@ export default {
                 else if(d == 'down'){
                     this.curRect.y += this.unit;
                 }
-                this.redraw_canvas();
                 this.logCurRect('move', d);
             }
-            return false;
+            else {
+                let next;
+                if (d == 'left' || d == 'up') {
+                    // this.$store.commit('setNextCurRect', {next: -1});
+                    next = -1;
+                } else {
+                    // this.$store.commit('setNextCurRect', {next: 1});
+                    next = 1;
+                }
+                let index = _(this.rects).findIndex({cc: this.curRect.cc}) + next;
+                let len = this.rects.length;
+                index = index < 0 ? 0 : (index >= len ? len - 1 : index);
+                this.curRect = this.rects[index];
+            }
+            this.redraw_canvas();
         },
         shrink: function (f, ev) { //缩小
             var d = this.direction(ev.keyCode);
             this.logCurRect('shrink', d);
-            if(this.curRect){
+            if(this.curRect.kselected){
                 if(f || (d == 'left' && this.curRect.w > this.unit)){
                     this.curRect.w -= this.unit;
                 }
@@ -117,7 +128,7 @@ export default {
         enlarge: function (f, ev) { //放大
             var d = this.direction(ev.keyCode);
             this.logCurRect('enlarge', d);
-            if(this.curRect){
+            if(this.curRect.kselected){
                 if(f || (d == 'left' && this.curRect.x > this.unit)){
                     this.curRect.x -= this.unit;
                     this.curRect.w += this.unit;
@@ -138,17 +149,16 @@ export default {
         },
         selected: function (ev) {
             this.logCurRect('selected', this.direction(ev.keyCode));
-            if(this.curRect){
-                this.curRect = null;  //置为空, 触发watch事件, 释放焦点.
-                this.$emit('releasenow');
-                //todo 向父组件发送 释放信号.
+            if(!this.curRect.kselected){
+                this.curRect.kselected = true;  //置为空, 触发watch事件, 释放焦点.
             }
             else {
-                //this.curRect = {};
+                this.curRect.kselected = false;
             }
+            this.redraw_canvas();
         },
         logCurRect: function (opt, direct) {
-            if(this.curRect){
+            if(this.curRect.kselected){
                 console.log(opt+'>>>'+direct+'>>>current{ x: '+this.curRect.x+', y: '+this.curRect.y+', w: '+this.curRect.w+', h: '+this.curRect.h+'}');
             }
             else {
