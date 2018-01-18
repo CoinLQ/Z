@@ -71,6 +71,7 @@
             </Row>
         </Col>
     </Row>
+    <help></help>
 </div>
 </template>
 
@@ -79,6 +80,7 @@ import canvasOp from './canvas_op3.vue';
 import glyphBlock from './glyph_block.vue';
 import util from '@/libs/util';
 import _ from 'lodash';
+import help from './help.vue';
 
 export default {
     name: 'confidence',
@@ -87,6 +89,7 @@ export default {
     components: {
         canvasOp,
         glyphBlock,
+        help
     },
     computed: {
         // Make sure canvas is properly displayed within the window height.

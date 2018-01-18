@@ -18,23 +18,27 @@
 </style>
 <template>
 <div>
-<div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
-  <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
-</div>
-<div class="button-wrapper"><Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
-    <span v-if="!isBtnLoading">提交</span>
-    <span v-else>进行中</span>
-</Button></div>
+  <div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
+    <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
+  </div>
+  <div class="button-wrapper">
+    <Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+      <span v-if="!isBtnLoading">提交</span>
+      <span v-else>进行中</span>
+    </Button>
+  </div>
+  <help></help>
 </div>
 </template>
 <script>
 import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
+import help from "./components/help";
 
 export default {
   name: "bPage",
   components: {
-    canvasOp
+    canvasOp, help
   },
   data() {
     return {
