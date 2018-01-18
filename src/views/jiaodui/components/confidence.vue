@@ -4,7 +4,8 @@
         border: 1px;
         text-align: center;
         color: #9ea7b4;
-        display: flex;
+        /*display: flex;*/
+        display: none;
     }
 
     .header {
@@ -26,6 +27,17 @@
         background-color: #cccccc;
         box-shadow: 0px 0px 3px 3px #363E4E;
     }
+
+    .glyph-wrapper {
+        display: flex;
+        flex-flow: column wrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        align-content: flex-start;
+        overflow: scroll;
+    }
+
+
 </style>
 <template>
 <div class="layout">
@@ -37,9 +49,11 @@
                     <div class="header">已完成区域总数：{{postCheckTotal}}</div>
                 </div>
             </Row>
-            <Row type="flex" justify="start" class="code-row-bg">
-                <div v-for="r in rectData">
-                    <glyph-block :imgData="getImageData(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
+            <Row>
+                <div class="glyph-wrapper" :style="{height: getHeight, flexDirection: getDirection}">
+                    <div v-for="r in rectData">
+                        <glyph-block :imgData="getImageData(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
+                    </div>
                 </div>
             </Row>
             <Row type="flex" align="bottom" justify="center">
@@ -51,7 +65,7 @@
         </Col>
         <Col span="7" :xs="14" :sm="11" :md="9" :lg="6">
             <Row>
-                <div ref="wrapper" class="canvas-layout" :style="{height: getHeight}">
+                <div ref="wrapper" class="canvas-layout" :style="{height: getHeightCanvas}">
                     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
                 </div>
             </Row>
@@ -76,8 +90,16 @@ export default {
     },
     computed: {
         // Make sure canvas is properly displayed within the window height.
-        getHeight: function () {
-            return window.innerHeight + 'px';
+        getHeightCanvas: function () {
+            return (window.innerHeight - 130) + 'px';
+        },
+
+        getHeight: function() {
+            return (window.innerHeight - 145) + 'px';
+        },
+
+        getDirection: function() {
+            return this.rectData.length > 20? 'column' : 'row';
         }
     },
     data () {
