@@ -97,12 +97,13 @@ export default {
                 return;
             }
             window.nn = this;
-            if (this.current.id) {
+            // if (this.current.id) {
                 this.current.mselected = false;
-            }
+            // }
             this.current = rect;
             this.current.mselected = true;
             this.current.$ = point;
+            this.$store.commit('setCurRect',{rect: this.current});
         },
         redraw_canvas() {
             this.$emit('drawnow', this.current);
@@ -197,7 +198,7 @@ export default {
                         break;
                 }
                 _this.redraw_canvas();
-                _.debounce(() => {  _this.drag.draggable = false; _this.drag.current = none; _this.redraw_canvas(); }, 100)
+                _.debounce(() => {  _this.drag.draggable = false; _this.drag.current = {}; _this.redraw_canvas(); }, 100)
             }
             else if (_this.current.mselected) {
                 _this.current.x += point.x - _this.current.$.x;
@@ -225,7 +226,6 @@ export default {
             }
 
             if (_this.draw.drawing) {
-                _this.draw.drawing = false;
                 let r = _this.draw.additions;
                 if (r.w * r.h <= 25) {
                     _this.$store.commit('pullRect', {rect: r});
@@ -233,6 +233,7 @@ export default {
                     _this.$store.commit('setCurRect', {rect: r});
                 }
             }
+            _this.draw.drawing = false;
 
             _this.redraw_canvas()
         };
