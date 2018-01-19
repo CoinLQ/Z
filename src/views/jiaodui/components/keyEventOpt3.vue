@@ -35,7 +35,7 @@ export default {
 			        55: 'scale-7', // 7
 			        56: 'scale-8', // 8
 			        57: 'scale-9', // 9
-			        72: 'help', // h
+			        112: 'help', // F1
 			    }
 
 			    let action = actionMap[event.keyCode];
