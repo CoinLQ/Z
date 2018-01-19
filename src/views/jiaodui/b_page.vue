@@ -1,20 +1,31 @@
 <style scoped>
-.layout-content-main {
-  padding: 10px;
-  border: 1px;
-  text-align: center;
-  color: #9ea7b4;
-}
+    .layout-content-main {
+      padding: 10px;
+      border: 1px;
+      text-align: center;
+      color: #9ea7b4;
+    }
 
-.canvas-layout {
-    overflow: scroll;
-    text-align: center;
-    padding: 4px;
-    margin: 10px;
-    background-color: #cccccc;
-    box-shadow: 0px 0px 3px 3px #363E4E;
-}
+    .canvas-layout {
+        overflow: scroll;
+        text-align: center;
+        padding: 4px;
+        margin: 10px;
+        background-color: #cccccc;
+        box-shadow: 0px 0px 3px 3px #363E4E;
+    }
 
+    .button {
+        background-color: #cccccc29;
+        border-color: #cccccc;
+        width: 98%;
+    }
+
+    .button:hover {
+        color: #fff;
+        background-color: #19be6b; /*#28a9e4*/
+        border-color: #47cb89; /*#4782cb*/
+    }
 </style>
 <template>
 <div>
@@ -22,7 +33,7 @@
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
   <div class="button-wrapper">
-    <Button type="success" size="large" shape="circle" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+    <Button type="success" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
       <span v-if="!isBtnLoading">提交</span>
       <span v-else>进行中</span>
     </Button>

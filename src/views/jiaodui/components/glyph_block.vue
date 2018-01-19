@@ -106,7 +106,7 @@
 		methods: {
 			onClick() {
 				this.isActive = true;
-				this.$store.commit('setFocusItem', {item: this, curRect: this.rect, image:this.image});
+				this.$store.commit('setCurGlyph', {glyph: this, curRect: this.rect, image:this.image});
 				this.$emit('highlight', this);
 			},
 
@@ -152,7 +152,7 @@
                     rect.h = 5;
                 }
                 return rect;
-			}
+			},
 		}
 	}
 </script>

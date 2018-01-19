@@ -28,7 +28,7 @@
         box-shadow: 0px 0px 3px 3px #363E4E;
     }
 
-    .glyph-wrapper {
+    .glyph-list {
         display: flex;
         flex-flow: column wrap;
         align-items: flex-start;
@@ -37,7 +37,17 @@
         overflow: scroll;
     }
 
+    .button {
+        background-color: #cccccc29;
+        border-color: #cccccc;
+        width: 98%;
+    }
 
+    .button:hover {
+        color: #fff;
+        background-color: #19be6b;
+        border-color: #47cb89;
+    }
 </style>
 <template>
 <div class="layout">
@@ -49,15 +59,15 @@
                     <div class="header">已完成区域总数：{{postCheckTotal}}</div>
                 </div>
             </Row>
-            <Row>
-                <div class="glyph-wrapper" :style="{height: getHeight, flexDirection: getDirection}">
+            <Row ref="glyphs">
+                <div class="glyph-list" :style="{height: getHeight, flexDirection: getDirection}">
                     <div v-for="r in rectData">
                         <glyph-block :imgData="getImageData(r)" :rectData="r" :active=false @highlight="onHighlight"></glyph-block>
                     </div>
                 </div>
             </Row>
             <Row type="flex" align="bottom" justify="center">
-                <Button type="success" size="large" shape="circle" style="width:98%;" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+                <Button type="success" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
                     <span v-if="!isBtnLoading">提交</span>
                     <span v-else>进行中</span>
                 </Button>
@@ -81,6 +91,7 @@ import glyphBlock from './glyph_block.vue';
 import util from '@/libs/util';
 import _ from 'lodash';
 import help from './help.vue';
+import bus from '@/bus';
 
 export default {
     name: 'confidence',
@@ -117,6 +128,9 @@ export default {
     mounted() {
         this.$store.commit('resetAll');
         this.$store.commit('setScale', {scale: 6});
+        bus.$on('keyEvent', function(event) {
+            if (event.target == 'glyph') this.handleKeyEvent(event);
+        }.bind(this));
     },
 
     methods: {
@@ -145,11 +159,41 @@ export default {
 
         submit() {
             let rects = this.$store.getters.rects;
-            let deleted = this.$store.getters.delRects;
-            let all = [].concat(rects).concat(deleted);
 
-            this.$emit('submit', all);
+            this.$emit('submit', rects);
         },
+
+        handleKeyEvent(event) {
+            setImmediate(function(){
+                let act = event.action;
+                let step = event.modify.enlarge ? 5 : 1;
+                let next = 1;
+                if (act == 'mov-up' || act == 'mov-left') {
+                    next = -1;
+                } else if (act == 'mov-down' || act == 'mov-right') {
+                    next = 1;
+                }
+                let curGlyph = this.$store.getters.curGlyph;
+                let list = this.$refs.glyphs.$children;
+                let index = _(list).indexOf(curGlyph) + next * step;
+                let len = list.length;
+
+                index = index < 0 ? len + index : (index >= len ? index - len : index);
+                list[index].onClick();
+
+
+                let gwidth = 140; // 140 for width of glyph-block
+                let gheight = 187; // 187 for height of glyph-block
+                let container = document.getElementsByClassName('glyph-list')[0];
+                let cheight = container.clientHeight;
+                let cwidth = container.clientWidth;
+                let verticalNum = ~~(cheight/gheight); // ~~ get floor of a float number
+                let horiNum = ~~(index/verticalNum); // Now we have the location of a glyph-block
+                let x = horiNum * gwidth - cwidth/3;
+                let y = (~~((index/verticalNum - ~~(index/verticalNum)) * verticalNum) - 1) * gheight - cheight/3;
+                container.scrollTo(x, y);
+            }.bind(this));
+        }
     }
 }
 </script>

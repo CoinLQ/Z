@@ -1,6 +1,6 @@
 <template>
   <canvas :id="canvasId">
-      <KeyEventOpt @keyEvent="handleKeyEvent"></KeyEventOpt>
+      <KeyEventOpt></KeyEventOpt>
       <MouseEventOpt :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
   </canvas>
 </template>
@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import KeyEventOpt from "./keyEventOpt3";
 import MouseEventOpt from "./mouseEventOpt3";
+import bus from '@/bus';
 
 export default {
     name: 'canvasOp',
@@ -75,7 +76,7 @@ export default {
                 } else if (rect.kselected) {
                     ctx.strokeStyle="rgba(255,255,0,1)";
                 } else if (rect == current) {
-                    ctx.strokeStyle="rgba(0,255,0,1)";
+                    ctx.strokeStyle="rgba(0,255,0,1)"; //#00ff0180
                 } else {
                     ctx.strokeStyle="rgba(56,56,255,1)";
                 }
@@ -139,6 +140,9 @@ export default {
     },
     mounted: function(){
         this.setInitCanvasImage()
+        bus.$on('keyEvent', function(event) {
+            if (event.target == 'canvas') this.handleKeyEvent(event);
+        }.bind(this));
     }
 };
 </script>

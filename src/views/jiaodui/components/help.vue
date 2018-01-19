@@ -57,8 +57,9 @@ export default {
     mounted: function() {
     	let _this = this;
 
-    	bus.$on('toggleHelp', function(t) {
-    		_this.toHide = _this.toHide ? false : true;
+    	bus.$on('keyEvent', function(t) {
+    		if (t.action == 'help')
+	    		_this.toHide = _this.toHide ? false : true;
     	})
     }
 }
