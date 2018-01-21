@@ -40,13 +40,12 @@
     .button {
         background-color: #cccccc29;
         border-color: #cccccc;
-        width: 98%;
     }
 
     .button:hover {
         color: #fff;
-        background-color: #19be6b;
-        border-color: #47cb89;
+        background-color: #2db7f5; /*#19be6b; /*#28a9e4*/
+        border-color: #2db7f5; /*#47cb89; /*#4782cb*/
     }
 </style>
 <template>

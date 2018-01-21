@@ -18,8 +18,9 @@ export default {
     mounted: function() {
     	let _this = this;
 
-        document.body.onkeydown = function(event) {
-    		// console.log("keydown event")
+        document.body.onkeydown = _.throttle(function(event) {
+    		// console.log("keydown event ");
+    		// console.dir(event);
             let actionMap =  {
 		        38: 'mov-up', // up
 		        87: 'mov-up', // w
@@ -57,7 +58,7 @@ export default {
 	        bus.$emit('keyEvent', {target: _this.target,action: action, modify:{enlarge: event.shiftKey, shrink: event.altKey, step: event.ctrlKey}});
 
 	        event.preventDefault();
-        }
+        }, 200);
     }
 }
 </script>

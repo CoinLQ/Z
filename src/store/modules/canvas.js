@@ -8,7 +8,8 @@ const canvas = {
         rects: [],
         rectsOfDel: [],
         scale: 1,
-        image: {empty: true}
+        image: {empty: true},
+        cover: false,
     },
     getters: {
         curRect: state => {
@@ -28,6 +29,9 @@ const canvas = {
         },
         curGlyph: state => {
             return state.curGlyph;
+        },
+        cover: state => {
+            return state.cover;
         }
 
     },
@@ -37,6 +41,7 @@ const canvas = {
             state.rects.length = 0;
             state.scale = 1;
             state.image = {empty: true};
+            state.cover = false;
         },
 
         setCurGlyph (state, payload) {
@@ -96,6 +101,10 @@ const canvas = {
 
         setImage(state, payload) {
             state.image = payload.image;
+        },
+
+        setCover(state, payload) {
+            state.cover = payload.cover;
         },
 
         setNextCurRect(state, payload) { // TODO: deprecated
@@ -159,7 +168,7 @@ const canvas = {
             cur.op = 2;
         },
 
-        moveRect(state, payload) {
+        resizeRect(state, payload) {
             let cur = state.curRect;
             let unit = payload.unit;
             let action = payload.action;
@@ -229,7 +238,7 @@ const canvas = {
                 return
             }
 
-            // key-mov will change focused rect
+            // key-mov will iterate focused rect
             if (!cur.kselected && _.startsWith(action, 'mov')) {
 
                 let next = (action == 'mov-left' || action == 'mov-up') ? -1 : 1;
@@ -255,7 +264,7 @@ const canvas = {
                 commit('shrinkRect', {action: action, unit: unit, all: all});
 
             } else { // Move
-                commit('moveRect', {action: action, unit: unit});
+                commit('resizeRect', {action: action, unit: unit});
             }
             commit('correctCurRect');
             commit('updateItemRect');

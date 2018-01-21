@@ -18,13 +18,21 @@
     .button {
         background-color: #cccccc29;
         border-color: #cccccc;
-        width: 98%;
     }
 
     .button:hover {
         color: #fff;
-        background-color: #19be6b; /*#28a9e4*/
-        border-color: #47cb89; /*#4782cb*/
+        background-color: #2db7f5; /*#19be6b; /*#28a9e4*/
+        border-color: #2db7f5; /*#47cb89; /*#4782cb*/
+    }
+
+    .switch {
+        font-size: 1rem;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        width: 99%;
+        margin: 5px;
     }
 </style>
 <template>
@@ -32,8 +40,11 @@
   <div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
+  <div class="switch">
+    <Switch v-model="switch1" @on-change="changeSwitch" style="margin: auto 5px;"></Switch>打开覆盖
+  </div>
   <div class="button-wrapper">
-    <Button type="success" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+    <Button type="info" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
       <span v-if="!isBtnLoading">提交</span>
       <span v-else>进行中</span>
     </Button>
@@ -47,12 +58,13 @@ import util from "@/libs/util";
 import help from "./components/help";
 
 export default {
-  name: "bPage",
+  name: "bCheckLeak",
   components: {
     canvasOp, help
   },
   data() {
     return {
+      switch1: false,
       rects: [
         {
           x: 143,
@@ -139,6 +151,11 @@ export default {
       }.bind(this));
       window.wrapper = this.$refs.wrapper;
     },
+
+    changeSwitch() {
+      this.$store.commit('setCover', {cover: this.switch1});
+      this.updateCanvas += 1;
+    }
   }
 };
 </script>
