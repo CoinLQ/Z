@@ -26,7 +26,7 @@
 	}
 
 	.char {
-		display: none;
+		/*display: none;*/
 	    text-align: center;
 	    background-color: #2E363F;
 	    color: white;
@@ -52,6 +52,10 @@
 	.active {
 		background-color: #27A9E3;
 	}
+
+	.glyph-wrapper {
+		/*display: flex;*/
+	}
 </style>
 
 <template>
@@ -59,7 +63,7 @@
 		<div class="inner-wrapper" @click="onClick">
 			<div class="glyph-wrapper">
 				<div class="glyph"><img :src="clip"></div>
-				<div class="glyph char"><div class="char-wrapper">{{rectData.word}}</div></div>
+				<div class="glyph char"><div class="char-wrapper">{{rectData.ch}}</div></div>
 			</div>
 			<div class="confidence" :class="{active:isActive}">
 				<label>{{ rectData.cc }}</label>

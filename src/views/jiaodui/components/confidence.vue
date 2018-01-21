@@ -143,9 +143,9 @@ export default {
         scrollToRect() {
             let scale = this.$store.getters.scale;
             let rect = this.$store.getters.curRect;
-            setImmediate(function() {
+            this.$nextTick(function() {
                 this.$refs.wrapper.scrollTo(0, Math.max(rect.y * scale - (window.innerHeight/3), rect.y));
-            }.bind(this));
+            });
             window.wrapper = this.$refs.wrapper;
         },
 
@@ -163,7 +163,7 @@ export default {
         },
 
         handleKeyEvent(event) {
-            setImmediate(function(){
+            this.$nextTick(function(){
                 let act = event.action;
                 let step = event.modify.enlarge ? 5 : 1;
                 let next = 1;
@@ -182,7 +182,7 @@ export default {
 
 
                 let gwidth = 140; // 140 for width of glyph-block
-                let gheight = 187; // 187 for height of glyph-block
+                let gheight = 302; // 187 for height of glyph-block, 302 for height including char block
                 let container = document.getElementsByClassName('glyph-list')[0];
                 let cheight = container.clientHeight;
                 let cwidth = container.clientWidth;
@@ -191,7 +191,7 @@ export default {
                 let x = horiNum * gwidth - cwidth/3;
                 let y = (~~((index/verticalNum - ~~(index/verticalNum)) * verticalNum) - 1) * gheight - cheight/3;
                 container.scrollTo(x, y);
-            }.bind(this));
+            });
         }
     }
 }
