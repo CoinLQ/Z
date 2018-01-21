@@ -19,12 +19,12 @@
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <div class="item email">
                             <FormItem prop="email">
-                                <Input v-model="form.email" placeholder="请输入邮箱地址"></Input>
+                                <Input v-model.trim="form.email" placeholder="请输入邮箱地址"></Input>
                             </FormItem>
                         </div>
                         <div class="item password">
                             <FormItem prop="password">
-                                <Input v-model="form.password" placeholder="请输入密码" type="password" ></Input>
+                                <Input v-model.trim="form.password" placeholder="请输入密码" type="password" ></Input>
                                 <router-link :to="{name: 'resetpasswd'}"><span class="forget">忘记密码?</span></router-link>
                             </FormItem>
                         </div>

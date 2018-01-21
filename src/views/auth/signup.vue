@@ -19,17 +19,17 @@
                     <Form ref="regForm" :model="form" :rules="rules">
                         <div class="item email">
                             <FormItem prop="email">
-                                <Input v-model="form.email" placeholder="请输入用户名"></Input>
+                                <Input v-model.trim="form.email" placeholder="请输入用户名"></Input>
                             </FormItem>
                         </div>
                         <div class="item password">
                             <FormItem prop="password">
-                                <Input v-model="form.password" placeholder="请输入密码" type="password" ></Input>
+                                <Input v-model.trim="form.password" placeholder="请输入密码" type="password" ></Input>
                             </FormItem>
                         </div>
                         <div class="item checkmark">
                             <FormItem prop="repassword">
-                                <Input v-model="form.repassword" placeholder="再输入密码" type="password" ></Input>
+                                <Input v-model.trim="form.repassword" placeholder="再输入密码" type="password" ></Input>
                             </FormItem>
                         </div>
                     </Form>
@@ -40,7 +40,7 @@
                 <div class="btn" @click="handleSubmit"><img src="././img/btn-v1.png" alt=""></div>
             </div>
         </div>
-    </div>    
+    </div>
 </template>
 
 <script>
@@ -133,7 +133,7 @@ export default {
         gotoLogin() {
              this.$router.push({
                 name: 'login'
-            });           
+            });
         }
     }
 };
