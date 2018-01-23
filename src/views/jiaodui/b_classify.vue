@@ -9,7 +9,7 @@ import util from '@/libs/util';
 import confidence from './components/confidence';
 
 export default {
-    name: 'bConfidence',
+    name: 'bClassify',
     components: {
         confidence,
     },

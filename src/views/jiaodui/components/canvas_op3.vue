@@ -1,6 +1,6 @@
 <template>
   <canvas :id="canvasId">
-      <KeyEventOpt @keyEvent="handleKeyEvent"></KeyEventOpt>
+      <KeyEventOpt></KeyEventOpt>
       <MouseEventOpt :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
   </canvas>
 </template>
@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import KeyEventOpt from "./keyEventOpt3";
 import MouseEventOpt from "./mouseEventOpt3";
+import bus from '@/bus';
 
 export default {
     name: 'canvasOp',
@@ -67,20 +68,26 @@ export default {
         drawAllRect: function(ctx, scale){
             let current = this.$store.getters.curRect;
             let rects = this.$store.getters.rects;
+            let cover = this.$store.getters.cover;
+
             rects.forEach(function(rect,i){
-                if (rect.mselected && rect.kselected) {
-                    ctx.strokeStyle="rgba(255,0,255,1)";
-                } else if (rect.mselected) {
-                    ctx.strokeStyle="rgba(255,0,0,1)";
+                if (rect.mselected) {
+                    ctx.strokeStyle="#1892e8bf"; // green
                 } else if (rect.kselected) {
-                    ctx.strokeStyle="rgba(255,255,0,1)";
+                    ctx.strokeStyle="#e8e818bf"; // yellow // #e32764e6
                 } else if (rect == current) {
-                    ctx.strokeStyle="rgba(0,255,0,1)";
+                    ctx.strokeStyle="#2aa766"; //blue //"#2aa366";
                 } else {
-                    ctx.strokeStyle="rgba(56,56,255,1)";
+                    rect.red = rect.red || util.getRed();
+                    ctx.strokeStyle=rect.red;
                 }
                 ctx.lineWidth=1.5*scale;
                 ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+
+                if (cover) {
+                    ctx.fillStyle = '#BEB7ADE0';
+                    ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                }
                 this.draw_corner(ctx, rect, scale);
             }, this);
         },
@@ -139,6 +146,9 @@ export default {
     },
     mounted: function(){
         this.setInitCanvasImage()
+        bus.$on('keyEvent', function(event) {
+            if (event.target == 'canvas') this.handleKeyEvent(event);
+        }.bind(this));
     }
 };
 </script>

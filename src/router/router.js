@@ -88,9 +88,12 @@ export const appRouter = [
             title: '切分校对',
             component: Main,
             children: [
-                { path: 'confidence', title: '置信校对', name: 'zhixin-jiaodui', icon: 'connection-bars', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
-                { path: 'classify', title: '聚类校对', name: 'julei-jiaodui', icon: 'ios-pricetags-outline', component: resolve => { require(['@/views/jiaodui/b_classify.vue'], resolve); } },
-                { path: 'page', title: '逐字校对', name: 'zhuzi-jiaodui', icon: 'images', component: resolve => { require(['@/views/jiaodui/b_page.vue'], resolve); } }
+                { path: 'confidence', title: '置信校对', name: 'zhixin-jiaodui', icon: 'arrow-graph-up-right', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
+                { path: 'classify', title: '聚类校对', name: 'julei-jiaodui', icon: 'ios-keypad', component: resolve => { require(['@/views/jiaodui/b_classify.vue'], resolve); } },
+                { path: 'checkleak', title: '查漏校对', name: 'chalou-jiaodui', icon: 'pinpoint', component: resolve => { require(['@/views/jiaodui/b_CheckLeak.vue'], resolve); } },
+                { path: 'onebyone', title: '逐字校对', name: 'zhuzi-jiaodui', icon: 'images', component: resolve => { require(['@/views/jiaodui/b_OneByOneCheck.vue'], resolve); } },
+                { path: 'checkdel', title: '删除审定', name: 'shanchu-jiaodui', icon: 'ios-close-outline', component: resolve => { require(['@/views/jiaodui/b_CheckDel.vue'], resolve); } },
+                { path: 'compare', title: '反馈审查', name: 'fankui-jiaodui', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/jiaodui/b_compare.vue'], resolve); } },
             ]
         }
 

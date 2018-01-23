@@ -1,14 +1,15 @@
 const canvas = {
     state: {
         // for glyph block callback
-        focusedItem: null,
+        curGlyph: null,
 
         // for data sync between canvas, keyeventopt and mouseeventopt
         curRect: {empty: true},
         rects: [],
         rectsOfDel: [],
         scale: 1,
-        image: {empty: true}
+        image: {empty: true},
+        cover: false,
     },
     getters: {
         curRect: state => {
@@ -25,6 +26,12 @@ const canvas = {
         },
         delRects: state => {
             return state.rectsOfDel;
+        },
+        curGlyph: state => {
+            return state.curGlyph;
+        },
+        cover: state => {
+            return state.cover;
         }
 
     },
@@ -34,23 +41,24 @@ const canvas = {
             state.rects.length = 0;
             state.scale = 1;
             state.image = {empty: true};
+            state.cover = false;
         },
 
-        setFocusItem (state, payload) {
-            if (state.focusedItem === payload.item) return;
+        setCurGlyph (state, payload) {
+            if (state.curGlyph === payload.glyph) return;
 
-            if (state.focusedItem) {
-                state.focusedItem.resetFocus();
+            if (state.curGlyph) {
+                state.curGlyph.resetFocus();
             }
-            state.focusedItem = payload.item;
+            state.curGlyph = payload.glyph;
             state.curRect = payload.curRect;
             state.rects = [payload.curRect];
             state.image = payload.image;
         },
 
         updateItemRect (state, payload) {
-            if (state.focusedItem) {
-                state.focusedItem.updateClip(state.curRect);
+            if (state.curGlyph) {
+                state.curGlyph.updateClip(state.curRect);
             }
         },
 
@@ -95,6 +103,10 @@ const canvas = {
             state.image = payload.image;
         },
 
+        setCover(state, payload) {
+            state.cover = payload.cover;
+        },
+
         setNextCurRect(state, payload) { // TODO: deprecated
             let index = _(state.rects).indexOf(state.curRect) + payload.next;
             let len = state.rects.length;
@@ -112,6 +124,7 @@ const canvas = {
             let cur = state.curRect;
             let unit = payload.unit;
             let action = payload.action;
+            let all = payload.all;
 
             if (all || action == 'mov-up') {
                 cur.y -= unit;
@@ -135,6 +148,7 @@ const canvas = {
             let cur = state.curRect;
             let unit = payload.unit;
             let action = payload.action;
+            let all = payload.all;
 
             if (all || action == 'mov-up') {
                 cur.h -= unit;
@@ -154,7 +168,7 @@ const canvas = {
             cur.op = 2;
         },
 
-        moveRect(state, payload) {
+        resizeRect(state, payload) {
             let cur = state.curRect;
             let unit = payload.unit;
             let action = payload.action;
@@ -213,7 +227,6 @@ const canvas = {
 
 
             let unit = payload.modify.step ? 10 : 2;
-            let all = action == 'drul';
 
             if (action == 'select') {
                 if (cur.kselected) {  // selected by keydown operation
@@ -225,7 +238,7 @@ const canvas = {
                 return
             }
 
-            // key-mov will change focused rect
+            // key-mov will iterate focused rect
             if (!cur.kselected && _.startsWith(action, 'mov')) {
 
                 let next = (action == 'mov-left' || action == 'mov-up') ? -1 : 1;
@@ -243,15 +256,15 @@ const canvas = {
                 return
             }
 
-
+            let all = action == 'drul';
             if (payload.modify.enlarge) {
-                commit('enlargeRect', {action: action, unit: unit});
+                commit('enlargeRect', {action: action, unit: unit, all: all});
 
             } else if (payload.modify.shrink) {
-                commit('shrinkRect', {action: action, unit: unit});
+                commit('shrinkRect', {action: action, unit: unit, all: all});
 
             } else { // Move
-                commit('moveRect', {action: action, unit: unit});
+                commit('resizeRect', {action: action, unit: unit});
             }
             commit('correctCurRect');
             commit('updateItemRect');
