@@ -13,6 +13,8 @@ import KeyEventOpt from "./keyEventOpt3";
 import MouseEventOpt from "./mouseEventOpt3";
 import bus from '@/bus';
 
+// http://cheatsheetworld.com/programming/html5-canvas-cheat-sheet/
+
 export default {
     name: 'canvasOp',
     components: {KeyEventOpt, MouseEventOpt},
@@ -43,10 +45,11 @@ export default {
             ctx.fillStyle = gradient;
             ctx.fillRect(0,0, 300, window.innerHeight);
             ctx.strokeStyle='white';
-            ctx.font="30px Verdana";
+            ctx.font="30px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.strokeText("Operate Area", 150, window.innerHeight/2, 300);
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.strokeText("Operate Area", 0, 0);
             ctx.save();
         },
         redraw_canvas: function() {
@@ -71,23 +74,35 @@ export default {
             let cover = this.$store.getters.cover;
 
             rects.forEach(function(rect,i){
+                ctx.lineWidth=1.5*scale;
+
                 if (rect.mselected) {
-                    ctx.strokeStyle="#1892e8bf"; // green
+                    ctx.strokeStyle="#1892e8bf"; // blue
+                    ctx.fillStyle = '#1892e8a0';
                 } else if (rect.kselected) {
                     ctx.strokeStyle="#e8e818bf"; // yellow // #e32764e6
+                    ctx.fillStyle = '#e8e818a0';
                 } else if (rect == current) {
-                    ctx.strokeStyle="#2aa766"; //blue //"#2aa366";
+                    ctx.strokeStyle="#2aa766"; //green //"#2aa366";
+                    ctx.fillStyle = '#2aa766a0';
                 } else {
                     rect.red = rect.red || util.getRed();
                     ctx.strokeStyle=rect.red;
+                    ctx.fillStyle = '#0000';
                 }
-                ctx.lineWidth=1.5*scale;
-                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
 
                 if (cover) {
                     ctx.fillStyle = '#BEB7ADE0';
-                    ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
                 }
+
+                if (rect.deleted) {
+                    ctx.fillStyle = '#000000a0';
+                    ctx.lineWidth=4*scale;
+                }
+
+                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+
                 this.draw_corner(ctx, rect, scale);
             }, this);
         },
@@ -139,16 +154,18 @@ export default {
             this.redraw_canvas();
         },
         handleKeyEvent: function (event) {
-            this.$store.dispatch('handleKeyEvent', event);
+            if (event.type == 'keydown')
+                this.$store.dispatch('handleKeyDownEvent', event);
+            else if (event.type == 'keyup')
+                this.$store.dispatch('handleKeyUpEvent', event);
+
             this.redraw_canvas();
             this.$emit('scrollToRect');
         },
     },
     mounted: function(){
         this.setInitCanvasImage()
-        bus.$on('keyEvent', function(event) {
-            if (event.target == 'canvas') this.handleKeyEvent(event);
-        }.bind(this));
+        bus.$on('keyEvent', this.handleKeyEvent);
     }
 };
 </script>

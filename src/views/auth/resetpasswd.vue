@@ -148,7 +148,7 @@ export default {
 
         handleFailure(error) {
             this.$Notice.error({
-                title: 'Something went wrong.',
+                title: 'Failed',
                 desc: error.message
             });
         },

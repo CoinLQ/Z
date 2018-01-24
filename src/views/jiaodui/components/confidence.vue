@@ -37,15 +37,27 @@
         overflow: scroll;
     }
 
-    .button {
+    .button-submit {
+        background-color: #cccccc29;
+        border-color: #cccccc;
+        flex-grow: 5;
+    }
+
+    .button-abandon {
         background-color: #cccccc29;
         border-color: #cccccc;
     }
 
-    .button:hover {
+    .button-submit:hover {
         color: #fff;
         background-color: #2db7f5; /*#19be6b; /*#28a9e4*/
         border-color: #2db7f5; /*#47cb89; /*#4782cb*/
+    }
+
+   .button-abandon:hover {
+        color: #fff;
+        background-color: #f90; /*#19be6b; /*#28a9e4*/
+        border-color: #f90; /*#47cb89; /*#4782cb*/
     }
 </style>
 <template>
@@ -66,7 +78,8 @@
                 </div>
             </Row>
             <Row type="flex" align="bottom" justify="center">
-                <Button type="success" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
+                <!-- <Button type="warning" size="large" shape="circle" class="button-abandon">放弃</Button> -->
+                <Button type="success" size="large" shape="circle" class="button-submit" @click="submit" :loading="isBtnLoading" icon="checkmark-round">
                     <span v-if="!isBtnLoading">提交</span>
                     <span v-else>进行中</span>
                 </Button>
@@ -128,7 +141,8 @@ export default {
         this.$store.commit('resetAll');
         this.$store.commit('setScale', {scale: 6});
         bus.$on('keyEvent', function(event) {
-            if (event.target == 'glyph') this.handleKeyEvent(event);
+            if (event.type == 'keydown')
+                this.handleKeyEvent(event);
         }.bind(this));
     },
 
@@ -144,7 +158,7 @@ export default {
             let scale = this.$store.getters.scale;
             let rect = this.$store.getters.curRect;
             this.$nextTick(function() {
-                this.$refs.wrapper.scrollTo(0, Math.max(rect.y * scale - (window.innerHeight/3), rect.y));
+                this.$refs.wrapper.scrollTo(rect.x * scale, Math.max(rect.y * scale - (window.innerHeight/3), rect.y));
             });
             window.wrapper = this.$refs.wrapper;
         },
@@ -157,30 +171,35 @@ export default {
         },
 
         submit() {
-            let rects = this.$store.getters.rects;
-
-            this.$emit('submit', rects);
+            let final = []
+            let list = this.$refs.glyphs.$children;
+            _(list).forEach(function(glyph) {
+                final.push(glyph.getRectData())
+            });
+            this.$emit('submit', final);
         },
 
         handleKeyEvent(event) {
+            let act = event.action;
+            let step = event.modify.enlarge ? 5 : 1;
+            let next = 1;
+            if (act == 'mov-up-w' || act == 'mov-left-a') {
+                next = -1;
+            } else if (act == 'mov-down-s' || act == 'mov-right-d') {
+                next = 1;
+            } else {
+                return
+            }
+
+            let curGlyph = this.$store.getters.curGlyph;
+            let list = this.$refs.glyphs.$children;
+            let index = _(list).indexOf(curGlyph) + next * step;
+            let len = list.length;
+
+            index = index < 0 ? len + index : (index >= len ? index - len : index);
+            list[index].onClick();
+
             this.$nextTick(function(){
-                let act = event.action;
-                let step = event.modify.enlarge ? 5 : 1;
-                let next = 1;
-                if (act == 'mov-up' || act == 'mov-left') {
-                    next = -1;
-                } else if (act == 'mov-down' || act == 'mov-right') {
-                    next = 1;
-                }
-                let curGlyph = this.$store.getters.curGlyph;
-                let list = this.$refs.glyphs.$children;
-                let index = _(list).indexOf(curGlyph) + next * step;
-                let len = list.length;
-
-                index = index < 0 ? len + index : (index >= len ? index - len : index);
-                list[index].onClick();
-
-
                 let gwidth = 140; // 140 for width of glyph-block
                 let gheight = 302; // 187 for height of glyph-block, 302 for height including char block
                 let container = document.getElementsByClassName('glyph-list')[0];

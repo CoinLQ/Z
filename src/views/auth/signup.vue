@@ -122,7 +122,7 @@ export default {
                     })
                     .catch(function (error) {
                         that.$Notice.error({
-                            title: 'Something went wrong.',
+                            title: 'Failed',
                             desc: error.message
                         });
                     });

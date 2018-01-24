@@ -10,6 +10,7 @@ const canvas = {
         scale: 1,
         image: {empty: true},
         cover: false,
+        ctrlPressed: false,
     },
     getters: {
         curRect: state => {
@@ -17,6 +18,12 @@ const canvas = {
         },
         rects: state => {
             return state.rects;
+        },
+        solidRects: state => {
+            let r = _.forEach(_.cloneDeep(state.rects), function (item) {
+                if (item.deleted) item.op = 3;
+            })
+            return r;
         },
         scale: state => {
             return state.scale;
@@ -32,6 +39,9 @@ const canvas = {
         },
         cover: state => {
             return state.cover;
+        },
+        ctrlPressed: state => {
+            return state.ctrlPressed;
         }
 
     },
@@ -89,6 +99,12 @@ const canvas = {
 
         setScale(state, payload) {
             state.scale = payload.scale;
+        },
+
+        setScaleForward(state, payload) {
+            state.scale += payload.forward
+            if (state.scale < 1) state.scale = 1;
+            else if (state.scale > 9) state.scale = 9;
         },
 
         pushRects(state, payload) {
@@ -199,28 +215,40 @@ const canvas = {
         },
 
         deleteCurRect(state, payload) {
-            let cur = state.curRect;
-            let index = _(state.rects).indexOf(cur)
+            // let cur = state.curRect;
+            // let index = _(state.rects).indexOf(cur)
 
-            cur.op = 3;
+            // cur.op = 3;
 
-            _.pull(state.rects, cur);
+            // _.pull(state.rects, cur);
 
-            index = index >= state.rects.length? state.rects.length -1 : index;
+            // index = index >= state.rects.length? state.rects.length -1 : index;
 
-            state.rectsOfDel.push(cur);
+            // state.rectsOfDel.push(cur);
 
-            state.curRect = state.rects[index] || {empty:true};
+            // state.curRect = state.rects[index] || {empty:true};
+            if (state.curRect.deleted)
+                state.curRect.deleted = false;
+            else
+                state.curRect.deleted = true;
+        },
+
+        setCtrlState(state, payload) {
+            state.ctrlPressed = payload.press;
+            console.log('set ctrlPressed ' + state.ctrlPressed)
         }
     },
     actions: {
-        handleKeyEvent({commit, state}, payload) {
+        handleKeyDownEvent({commit, state}, payload) {
             let action = payload.action;
             if (_(action).startsWith('scale')) {
                 commit('setScale', {scale: parseInt(action[action.length-1])});
                 return;
             }
 
+            if (action == 'noop' && payload.modify.step) {
+                commit('setCtrlState', {press: true});
+            }
             // TODO: move below code into commits.
             let cur = state.curRect.empty? state.rects[0] : state.curRect;
             if (!cur) return;
@@ -241,7 +269,10 @@ const canvas = {
             // key-mov will iterate focused rect
             if (!cur.kselected && _.startsWith(action, 'mov')) {
 
-                let next = (action == 'mov-left' || action == 'mov-up') ? -1 : 1;
+                let next = 0;
+                if (action == 'mov-left' || action == 'mov-up') next = -1;
+                else if (action == 'mov-right' || action == 'mov-down') next = 1;
+
                 let index = _(state.rects).indexOf(state.curRect) + next;
                 let len = state.rects.length;
                 index = index < 0 ? len + index : (index >= len ? index - len : index);
@@ -252,8 +283,7 @@ const canvas = {
 
             if (action == 'delete') {
                 commit('deleteCurRect');
-
-                return
+                // return
             }
 
             let all = action == 'drul';
@@ -268,6 +298,15 @@ const canvas = {
             }
             commit('correctCurRect');
             commit('updateItemRect');
+        },
+
+        handleKeyUpEvent({commit, state}, payload) {
+            let action = payload.action;
+
+            if (action == 'noop' && payload.modify.step) {
+                commit('setCtrlState', {press: false});
+            }
+
         }
     }
 };

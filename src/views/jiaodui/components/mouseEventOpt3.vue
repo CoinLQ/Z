@@ -46,6 +46,8 @@ export default {
                         this.current.corner = false;
                     }
                     var rect = _.find(rects, function(r) {
+                        if (r.deleted) return false;
+
                         let corner = this.getHandle(mouse, r)
                         if (corner) {
                             r.corner = corner;
@@ -86,6 +88,8 @@ export default {
         },
         getRectOverByPoint: function(point, rects) {
             return _.find(rects, function(r) {
+                if (r.deleted) return false;
+
                 let dx = point.x - r.x;
                 let dy = point.y - r.y;
                 return 0 <= dx && dx<=r.w &&
@@ -113,7 +117,6 @@ export default {
     },
     mounted: function(){
         let _this = this;
-
         _this.canvas.onselectstart = function(e) { e.preventDefault(); return false; };
         _this.canvas.onmousedown = function (event) {
             let rects = _this.$store.getters.rects;
@@ -129,15 +132,14 @@ export default {
                     _this.draw.drawing = true;
                     let new_rect = Object.assign({}, rects[0]);
                     new_rect.id = '';
-                    new_rect.hans = '';
-                    new_rect.confidence = 1.0;
                     new_rect.x = point.x -5;
                     new_rect.y = point.y -5;
                     new_rect.w = 5;
                     new_rect.h = 5;
                     new_rect.op = 4;
                     new_rect.cc = 0.5;
-                    new_rect.char = '';
+                    new_rect.ch = '';
+                    new_rect.deleted = false;
                     _this.draw.additions = new_rect;
                     _this.$store.commit('pushRects', {rect:new_rect});
                 }
@@ -201,6 +203,7 @@ export default {
                 _.debounce(() => {  _this.drag.draggable = false; _this.drag.current = {}; _this.redraw_canvas(); }, 100)
             }
             else if (_this.current.mselected) {
+                // 此情况是将rect拖动到新的位置
                 _this.current.x += point.x - _this.current.$.x;
                 _this.current.y += point.y - _this.current.$.y;
                 _this.current.$.x = point.x;
@@ -238,6 +241,28 @@ export default {
             _this.redraw_canvas()
         };
 
+        // _this.canvas.onmousewheel = _.throttle(function (event) {
+
+        //         let ctrlPressed = _this.$store.getters.ctrlPressed;
+        //         // console.dir(event)
+        //         console.log('in throttle wheel ctrl ' + ctrlPressed);
+
+        //         if (!ctrlPressed) return
+
+        //         let forward = 0
+        //         if (event.wheelDeltaY < 0)
+        //             forward = -1;
+        //         else if (event.wheelDeltaY > 0)
+        //             forward = 1;
+        //         else
+        //             return
+
+        //         _this.$store.commit('setScaleForward', {forward: forward})
+
+        //         _this.redraw_canvas();
+
+        //         event.preventDefault();
+        //     }, 100);
     }
 }
 </script>

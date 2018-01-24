@@ -127,7 +127,7 @@ export default {
 
             // }
             this.$Notice.error({
-                title: 'Something went wrong.',
+                title: 'Failed',
                 desc: error.message
             });
         }

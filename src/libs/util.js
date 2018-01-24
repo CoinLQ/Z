@@ -335,7 +335,7 @@ util.getImageUrlFromCode = function(code) {
 util.getRed = function() {
     let random = Math.random();
     let red = ['#E43B46', '#DF3B49', '#E63A4A', '#EB3845'][~~(random*4)];
-    let alpha = 200 + ~~(random*56); // 200 + [0-55]
+    let alpha = 128 + ~~(random*128); // 200 + [0-55]
     return red + alpha.toString(16);
 }
 
