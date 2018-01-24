@@ -77,39 +77,39 @@ export default {
           cn: 1,
           pcode: "GLZ_S00001_R001_T0002"
         },
-        {
-          x: 146,
-          y: 385,
-          w: 85,
-          h: 72,
-          cc: "0.966675",
-          word: "驟",
-          ln: 2,
-          cn: 1,
-          pcode: "GLZ_S00001_R001_T0002"
-        },
-        {
-          x: 237,
-          y: 303,
-          w: 89,
-          h: 80,
-          cc: "0.997873",
-          word: "探",
-          ln: 1,
-          cn: 2,
-          pcode: "GLZ_S00001_R001_T0002"
-        },
-        {
-          x: 249,
-          y: 384,
-          w: 71,
-          h: 71,
-          cc: "0.958889",
-          word: "賾",
-          ln: 2,
-          cn: 2,
-          pcode: "GLZ_S00001_R001_T0002"
-        }
+        // {
+        //   x: 146,
+        //   y: 385,
+        //   w: 85,
+        //   h: 72,
+        //   cc: "0.966675",
+        //   word: "驟",
+        //   ln: 2,
+        //   cn: 1,
+        //   pcode: "GLZ_S00001_R001_T0002"
+        // },
+        // {
+        //   x: 237,
+        //   y: 303,
+        //   w: 89,
+        //   h: 80,
+        //   cc: "0.997873",
+        //   word: "探",
+        //   ln: 1,
+        //   cn: 2,
+        //   pcode: "GLZ_S00001_R001_T0002"
+        // },
+        // {
+        //   x: 249,
+        //   y: 384,
+        //   w: 71,
+        //   h: 71,
+        //   cc: "0.958889",
+        //   word: "賾",
+        //   ln: 2,
+        //   cn: 2,
+        //   pcode: "GLZ_S00001_R001_T0002"
+        // }
       ],
       image_url:
         "https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v001/GZ000790v001p00010.jpg",
@@ -146,9 +146,9 @@ export default {
       let rect = this.$store.getters.curRect;
       let x = Math.max(rect.x * scale - (window.innerWidth/3), rect.x);
       let y = Math.max(rect.y * scale - (window.innerHeight/3), rect.y);
-      setImmediate(function() {
+      this.$nextTick(function() {
           this.$refs.wrapper.scrollTo(x, y);
-      }.bind(this));
+      });
       window.wrapper = this.$refs.wrapper;
     },
 

@@ -29,15 +29,17 @@ export default {
             let that = this;
             // Fetch glyphs data
             util.ajax.get('/api/cctask/obtain/').then(function(response){
-                if (response.data.status) {
-                    throw 'status exception'
+                let suc = response.data.status == 0;
+
+                if (!suc) {
+                    throw {message: response.data.msg}
                 }
                 that.rects = response.data.rects;
                 that.task_id = response.data.task_id;
             }).catch(function(error){
                 console.log(error);
                 that.$Notice.error({
-                    title: 'Something went wrong.',
+                    title: 'Failed',
                     desc: error.message
                 });
             });
@@ -45,22 +47,23 @@ export default {
 
         onSubmit(rects) {
             let that = this;
+            let url = '/api/cctask/' + this.task_id + '/done/';
             this.isBtnLoading = true;
 
-            util.ajax.post('/api/cctask/done', {rects: rects})
+            util.ajax.post(url, {rects: rects})
             .then(function(response){
                 let suc = response.data.status == 0;
-                let alert = suc? that.$Notice.success : that.$Notice.error;
-                alert({
-                    title: suc? 'success': 'Failed',
-                    desc: suc? '' : response.data.msg
-                });
+                if (!suc) {
+                    throw {message: response.data.msg}
+                }
                 that.isBtnLoading = false;
+                that.$Notice.success({title: 'success', desc: ''});
+                that.getWorkingData();
             })
             .catch(function (error) {
                 that.isBtnLoading = false;
                 that.$Notice.error({
-                    title: 'Something went wrong.',
+                    title: 'Failed',
                     desc: error.message
                 });
             })

@@ -19,27 +19,27 @@
                     <Form ref="resetForm" :model="form" :rules="rules">
                         <div class="item email">
                             <FormItem prop="email">
-                                <input v-model="form.email" type="text" placeholder="请输入您的注册邮箱">
+                                <input v-model.trim="form.email" type="text" placeholder="请输入您的注册邮箱">
                             </FormItem>
                         </div>
                         <div class="item vericode">
                             <FormItem prop="vericode">
-                                <input v-model="form.vericode" type="text" placeholder="请输入您收到的验证码">
+                                <input v-model.trim="form.vericode" type="text" placeholder="请输入您收到的验证码">
                                 <span class="send" @click="handleSendVericode">点击发送验证码</span>
                             </FormItem>
                         </div>
                         <div class="item password">
                             <FormItem prop="password">
-                                <input v-model="form.password" type="password" placeholder="请输入您的新密码">
+                                <input v-model.trim="form.password" type="password" placeholder="请输入您的新密码">
                                 <span class="hidden"><img src="./img/hidden.png" alt=""></span>
                             </FormItem>
                         </div>
                         <div class="item checkmark">
                             <FormItem prop="repassword">
-                                <input v-model="form.repassword" type="password" placeholder="再次输入您的新密码">
+                                <input v-model.trim="form.repassword" type="password" placeholder="再次输入您的新密码">
                                 <span class="hidden"><img src="./img/hidden.png" alt=""></span>
                             </FormItem>
-                        </div>                    
+                        </div>
                         <div class="item clearfix">
                             <p><span class="fr">想起来了?&nbsp;点我<em @click="handleLogin">登录</em></span></p>
                         </div>
@@ -148,7 +148,7 @@ export default {
 
         handleFailure(error) {
             this.$Notice.error({
-                title: 'Something went wrong.',
+                title: 'Failed',
                 desc: error.message
             });
         },
@@ -156,7 +156,7 @@ export default {
         handleLogin() {
              this.$router.push({
                 name: 'login'
-            });           
+            });
         },
 
         handleSendVericode() {

@@ -8,28 +8,19 @@
 import bus from '@/bus';
 
 export default {
-
-	data() {
-		return {
-			target: 'canvas'
-		}
-	},
-
-    mounted: function() {
-    	let _this = this;
-
-        document.body.onkeydown = _.throttle(function(event) {
+	methods: {
+		handler(event) {
     		// console.log("keydown event ");
     		// console.dir(event);
             let actionMap =  {
 		        38: 'mov-up', // up
-		        87: 'mov-up', // w
+		        87: 'mov-up-w', // w
 		        37: 'mov-left', // left
-		        65: 'mov-left', // a
+		        65: 'mov-left-a', // a
 		        40: 'mov-down', // down
-		        83: 'mov-down', // s
+		        83: 'mov-down-s', // s
 		        39: 'mov-right', // right
-		        68: 'mov-right', // d
+		        68: 'mov-right-d', // d
 		        32: 'select', // space
 		        88: 'drul', // x for down right up left
 		        75: 'delete', // k
@@ -43,22 +34,42 @@ export default {
 		        56: 'scale-8', // 8
 		        57: 'scale-9', // 9
 		        112: 'help', // F1
-		        113: 'focusGlyphPanel', // F2
-		        114: 'focusCanvasPanel', // F3
+		        // 113: 'focusGlyphPanel', // F2
+		        // 114: 'focusCanvasPanel', // F3
+		        17: 'ctrl',
 		    }
 
 		    let action = actionMap[event.keyCode];
+		    let type = event.type; // keydown or keyup
+		    let shiftKey = event.shiftKey;
+		    let altKey = event.altKey;
+		    let ctrlKey = event.ctrlKey;
+
 		    if (!action) return;
 
-		    if (action == 'focusGlyphPanel') {_this.target = 'glyph'; return}
-		    if (action == 'focusCanvasPanel') {_this.target = 'canvas'; return}
+		    if (action == 'ctrl') {
+		    	action = 'noop';
+		    	ctrlKey = true;
+		    }
 
-		    // console.log('KeyEvent target: ' + _this.target);
-
-	        bus.$emit('keyEvent', {target: _this.target,action: action, modify:{enlarge: event.shiftKey, shrink: event.altKey, step: event.ctrlKey}});
+	        bus.$emit('keyEvent', {type: type, action: action, modify:{enlarge: shiftKey, shrink: altKey, step: ctrlKey}});
 
 	        event.preventDefault();
-        }, 200);
+			},
+		},
+
+    mounted: function() {
+        // document.body.onkeydown = _.throttle(this.handler, 200);
+        // document.body.onkeyup = _.throttle(this.handler, 200);
+        window.staticfunc = this.handler;
+        document.body.addEventListener('keydown', window.staticfunc);
+    	  document.body.addEventListener('keyup', window.staticfunc);
+    },
+
+    beforeDestroy: function() {
+    	document.body.removeEventListener('keydown', window.staticfunc);
+    	document.body.removeEventListener('keyup', window.staticfunc);
+
     }
 }
 </script>
