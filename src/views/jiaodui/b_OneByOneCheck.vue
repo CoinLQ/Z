@@ -13,11 +13,14 @@
         margin: 10px;
         background-color: #cccccc;
         box-shadow: 0px 0px 3px 3px #363E4E;
+        border-radius: 2px;
     }
 
     .button {
         background-color: #cccccc29;
         border-color: #cccccc;
+        margin-top: 5px auto;
+        width: 99%;
     }
 
     .button:hover {
@@ -35,21 +38,23 @@
         margin: 5px;
         display: none;
     }
+
+    .outter-wrapper {
+      text-align: center;
+    }
 </style>
 <template>
-<div>
+<div class="outter-wrapper">
   <div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
   <div class="switch">
     <Switch v-model="switch1" @on-change="changeSwitch" style="margin: auto 5px;"></Switch>打开覆盖
   </div>
-  <div class="button-wrapper">
-    <Button type="info" size="large" shape="circle" class="button" long @click="submit" :loading="isBtnLoading" icon="checkmark-round">
-      <span v-if="!isBtnLoading">提交</span>
-      <span v-else>进行中</span>
-    </Button>
-  </div>
+  <Button type="info" size="large" icon="checkmark-round" class="button" long @click="submit" :loading="isBtnLoading">
+    <span v-if="!isBtnLoading">提交</span>
+    <span v-else>进行中</span>
+  </Button>
   <help></help>
 </div>
 </template>
@@ -80,11 +85,11 @@ export default {
       }
   },
   mounted() {
-    this.getWorkData();
+    this.getWorkingData();
     this.$store.commit('setScale', {scale: 1});
   },
   methods: {
-    getWorkData() {
+    getWorkingData() {
         let that = this;
         util.ajax('/api/pagetask/obtain/').then(function (response) {
             if (response.data.status != 0)

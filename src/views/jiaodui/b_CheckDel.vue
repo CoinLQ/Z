@@ -1,13 +1,30 @@
 <style scoped>
-.tweaks {
-    margin-top: 5px;
+.button {
+    margin-top: 15px;
+    background-color: #cccccc29;
+    border-color: #cccccc;
+}
+
+.button:hover {
+    color: #fff;
+    background-color: #2db7f5; /*#19be6b; /*#28a9e4*/
+    border-color: #2db7f5; /*#47cb89; /*#4782cb*/
+}
+
+.table {
+    box-shadow: 0px 0px 3px 3px #363E4E;
+    border-radius: 2px;
+}
+
+.wrapper {
+    margin: 10px;
 }
 </style>>
 
 <template>
-    <div>
-        <Table :loading="loading" border size="large" height="getHeight" :columns="columns" :data="rows" ></Table>
-        <Button type="success" size="large" shape="circle" class="button-submit tweaks" @click="submit" :loading="isBtnLoading" icon="checkmark-round" long>
+    <div class="wrapper">
+        <Table stripe border class="table" size="large" :height="getHeight" :loading="loading" :columns="columns" :data="rows"></Table>
+        <Button type="success" size="large" class="button-submit button" @click="submit" :loading="isBtnLoading" icon="checkmark-round" long>
             <span v-if="!isBtnLoading">提交</span>
             <span v-else>进行中</span>
         </Button>
