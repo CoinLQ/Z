@@ -1,120 +1,112 @@
 <style scoped>
-    .ivu-table .demo-table-info-cell-address {
-        background-color: #187;
-        color: #fff;
-    }
+.table {
+    box-shadow: 0px 0px 3px 3px #363E4E;
+    border-radius: 2px;
+}
+
+.wrapper {
+    margin: 10px;
+}
 </style>>
 
 <template>
 <div>
-    <Table ref="selection" :loading="loading" border size="large" height="getHeight" :columns="columns" :data="rows" ></Table>
-    <Button @click="handleSelectAll(true)">Set all selected</Button>
-    <Button @click="handleSelectAll(false)">Cancel all selected</Button>
+    <div class="wrapper">
+        <Table stripe border class="table" size="large" :height="getHeight" :loading="loading" :columns="columns" :data="rows"></Table>
+    </div>
+
+    <Page :total="pagination.total_pages" :current="pagination.page" :pageSize="pagination.page_size" @on-change="changePage" @on-page-size-change="changePageSize" size="small" show-elevator show-sizer></Page>
 </div>
 </template>
-
 <script>
 import util from '@/libs/util';
 
 export default {
     data () {
         return {
-        	loading: false,
+          loading: false,
             columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    fixed: 'left',
-                    align: 'center'
-                },
+                // {
+                //     type: 'selection',
+                //     width: 60,
+                //     fixed: 'left',
+                //     align: 'center'
+                // },
                 {
                     title: '批次号',
-                    key: 'bid',
+                    key: 'schedule_no',
                 },
                 {
                     title: '任务号',
-                    key: 'tid'
+                    key: 'number'
                 },
                 {
                     title: '任务状态',
                     key: 'status'
                 },
                 {
-                	title: '领取时间',
-                	key: 'assign_dt'
+                  title: '领取时间',
+                  key: 'assign_dt'
                 },
                 {
-                    title: '完成时间',
-                    key: 'complete_dt'
+                    title: '最后处理时间',
+                    key: 'update_date'
                 },
                 {
-                	title: '操作',
-                	key: 'op',
-                	fixed: 'right',
-                	align: 'center',
-        	      	render: (h, params) => {
-        	      		// 参考https://cn.vuejs.org/v2/guide/render-function.html#%E6%B7%B1%E5%85%A5-data-%E5%AF%B9%E8%B1%A1
-        	      		// 数据要加上radioValue
-                        return h('RadioGroup', {
-                        	props: {
-                        		type: 'button',
-                        		value: params.row.radioValue
-                        	},
-                        	on: {
-                    			input: (value) => {
-                    				// console.dir(this)
-                    				// console.dir(params)
-                    				params.row.radioValue = value;
-                    				// util.ajax()
-                    			}
-                        	}
-                    	}, [
-                            h('Radio', {
-                                attrs: {
-                                    name: 'bg' + params.index,
-                                    label: 1
-                                },
-                            }, '同意'),
-                            h('Radio', {
-                                attrs: {
-                                    name: 'bg' + params.index,
-                                    label: 2
-                                },
-                            }, '不同意')
-                    	]);
+                  title: '操作',
+                  key: 'op',
+                  fixed: 'right',
+                  align: 'center',
+                  width: 100,
+                  render: (h, params) => {
+                        return h('Button', {
+                            props: {
+                                size: 'large'
+                            },
+                            on: {
+                                click: () => {
+
+                                }
+                            }
+                        }, '查看');
                     }
                 }
             ],
-            rows: [
-                {
-                    bid: '00001000100110101',
-                    tid: '贤二',
-                    status: 'completed',
-                    assign_dt: '20171231 06:48',
-                    complete_dt: '20171231 06:48'
-                },
-
-            ],
-            task_id: ''
+            rows: [],
+            pagination: {},
         }
     },
     computed: {
-    	getHeight() {
-    		return window.innerHeight
-    	}
+      getHeight() {
+        return window.innerHeight
+      }
     },
     methods: {
-
+        gotoPage(page, page_size) {
+            let that = this;
+            that.loading = true;
+            let offset = '?page='+page+'&page_size='+page_size;
+            util.ajax.get('/api/cctask/history/' + offset).then(function (response) {
+                that.rows = response.data.models;
+                that.loading = false;
+                that.pagination = response.data.pagination;
+            }).catch(function (error) {
+                that.$Notice.error({
+                    title: 'Failed',
+                    desc: error.message
+                });
+                that.loading = false;
+            })
+        },
+        changePage(page) {
+            this.gotoPage(page, this.pagination.page_size);
+        },
+        changePageSize(size) {
+            this.gotoPage(this.pagination.page, size);
+        }
     },
     mounted() {
-        let that = this;
-        util.ajax('/api/cctask/obtain').then(function (response) {
-            if (response.data.status) {
-                    throw {message: response.data.msg}
-                }
-            that.rows = response.data.rects;
-            that.task_id = response.data.task_id;
-        })
+        this.gotoPage(1, 10)
     }
 }
 </script>
