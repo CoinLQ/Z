@@ -27,8 +27,13 @@ export default {
     methods: {
         getWorkingData() {
             let that = this;
+            let url = '/api/cctask/obtain/';
+
+            if (this.$route.params.tid) {
+                url = '/api/cctask/' + this.$route.params.tid + '/';
+            }
             // Fetch glyphs data
-            util.ajax.get('/api/cctask/obtain/').then(function(response){
+            util.ajax.get(url).then(function(response){
                 let suc = response.data.status == 0;
 
                 if (!suc) {
