@@ -30,16 +30,16 @@ export default {
             columns: [
                 {
                     title: '经字号',
-                    key: 'id',
+                    key: 'cid',
                     fixed: 'left'
                 },
                 {
                     title: '提交人',
-                    key: 'submitter'
+                    key: 'modifier'
                 },
                 {
                     title: '提交时间',
-                    key: 'updated_at'
+                    key: 'created_at'
                 },
                 {
                 	title: '提交删框',
