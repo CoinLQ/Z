@@ -141,8 +141,13 @@ export default {
 
         getWorkingData() {
             let that = this;
+            let url = '/api/deltask/obtain/';
+
+            if (this.$route.params.tid) {
+                url = '/api/deltask/' + this.$route.params.tid + '/';
+            }
             that.loading = true;
-            util.ajax.get('/api/deltask/obtain').then(function (response) {
+            util.ajax.get(url).then(function (response) {
                 let suc = response.data.status == 0;
                 if (!suc) {
                     throw {message: response.data.msg}

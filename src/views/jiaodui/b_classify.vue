@@ -28,8 +28,14 @@ export default {
     methods: {
         getWorkingData() {
             let that = this;
+            let url = '/api/classifytask/obtain/';
+
+            if (this.$route.params.tid) {
+                url = '/api/classifytask/' + this.$route.params.tid + '/';
+            }
+            console.log(url);
             // Fetch glyphs data
-            util.ajax.get('/api/classifytask/obtain/').then(function(response){
+            util.ajax.get(url).then(function(response){
                 if (response.data.status) {
                     throw {message: response.data.msg}
                 }

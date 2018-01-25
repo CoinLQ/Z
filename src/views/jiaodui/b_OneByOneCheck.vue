@@ -91,7 +91,12 @@ export default {
   methods: {
     getWorkingData() {
         let that = this;
-        util.ajax('/api/pagetask/obtain/').then(function (response) {
+        let url = '/api/pagetask/obtain/';
+
+        if (this.$route.params.tid) {
+          url = '/api/pagetask/' + this.$route.params.tid + '/';
+        }
+        util.ajax(url).then(function (response) {
             if (response.data.status != 0)
                 throw {message: response.data.msg}
 
