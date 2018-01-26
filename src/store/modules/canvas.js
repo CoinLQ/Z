@@ -184,7 +184,7 @@ const canvas = {
             cur.op = 2;
         },
 
-        resizeRect(state, payload) {
+        moveRect(state, payload) {
             let cur = state.curRect;
             let unit = payload.unit;
             let action = payload.action;
@@ -236,68 +236,74 @@ const canvas = {
         setCtrlState(state, payload) {
             state.ctrlPressed = payload.press;
             console.log('set ctrlPressed ' + state.ctrlPressed)
+        },
+
+        setSelectState(state, payload) {
+            let cur = state.curRect;
+            if (cur.kselected) {  // selected by keydown operation
+                cur.kselected = false;
+            }
+            else {
+                cur.kselected = true;
+            }
+        },
+
+        shiftCurRect(state, payload) {
+            let next = 0;
+            let action = payload.action;
+
+            if (action == 'mov-left' || action == 'mov-up') next = -1;
+            else if (action == 'mov-right' || action == 'mov-down') next = 1;
+            else return
+
+            let index = _(state.rects).indexOf(state.curRect) + next;
+            let len = state.rects.length;
+            index = index < 0 ? len + index : (index >= len ? index - len : index);
+            state.curRect = state.rects[index];
         }
     },
     actions: {
         handleKeyDownEvent({commit, state}, payload) {
             let action = payload.action;
+            let cur = state.curRect.empty? state.rects[0] : state.curRect;
+
+            if (!cur) return;
+
             if (_(action).startsWith('scale')) {
                 commit('setScale', {scale: parseInt(action[action.length-1])});
-                return;
+            }
+
+            if (action == 'delete') {
+                commit('deleteCurRect');
             }
 
             if (action == 'noop' && payload.modify.step) {
                 commit('setCtrlState', {press: true});
             }
-            // TODO: move below code into commits.
-            let cur = state.curRect.empty? state.rects[0] : state.curRect;
-            if (!cur) return;
-
-
-            let unit = payload.modify.step ? 10 : 2;
 
             if (action == 'select') {
-                if (cur.kselected) {  // selected by keydown operation
-                    cur.kselected = false;
+                commit('setSelectState');
+            }
+
+            if (_(action).startsWith('mov')) {
+                let all = action == 'drul';
+                let unit = payload.modify.step ? 10 : 2;
+
+                if (!cur.kselected) {
+                    commit('shiftCurRect', {action: action});
+
+                } else if (payload.modify.enlarge) {
+                    commit('enlargeRect', {action: action, unit: unit, all: all});
+
+                } else if (payload.modify.shrink) {
+                    commit('shrinkRect', {action: action, unit: unit, all: all});
+
+                } else { // Move
+                    commit('moveRect', {action: action, unit: unit});
                 }
-                else {
-                    cur.kselected = true;
-                }
-                return
+                commit('correctCurRect');
+                commit('updateItemRect');
             }
-
-            // key-mov will iterate focused rect
-            if (!cur.kselected && _.startsWith(action, 'mov')) {
-
-                let next = 0;
-                if (action == 'mov-left' || action == 'mov-up') next = -1;
-                else if (action == 'mov-right' || action == 'mov-down') next = 1;
-
-                let index = _(state.rects).indexOf(state.curRect) + next;
-                let len = state.rects.length;
-                index = index < 0 ? len + index : (index >= len ? index - len : index);
-                state.curRect = state.rects[index];
-
-                return
-            }
-
-            if (action == 'delete') {
-                commit('deleteCurRect');
-                // return
-            }
-
-            let all = action == 'drul';
-            if (payload.modify.enlarge) {
-                commit('enlargeRect', {action: action, unit: unit, all: all});
-
-            } else if (payload.modify.shrink) {
-                commit('shrinkRect', {action: action, unit: unit, all: all});
-
-            } else { // Move
-                commit('resizeRect', {action: action, unit: unit});
-            }
-            commit('correctCurRect');
-            commit('updateItemRect');
         },
 
         handleKeyUpEvent({commit, state}, payload) {
