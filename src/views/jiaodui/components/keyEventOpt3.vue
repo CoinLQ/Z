@@ -69,7 +69,7 @@ export default {
     beforeDestroy: function() {
     	document.body.removeEventListener('keydown', window.staticfunc);
     	document.body.removeEventListener('keyup', window.staticfunc);
-
+      bus.$off('keyEvent');
     }
 }
 </script>
