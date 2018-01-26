@@ -81,7 +81,7 @@ export default {
   computed: {
       // Make sure canvas is properly displayed within the window height.
       getHeight: function () {
-          return window.innerHeight + 'px';
+          return (window.innerHeight - 130) + 'px';
       }
   },
   mounted() {
