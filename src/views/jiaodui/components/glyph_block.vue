@@ -96,20 +96,29 @@
 		],
 
 		mounted() {
-			this.rect = {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h};
+			this.init();
+		},
 
-			this.rect = this.correct(this.rect);
-
-			util.createImgObjWithUrl(this.imgData.url)
-			.then(function(v){
-				this.image = v.target;
-				this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
-			}.bind(this)).catch(function(v) {
-				console.log("Image failed to load! " + v);
-			})
+		watch: {
+			imgData() {
+				this.init();
+			}
 		},
 
 		methods: {
+			init() {
+				this.rect = {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h};
+
+				this.rect = this.correct(this.rect);
+
+				util.createImgObjWithUrl(this.imgData.url)
+				.then(function(v){
+					this.image = v.target;
+					this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
+				}.bind(this)).catch(function(v) {
+					console.log("Image failed to load! " + v);
+				})
+			},
 			onClick() {
 				this.isActive = true;
 				this.$store.commit('setCurGlyph', {glyph: this, curRect: this.rect, image:this.image});

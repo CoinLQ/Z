@@ -136,10 +136,14 @@ export default {
             updateCanvas: 1,
         }
     },
+    watch: {
+        rectData() {
+            this.init();
+        }
+    },
 
     mounted() {
-        this.$store.commit('resetAll');
-        this.$store.commit('setScale', {scale: 6});
+        this.init();
         bus.$on('keyEvent', function(event) {
             if (event.type == 'keydown')
                 this.handleKeyEvent(event);
@@ -147,6 +151,11 @@ export default {
     },
 
     methods: {
+        init() {
+            this.$store.commit('resetAll');
+            this.$store.commit('setScale', {scale: 6});
+        },
+
         onHighlight(item) {
             this.updateCanvas +=1;
 
@@ -181,7 +190,7 @@ export default {
 
         handleKeyEvent(event) {
             let act = event.action;
-            let step = event.modify.enlarge ? 5 : 1;
+            let step = (event.modify.enlarge || event.modify.step)? 5 : 1;
             let next = 1;
             if (act == 'mov-up-w' || act == 'mov-left-a') {
                 next = -1;
