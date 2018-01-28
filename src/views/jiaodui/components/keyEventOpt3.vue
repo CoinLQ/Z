@@ -52,7 +52,8 @@ export default {
 		    	ctrlKey = true;
 		    }
 
-	        bus.$emit('keyEvent', {type: type, action: action, modify:{enlarge: shiftKey, shrink: altKey, step: ctrlKey}});
+        // TODO: it'd be better to make combo keys into a certain action.
+        bus.$emit('keyEvent', {type: type, action: action, modify:{enlarge: shiftKey, shrink: altKey, step: ctrlKey}});
 
 	        event.preventDefault();
 			},
@@ -69,7 +70,7 @@ export default {
     beforeDestroy: function() {
     	document.body.removeEventListener('keydown', window.staticfunc);
     	document.body.removeEventListener('keyup', window.staticfunc);
-
+      bus.$off('keyEvent');
     }
 }
 </script>
