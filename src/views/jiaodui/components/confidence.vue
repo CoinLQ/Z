@@ -176,7 +176,7 @@ export default {
             _(list).forEach(function(glyph) {
                 final.push(glyph.getRectData())
             });
-            this.$emit('submit', final);
+            this.$emit('submit', {rects: final, _this: this});
         },
 
         handleKeyEvent(event) {
