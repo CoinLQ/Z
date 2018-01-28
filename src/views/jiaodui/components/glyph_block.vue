@@ -124,7 +124,7 @@
 				if (rect.deleted) {
 					this.clip = this.xpng;
 					this.deleted = true;
-				} else if (rect && rect.x && rect.y && rect.w && rect.h) {
+				} else {
 					this.rect.x = rect.x;
 					this.rect.y = rect.y;
 					this.rect.w = rect.w;

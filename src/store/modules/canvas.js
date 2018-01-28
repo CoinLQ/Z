@@ -275,6 +275,7 @@ const canvas = {
 
             if (action == 'delete') {
                 commit('deleteCurRect');
+                commit('updateItemRect');
             }
 
             if (action == 'noop' && payload.modify.step) {
