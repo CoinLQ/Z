@@ -7,6 +7,7 @@ const canvas = {
         curRect: {empty: true},
         rects: [],
         rectsOfDel: [],
+        refRects: [],
         scale: 1,
         image: {empty: true},
         cover: false,
@@ -24,6 +25,9 @@ const canvas = {
                 if (item.deleted) item.op = 3;
             })
             return r;
+        },
+        refRects: state => {
+            return state.refRects;
         },
         scale: state => {
             return state.scale;
@@ -52,6 +56,7 @@ const canvas = {
             state.scale = 1;
             state.image = {empty: true};
             state.cover = false;
+            state.refRects.length = 0;
         },
 
         setCurGlyph (state, payload) {
@@ -64,6 +69,7 @@ const canvas = {
             state.curRect = payload.curRect;
             state.rects = [payload.curRect];
             state.image = payload.image;
+            state.refRects = payload.refRects;
         },
 
         updateItemRect (state, payload) {

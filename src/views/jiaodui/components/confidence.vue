@@ -208,6 +208,8 @@ export default {
             index = index < 0 ? len + index : (index >= len ? index - len : index);
             list[index].onClick();
 
+            if (len <= 20) return;
+
             this.$nextTick(function(){
                 let gwidth = 140; // 140 for width of glyph-block
                 let gheight = 302; // 187 for height of glyph-block, 302 for height including char block
