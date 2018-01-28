@@ -42,7 +42,7 @@ export default {
                 },
                 {
                     title: '任务号',
-                    key: 'number'
+                    key: 'tid'
                 },
                 {
                     title: '任务状态',
@@ -50,7 +50,7 @@ export default {
                 },
                 {
                   title: '领取时间',
-                  key: 'assign_dt'
+                  key: 'assigned_date'
                 },
                 {
                     title: '最后处理时间',
@@ -70,7 +70,7 @@ export default {
                             },
                             on: {
                                 click: (e) => {
-                                    let tid = e.vm.$options.parent.$props.row.schedule_no;
+                                    let tid = e.vm.$options.parent.$props.row.tid;
                                     this.$router.push({name: this.viewRouteName, params: {tid: tid}})
                                 }
                             }
