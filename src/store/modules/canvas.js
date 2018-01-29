@@ -114,6 +114,7 @@ const canvas = {
         },
 
         pushRects(state, payload) {
+            // here rect was marked as created and not deleted
             state.rects.push(payload.rect);
         },
 
