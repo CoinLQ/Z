@@ -125,7 +125,8 @@ export default {
         },
 
         getDirection: function() {
-            return this.rectData.length > 20? 'column' : 'row';
+            // return this.rectData.length > 20? 'column' : 'row';
+            return 'column';
         }
     },
     data () {
@@ -208,7 +209,7 @@ export default {
             index = index < 0 ? len + index : (index >= len ? index - len : index);
             list[index].onClick();
 
-            if (len <= 20) return;
+            // if (len <= 20) return;
 
             this.$nextTick(function(){
                 let gwidth = 140; // 140 for width of glyph-block

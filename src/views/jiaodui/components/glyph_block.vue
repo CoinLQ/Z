@@ -29,7 +29,7 @@
 		/*display: none;*/
 	    text-align: center;
 	    background-color: #2E363F;
-	    color: white;
+	    color: #d6d6d6;
 	    font-size: 80px;
 	}
 
@@ -41,7 +41,7 @@
 		/*height: 26px;*/
 		background-color: #404040;
 		opacity: 1;
-		color: white;
+		color: #eee;
 		padding-top: 3px;
 		text-align: center;
 		border-radius: 0 0 3px 3px;
