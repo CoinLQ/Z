@@ -221,19 +221,16 @@ const canvas = {
         },
 
         deleteCurRect(state, payload) {
-            // let cur = state.curRect;
-            // let index = _(state.rects).indexOf(cur)
+            if (state.curRect.created) {
+                let cur = state.curRect;
+                let index = _(state.rects).indexOf(cur)
 
-            // cur.op = 3;
+                _.pull(state.rects, cur);
 
-            // _.pull(state.rects, cur);
+                index = index >= state.rects.length? state.rects.length -1 : index;
 
-            // index = index >= state.rects.length? state.rects.length -1 : index;
-
-            // state.rectsOfDel.push(cur);
-
-            // state.curRect = state.rects[index] || {empty:true};
-            if (state.curRect.deleted)
+                state.curRect = state.rects[index] || {empty:true};
+            } else if (state.curRect.deleted)
                 state.curRect.deleted = false;
             else
                 state.curRect.deleted = true;
