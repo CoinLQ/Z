@@ -60,6 +60,7 @@ const canvas = {
         },
 
         setCurGlyph (state, payload) {
+            state.refRects = payload.refRects;
             if (state.curGlyph === payload.glyph) return;
 
             if (state.curGlyph) {
@@ -69,7 +70,6 @@ const canvas = {
             state.curRect = payload.curRect;
             state.rects = [payload.curRect];
             state.image = payload.image;
-            state.refRects = payload.refRects;
         },
 
         updateItemRect (state, payload) {

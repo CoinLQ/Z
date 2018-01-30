@@ -112,7 +112,19 @@
 
 				this.rect = this.correct(this.rect);
 
-				util.ajax.get('/api/rect/' + this.rectData.cid + '/col_rects/')
+				setTimeout(this.getRefRects(this.rectData.cid), Math.random()*3000);
+
+				util.createImgObjWithUrl(this.imgData.url)
+				.then(function(v){
+					this.image = v.target;
+					this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
+				}.bind(this)).catch(function(v) {
+					console.log("Image failed to load! " + v);
+				})
+			},
+
+			getRefRects(id) {
+				util.ajax.get('/api/rect/' + id + '/col_rects/')
 				.then(function(response){
 				    let suc = response.data.status == 0;
 
@@ -124,6 +136,11 @@
 							r.y = r.y-r.column_set.y;
 							r.refonly = true;
 				    });
+
+				    if (this.isActive) {
+				    	this.onClick();
+				    }
+
 				}.bind(this)).catch(function(error){
 				    console.log(error);
 				    this.$Notice.error({
@@ -131,15 +148,8 @@
 				        desc: error.message
 				    });
 				}.bind(this));
-
-				util.createImgObjWithUrl(this.imgData.url)
-				.then(function(v){
-					this.image = v.target;
-					this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
-				}.bind(this)).catch(function(v) {
-					console.log("Image failed to load! " + v);
-				})
 			},
+
 			onClick() {
 				this.isActive = true;
 				this.$store.commit('setCurGlyph', {glyph: this, curRect: this.rect, image:this.image, refRects: this.refRects});

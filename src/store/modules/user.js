@@ -4,11 +4,8 @@ const user = {
     state: {},
     mutations: {
         logout (state, vm) {
-            let keep = Cookies.get('keeplogin');
-            if (!keep) {
-                Cookies.remove('user');
-                Cookies.remove('token');
-            }
+            Cookies.remove('user');
+            Cookies.remove('token');
             // 恢复默认样式
             // let themeLink = document.querySelector('link[name="theme"]');
             // themeLink.setAttribute('href', '');

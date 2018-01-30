@@ -88,6 +88,9 @@ export default {
     this.getWorkingData();
     this.$store.commit('setScale', {scale: 1});
   },
+  beforeDestroy() {
+      this.$store.commit('resetAll')
+  },
   methods: {
     getWorkingData() {
         let that = this;

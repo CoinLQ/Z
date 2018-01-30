@@ -29,7 +29,7 @@
                             </FormItem>
                         </div>
                         <div class="item clearfix">
-                            <p><Checkbox v-model="keepLogin"><span class="fl rember" style="font-size:18px;font-weight:400;">保持登录</span></Checkbox><span class="fr">还没账号?&nbsp;点我<router-link :to="{name: 'signup'}"><em>注册</em></router-link></span></p>
+                            <p><Checkbox v-model="keepLogin"><span class="fl rember" style="font-size:18px;font-weight:400;">保持登录状态7天</span></Checkbox><span class="fr">还没账号?&nbsp;点我<router-link :to="{name: 'signup'}"><em>注册</em></router-link></span></p>
                         </div>
                     </Form>
                 </div>
@@ -94,13 +94,12 @@ export default {
                 // });
 
                 Cookies.set('user', response.data.staff.email);
-                Cookies.set('token', response.data.token, { expires: 7 });
                 // Cookies.set('last_login', response.data.staff.last_login);
 
                 if (this.keepLogin) {
-                    Cookies.set('keeplogin', true);
+                    Cookies.set('token', response.data.token, { expires: 7 });
                 } else {
-                    Cookies.remove('keeplogin');
+                    Cookies.set('token', response.data.token);
                 }
 
                 this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');

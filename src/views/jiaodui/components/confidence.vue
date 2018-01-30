@@ -151,6 +151,10 @@ export default {
         }.bind(this));
     },
 
+    beforeDestroy() {
+        this.$store.commit('resetAll')
+    },
+
     methods: {
         init() {
             this.$store.commit('resetAll');
