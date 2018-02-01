@@ -320,15 +320,17 @@ util.createImgObjWithUrl = function(url) {
 
 util.getImageUrlFromCode = function(code) {
     /*  e.g. code = GZ000790v030p0010005
-        url = https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
+        https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
+        https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/YB/027/YBv027p00010.jpg
     */
-    // TODO: write with regexp by group match
-    if (typeof(code) != typeof('')) return '';
+    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/';
 
-    let dir1 = code.substr(0, 2);
-    let dir2 = code.substr(2, 6);
-    let dir3 = code.substr(8, 4);
-    return 'https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/' + dir1 + '/' + dir2 + '/' + dir3 + '/' + code + '.jpg';
+    let re = /^([A-Z]+)(\d*)v(\d+)(p\d+)\w*/.exec(code);
+    if (!re) return '';
+
+    if (re[2]) return  prefix + re[1] + '/' + re[2] + '/v' + re[3] + '/' + code + '.jpg';
+
+    return prefix + re[1] + '/' + re[3] + '/' + code + '.jpg';
 }
 
 // simulate the color feeling of red on the old paper

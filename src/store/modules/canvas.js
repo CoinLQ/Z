@@ -7,6 +7,7 @@ const canvas = {
         curRect: {empty: true},
         rects: [],
         rectsOfDel: [],
+        refRects: [],
         scale: 1,
         image: {empty: true},
         cover: false,
@@ -24,6 +25,9 @@ const canvas = {
                 if (item.deleted) item.op = 3;
             })
             return r;
+        },
+        refRects: state => {
+            return state.refRects;
         },
         scale: state => {
             return state.scale;
@@ -52,9 +56,11 @@ const canvas = {
             state.scale = 1;
             state.image = {empty: true};
             state.cover = false;
+            state.refRects.length = 0;
         },
 
         setCurGlyph (state, payload) {
+            state.refRects = payload.refRects;
             if (state.curGlyph === payload.glyph) return;
 
             if (state.curGlyph) {
@@ -108,6 +114,7 @@ const canvas = {
         },
 
         pushRects(state, payload) {
+            // here rect was marked as created and not deleted
             state.rects.push(payload.rect);
         },
 
@@ -215,19 +222,16 @@ const canvas = {
         },
 
         deleteCurRect(state, payload) {
-            // let cur = state.curRect;
-            // let index = _(state.rects).indexOf(cur)
+            if (state.curRect.created) {
+                let cur = state.curRect;
+                let index = _(state.rects).indexOf(cur)
 
-            // cur.op = 3;
+                _.pull(state.rects, cur);
 
-            // _.pull(state.rects, cur);
+                index = index >= state.rects.length? state.rects.length -1 : index;
 
-            // index = index >= state.rects.length? state.rects.length -1 : index;
-
-            // state.rectsOfDel.push(cur);
-
-            // state.curRect = state.rects[index] || {empty:true};
-            if (state.curRect.deleted)
+                state.curRect = state.rects[index] || {empty:true};
+            } else if (state.curRect.deleted)
                 state.curRect.deleted = false;
             else
                 state.curRect.deleted = true;
@@ -275,6 +279,7 @@ const canvas = {
 
             if (action == 'delete') {
                 commit('deleteCurRect');
+                commit('updateItemRect');
             }
 
             if (action == 'noop' && payload.modify.step) {

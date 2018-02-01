@@ -126,7 +126,7 @@ export default {
                 let point= _this.translat_point(event)
                 let rect = _this.getRectOverByPoint(point, rects);
                 _this.markRectSelected(rect, point);
-
+                window.dd = _this;
                 console.log("mouse key pressed");
                 if (!rect && _this.draw.enable) {
                     _this.draw.drawing = true;
@@ -140,6 +140,7 @@ export default {
                     new_rect.cc = 0.5;
                     new_rect.ch = '';
                     new_rect.deleted = false;
+                    new_rect.created = true;
                     _this.draw.additions = new_rect;
                     _this.$store.commit('pushRects', {rect:new_rect});
                 }

@@ -72,8 +72,8 @@ export default {
             let current = this.$store.getters.curRect;
             let rects = this.$store.getters.rects;
             let cover = this.$store.getters.cover;
-
-            rects.forEach(function(rect,i){
+            window.rects = rects;
+            _(rects).forEach(function(rect,i){
                 ctx.lineWidth=1.5*scale;
 
                 if (rect.mselected) {
@@ -104,7 +104,15 @@ export default {
                 ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
 
                 this.draw_corner(ctx, rect, scale);
-            }, this);
+            }.bind(this));
+
+            let refRects = this.$store.getters.refRects;
+            _(refRects).forEach(function(rect,i){
+                rect.red = rect.red || util.getRed();
+                ctx.lineWidth=1.5*scale;
+                ctx.strokeStyle=rect.red;
+                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+            }.bind(this));
         },
 
         draw_corner: function(ctx, rect, scale) {

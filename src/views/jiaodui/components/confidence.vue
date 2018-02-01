@@ -125,7 +125,8 @@ export default {
         },
 
         getDirection: function() {
-            return this.rectData.length > 20? 'column' : 'row';
+            // return this.rectData.length > 20? 'column' : 'row';
+            return 'column';
         }
     },
     data () {
@@ -136,17 +137,30 @@ export default {
             updateCanvas: 1,
         }
     },
+    watch: {
+        rectData() {
+            this.init();
+        }
+    },
 
     mounted() {
-        this.$store.commit('resetAll');
-        this.$store.commit('setScale', {scale: 6});
+        this.init();
         bus.$on('keyEvent', function(event) {
             if (event.type == 'keydown')
                 this.handleKeyEvent(event);
         }.bind(this));
     },
 
+    beforeDestroy() {
+        this.$store.commit('resetAll')
+    },
+
     methods: {
+        init() {
+            this.$store.commit('resetAll');
+            this.$store.commit('setScale', {scale: 6});
+        },
+
         onHighlight(item) {
             this.updateCanvas +=1;
 
@@ -176,12 +190,12 @@ export default {
             _(list).forEach(function(glyph) {
                 final.push(glyph.getRectData())
             });
-            this.$emit('submit', final);
+            this.$emit('submit', {rects: final, _this: this});
         },
 
         handleKeyEvent(event) {
             let act = event.action;
-            let step = event.modify.enlarge ? 5 : 1;
+            let step = (event.modify.enlarge || event.modify.step)? 5 : 1;
             let next = 1;
             if (act == 'mov-up-w' || act == 'mov-left-a') {
                 next = -1;
@@ -198,6 +212,8 @@ export default {
 
             index = index < 0 ? len + index : (index >= len ? index - len : index);
             list[index].onClick();
+
+            // if (len <= 20) return;
 
             this.$nextTick(function(){
                 let gwidth = 140; // 140 for width of glyph-block

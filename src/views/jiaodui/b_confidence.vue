@@ -50,23 +50,24 @@ export default {
             });
         },
 
-        onSubmit(rects) {
+        onSubmit(sender) {
             let that = this;
             let url = '/api/cctask/' + this.task_id + '/done/';
-            this.isBtnLoading = true;
+            let sender_this = sender._this;
+            sender_this.$data.isBtnLoading = true;
 
-            util.ajax.post(url, {rects: rects})
+            util.ajax.post(url, {rects: sender.rects})
             .then(function(response){
                 let suc = response.data.status == 0;
                 if (!suc) {
                     throw {message: response.data.msg}
                 }
-                that.isBtnLoading = false;
+                sender_this.$data.isBtnLoading = false;
                 that.$Notice.success({title: 'success', desc: ''});
                 that.getWorkingData();
             })
             .catch(function (error) {
-                that.isBtnLoading = false;
+                sender_this.$data.isBtnLoading = false;
                 that.$Notice.error({
                     title: 'Failed',
                     desc: error.message
