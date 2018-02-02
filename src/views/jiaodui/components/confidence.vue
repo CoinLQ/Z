@@ -180,7 +180,7 @@ export default {
         getImageData(rect) {
             let column = rect.column_set;
 
-            column.url = util.getImageUrlFromCode(column.col_id);
+            column.url = util.getColumnImageUrlFromCode(column.col_id);
             return column;
         },
 

@@ -305,6 +305,7 @@ util.getImageClip = function(imgObj, newWidth, newHeight, startX, startY, ratio)
 }
 
 util.createImgObjWithUrl = function(url) {
+    // console.log('Img ' + url)
     return new Promise(function(resolve, reject){
         let image = new Image();
         image.crossOrigin = "*";
@@ -323,7 +324,7 @@ util.getImageUrlFromCode = function(code) {
         https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
         https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/YB/027/YBv027p00010.jpg
     */
-    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/';
+    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-col/';
 
     let re = /^([A-Z]+)(\d*)v(\d+)(p\d+)\w*/.exec(code);
     if (!re) return '';
@@ -331,6 +332,29 @@ util.getImageUrlFromCode = function(code) {
     if (re[2]) return  prefix + re[1] + '/' + re[2] + '/v' + re[3] + '/' + code + '.jpg';
 
     return prefix + re[1] + '/' + re[3] + '/' + code + '.jpg';
+}
+
+util.getPageImageUrlFromCode = function (code) {
+    //  GL000790_79_2_p30 ZH000010_1_p10a01n02
+    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
+    let re2 = /^([A-Z]{2})(\w{6})((_\d+)*)_p(\d+)(.)(.....){0,1}$/.exec(code);
+    if (!re2) return '';
+
+    return prefix + re2[1] + re2[3].replace(/_/g, '/') + '/' + re2[1] + re2[3] + '_' + re2[5] + '.jpg'
+}
+
+util.getColumnImageUrlFromCode = function (column_code) {
+    const regex = /^.*_.*/;
+    if(regex.test(column_code)){
+        Array.prototype.subarray=function(start,end){
+            if(!end){ end=-1;}
+           return this.slice(start, this.length+1-(end*-1));
+        }
+        let column_path = column_code.split('_').subarray(0,-2).join("/")
+        return "https://s3.cn-north-1.amazonaws.com.cn/lqdzj-col/" + column_path + "/" + column_code + ".jpg"
+    }
+    //说明column_code不匹配规则, 默认显示加载中...todo 后续改加载失败的图片.
+    // this.clip = '/static/img/FhHRx.gif';
 }
 
 // simulate the color feeling of red on the old paper
