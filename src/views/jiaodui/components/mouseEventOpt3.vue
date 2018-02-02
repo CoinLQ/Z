@@ -140,9 +140,6 @@ export default {
             _this.redraw_canvas()
         };
         _this.canvas.onmousemove = _.throttle(function (event) {
-                _.debounce(() => {   console.log(1)}, 200)
-                _.debounce(() => {  console.log(2)}, 300)
-            window.nn = _this;
             _this.current = _this.$store.getters.curRect;
             let point= _this.translat_point(event)
             if (_this.draw.drawing) {
@@ -150,9 +147,6 @@ export default {
                 _new.w = point.x - _new.x;
                 _new.h = point.y - _new.y;
                 _this.redraw_canvas();
-                _.debounce(() => {
-                    _this.draw.drawing = false;
-                    _this.redraw_canvas(); }, 100)
             }
             else if (_this.drag.draggable) {
                 let rect = _this.drag.current;
@@ -197,10 +191,6 @@ export default {
                         break;
                 }
                 _this.redraw_canvas();
-                _.debounce(() => {
-                    _this.drag.draggable = false;
-                    _this.drag.current = {};
-                    _this.redraw_canvas(); }, 100)
             }
             else if (_this.current.mselected) {
                 // 此情况是将rect拖动到新的位置
@@ -212,18 +202,11 @@ export default {
 
             } else {
                 _this.drag.mark_corner(point, _this.$store.getters.rects);
-                _.debounce(() => {
-                    _this.drag.current.corner = false;
-                    console.log('mark corner');
-                    _this.redraw_canvas(); }, 100)
                 _this.redraw_canvas();
-                return false;
             }
             if (event.preventDefault) {
                 event.preventDefault()
             }
-
-            return false
         }, 100);
         _this.canvas.onmouseup = function (event) {
             if (_this.drag.draggable) {
