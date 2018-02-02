@@ -19,7 +19,7 @@
 .wrapper {
     margin: 10px;
 }
-</style>>
+</style>
 
 <template>
     <div class="wrapper">
@@ -133,8 +133,8 @@ export default {
             .catch(function (error) {
                 that.isBtnLoading = false;
                 that.$Notice.error({
-                    title: '━Σ(ﾟДﾟ|||)━',
-                    desc: error.message
+                    title: that.$t('Failed'),
+                    desc: that.$t(error.message)
                 });
             })
         },
@@ -157,8 +157,8 @@ export default {
                 that.loading = false;
             }).catch(function (error) {
                 that.$Notice.error({
-                    title: '━Σ(ﾟДﾟ|||)━',
-                    desc: error.message
+                    title: that.$t('Failed'),
+                    desc: that.$t(error.message)
                 });
                 that.loading = false;
             })
@@ -166,6 +166,7 @@ export default {
     },
     mounted() {
         this.getWorkingData();
+        this.$Notice.config({top: 50, duration: 3});
     }
 }
 </script>

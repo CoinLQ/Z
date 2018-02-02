@@ -148,7 +148,7 @@
 				}.bind(this)).catch(function(error){
 				    console.log(error);
 				    this.$Notice.error({
-				        title: '━Σ(ﾟДﾟ|||)━',
+				        title: this.$t('Failed'),
 				        desc: error.message
 				    });
 				}.bind(this));

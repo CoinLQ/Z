@@ -48,7 +48,6 @@ export default {
 
     data () {
         let saved_username = Cookies.get('user');
-
         return {
             form: {
                 email: saved_username,
@@ -64,6 +63,9 @@ export default {
             },
             keepLogin: false
         };
+    },
+    mounted() {
+        this.$Notice.config({top: 50, duration: 3});
     },
     methods: {
         handleSubmit () {
@@ -111,7 +113,7 @@ export default {
             } else {
                 // Pop user diabled
                 this.$Notice.info({
-                    title: '账号未激活，请联系管理员。',
+                    title: this.$t('The account is not activated, please contact admin.'),
                     desc: ''
                 });
             }
@@ -119,15 +121,14 @@ export default {
         },
 
         handleFailure(error) {
-            // TODO: bug wrap up
-            // if (error.response.data.non_field_errors[0]) {
-            //     // Test server should not reply auth message with 400.
-            // } else {
-
-            // }
+            let message = this.$t(error.message);
+            if (error.response && error.response.status == 400) { 
+                message = error.response.data.non_field_errors;
+                
+            }
             this.$Notice.error({
-                title: '━Σ(ﾟДﾟ|||)━',
-                desc: error.message
+                title: this.$t('Failed'),
+                desc: message
             });
         }
     }

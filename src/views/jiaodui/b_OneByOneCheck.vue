@@ -87,6 +87,7 @@ export default {
   mounted() {
     this.getWorkingData();
     this.$store.commit('setScale', {scale: 1});
+    this.$Notice.config({top: 50, duration: 3});
   },
   beforeDestroy() {
       this.$store.commit('resetAll')
@@ -113,8 +114,8 @@ export default {
             that.updateCanvas += 1;
         }).catch(function(error) {
             that.$Notice.error({
-                title: '━Σ(ﾟДﾟ|||)━',
-                desc: error.message || ''
+                title: that.$t('Failed'),
+                desc: that.$t(error.message||'')
             });
         });
     },
@@ -135,8 +136,8 @@ export default {
         }).catch(function (error) {
             that.isBtnLoading = false;
             that.$Notice.error({
-                title: '━Σ(ﾟДﾟ|||)━',
-                desc: error.message
+                title: that.$t('Failed'),
+                desc: that.$t(error.message)
             });
         })
     },

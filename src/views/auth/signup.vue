@@ -69,17 +69,15 @@ export default {
             }
         };
         const validateEmail = (rule, value, callback) => {
-            // TODO: Check available account name
-            // util.ajax.post('/auth/check-avail-email', {
-            //     email: value
-            // })
-            // .then(function (response) {
-
-            // })
-            // .catch(function (error) {
-
-            // });
-            callback();
+            util.ajax.get('/auth/staff/exist_email?email='+value)
+            .then(function (response) {
+                if (response.data.status == -1) {
+                    callback(new Error('Email has been registered.'));
+                }
+            })
+            .catch(function (error) {
+                callback();
+            });  
         };
 
         return {
@@ -90,15 +88,15 @@ export default {
             },
             rules: {
                 email: [
-                    { type: 'email', required: true },
+                    { type: 'email', required: true, message: this.$t('email required') },
                     { validator: validateEmail, trigger: 'blur' }
                 ],
                 password: [
-                    { type: 'string', min: 6, required: true },
+                    { type: 'string', min: 6, required: true, message: this.$t('password required') },
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [
-                    { type: 'string', required: true },
+                    { type: 'string', required: true, message: this.$t('password must be same') },
                     { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }
@@ -109,7 +107,7 @@ export default {
             let that = this;
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
-                    util.ajax.post('/auth/api-register/', {
+                    util.ajax.get('/auth/api-register/', {
                             email: that.form.email,
                             password: that.form.password
                     })
@@ -122,7 +120,7 @@ export default {
                     })
                     .catch(function (error) {
                         that.$Notice.error({
-                            title: '━Σ(ﾟДﾟ|||)━',
+                            title: this.$t('Failed'),
                             desc: error.message
                         });
                     });

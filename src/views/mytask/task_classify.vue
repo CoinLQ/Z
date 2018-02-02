@@ -1,4 +1,4 @@
-<style scoped> </style>>
+<style scoped> </style>
 
 <template>
 <TaskList :viewRouteName="view" :dataUrl="url"></TaskList>

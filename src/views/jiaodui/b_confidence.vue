@@ -22,6 +22,7 @@ export default {
 
     mounted() {
         this.getWorkingData();
+        this.$Notice.config({top: 50, duration: 3});
     },
 
     methods: {
@@ -44,8 +45,8 @@ export default {
             }).catch(function(error){
                 console.log(error);
                 that.$Notice.error({
-                    title: '━Σ(ﾟДﾟ|||)━',
-                    desc: error.message
+                    title: that.$t('Failed'),
+                    desc: that.$t(error.message)
                 });
             });
         },
@@ -69,8 +70,8 @@ export default {
             .catch(function (error) {
                 sender_this.$data.isBtnLoading = false;
                 that.$Notice.error({
-                    title: '━Σ(ﾟДﾟ|||)━',
-                    desc: error.message
+                    title: that.$t('Failed'),
+                    desc: that.$t(error.message)
                 });
             })
         },
