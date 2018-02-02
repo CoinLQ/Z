@@ -123,7 +123,7 @@
 					this.image = v.target;
 					this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
 				}.bind(this)).catch(function(v) {
-					console.log("Image failed to load! " + v);
+					console.log("图片载入失败 " + v);
 				})
 			},
 
@@ -148,7 +148,7 @@
 				}.bind(this)).catch(function(error){
 				    console.log(error);
 				    this.$Notice.error({
-				        title: 'Failed',
+				        title: '━Σ(ﾟДﾟ|||)━',
 				        desc: error.message
 				    });
 				}.bind(this));

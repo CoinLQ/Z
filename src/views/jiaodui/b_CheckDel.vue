@@ -127,13 +127,13 @@ export default {
                     throw {message: response.data.msg}
                 }
                 that.isBtnLoading = false;
-                that.$Notice.success({title: 'success', desc: ''});
+                that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
                 that.getWorkingData();
             })
             .catch(function (error) {
                 that.isBtnLoading = false;
                 that.$Notice.error({
-                    title: 'Failed',
+                    title: '━Σ(ﾟДﾟ|||)━',
                     desc: error.message
                 });
             })
@@ -157,7 +157,7 @@ export default {
                 that.loading = false;
             }).catch(function (error) {
                 that.$Notice.error({
-                    title: 'Failed',
+                    title: '━Σ(ﾟДﾟ|||)━',
                     desc: error.message
                 });
                 that.loading = false;

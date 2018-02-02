@@ -381,7 +381,7 @@ const canvas = {
                 }
             })
             .catch(function (error) {
-                console.log("OCR API Failed. " + error);
+                console.log("读取识别过程中出错了 " + error);
             })
         }
     }

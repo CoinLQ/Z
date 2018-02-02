@@ -44,7 +44,7 @@ export default {
             }).catch(function(error){
                 console.log(error);
                 that.$Notice.error({
-                    title: 'Failed',
+                    title: '━Σ(ﾟДﾟ|||)━',
                     desc: error.message
                 });
             });
@@ -63,13 +63,13 @@ export default {
                     throw {message: response.data.msg}
                 }
                 sender_this.$data.isBtnLoading = false;
-                that.$Notice.success({title: 'success', desc: ''});
+                that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
                 that.getWorkingData();
             })
             .catch(function (error) {
                 sender_this.$data.isBtnLoading = false;
                 that.$Notice.error({
-                    title: 'Failed',
+                    title: '━Σ(ﾟДﾟ|||)━',
                     desc: error.message
                 });
             })

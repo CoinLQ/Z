@@ -57,13 +57,13 @@ export default {
             var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('The password must contain at least 6 and max 30 of mixings of numbers, alphabets, specials.'))
+                callback(new Error('密码长度为6-30，必须包含数字、大小写字母、特殊符号'))
             }
             callback();
         };
         const validatePassCheck = (rule, value, callback) => {
             if (value !== this.form.password) {
-                callback(new Error('The two input passwords do not match!'));
+                callback(new Error('两次密码输入的不同。'));
             } else {
                 callback();
             }
@@ -115,14 +115,14 @@ export default {
                     })
                     .then(function (response) {
                         that.$Notice.success({
-                            title: 'Success! Now please log in.',
+                            title: '注册完成，请重新登录。',
                             desc: ''
                         });
                         that.gotoLogin();
                     })
                     .catch(function (error) {
                         that.$Notice.error({
-                            title: 'Failed',
+                            title: '━Σ(ﾟДﾟ|||)━',
                             desc: error.message
                         });
                     });

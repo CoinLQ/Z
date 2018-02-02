@@ -102,7 +102,7 @@ export default {
                 that.pagination = response.data.pagination;
             }).catch(function (error) {
                 that.$Notice.error({
-                    title: 'Failed',
+                    title: '━Σ(ﾟДﾟ|||)━',
                     desc: error.message
                 });
                 that.loading = false;
