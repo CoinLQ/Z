@@ -84,7 +84,7 @@ export default {
             let offsetx = this.canvas.getBoundingClientRect().left+documentScrollLeft;
             let yy = (mouse.y-offsety)/scale;
             let xx = (mouse.x-offsetx)/scale;
-            return {x: xx, y: yy}
+            return {x: ~~xx, y: ~~yy}
         },
         getRectOverByPoint: function(point, rects) {
             return _.find(rects, function(r) {
@@ -127,27 +127,21 @@ export default {
                 let rect = _this.getRectOverByPoint(point, rects);
                 _this.markRectSelected(rect, point);
                 window.dd = _this;
-                console.log("mouse key pressed");
+
                 if (!rect && _this.draw.enable) {
                     _this.draw.drawing = true;
                     let new_rect = Object.assign({}, rects[0]);
-                    new_rect.id = '';
-                    new_rect.x = point.x -5;
-                    new_rect.y = point.y -5;
-                    new_rect.w = 5;
-                    new_rect.h = 5;
-                    new_rect.op = 4;
-                    new_rect.cc = 0.5;
-                    new_rect.ch = '';
-                    new_rect.deleted = false;
-                    new_rect.created = true;
+                    new_rect.x = point.x;
+                    new_rect.y = point.y;
                     _this.draw.additions = new_rect;
-                    _this.$store.commit('pushRects', {rect:new_rect});
+                    _this.$store.commit('startNewRect', {rect:new_rect});
                 }
             }
             _this.redraw_canvas()
         };
         _this.canvas.onmousemove = _.throttle(function (event) {
+                _.debounce(() => {   console.log(1)}, 200)
+                _.debounce(() => {  console.log(2)}, 300)
             window.nn = _this;
             _this.current = _this.$store.getters.curRect;
             let point= _this.translat_point(event)
@@ -156,7 +150,9 @@ export default {
                 _new.w = point.x - _new.x;
                 _new.h = point.y - _new.y;
                 _this.redraw_canvas();
-                _.debounce(() => {  _this.draw.drawing = false; _this.redraw_canvas(); }, 100)
+                _.debounce(() => {
+                    _this.draw.drawing = false;
+                    _this.redraw_canvas(); }, 100)
             }
             else if (_this.drag.draggable) {
                 let rect = _this.drag.current;
@@ -201,7 +197,10 @@ export default {
                         break;
                 }
                 _this.redraw_canvas();
-                _.debounce(() => {  _this.drag.draggable = false; _this.drag.current = {}; _this.redraw_canvas(); }, 100)
+                _.debounce(() => {
+                    _this.drag.draggable = false;
+                    _this.drag.current = {};
+                    _this.redraw_canvas(); }, 100)
             }
             else if (_this.current.mselected) {
                 // 此情况是将rect拖动到新的位置
@@ -213,13 +212,17 @@ export default {
 
             } else {
                 _this.drag.mark_corner(point, _this.$store.getters.rects);
-                _.debounce(() => {  _this.drag.current.corner = false; console.log('mark corner'); _this.redraw_canvas(); }, 100)
+                _.debounce(() => {
+                    _this.drag.current.corner = false;
+                    console.log('mark corner');
+                    _this.redraw_canvas(); }, 100)
                 _this.redraw_canvas();
                 return false;
             }
             if (event.preventDefault) {
                 event.preventDefault()
             }
+
             return false
         }, 100);
         _this.canvas.onmouseup = function (event) {
@@ -231,11 +234,7 @@ export default {
 
             if (_this.draw.drawing) {
                 let r = _this.draw.additions;
-                if (r.w * r.h <= 25) {
-                    _this.$store.commit('pullRect', {rect: r});
-                } else {
-                    _this.$store.commit('setCurRect', {rect: r});
-                }
+                _this.$store.dispatch('closeNewRect', {rect: r, canvas: _this});
             }
             _this.draw.drawing = false;
 

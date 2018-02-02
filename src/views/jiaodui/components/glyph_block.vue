@@ -108,9 +108,13 @@
 
 		methods: {
 			init() {
-				this.rect = {x: this.rectData.x-this.imgData.x, y: this.rectData.y-this.imgData.y, w: this.rectData.w, h: this.rectData.h};
+				this.rect = _.cloneDeep(this.rectData)
+				let trans_rect = this.correct({x: this.rectData.x-this.imgData.x,
+																			y: this.rectData.y-this.imgData.y,
+																			w: this.rectData.w,
+																			h: this.rectData.h});
 
-				this.rect = this.correct(this.rect);
+				this.rect = _.assign(this.rect, trans_rect)
 
 				setTimeout(this.getRefRects(this.rectData.cid), Math.random()*3000);
 
@@ -119,7 +123,7 @@
 					this.image = v.target;
 					this.clip = util.getImageClip(v.target, this.rect.w, this.rect.h, this.rect.x, this.rect.y, 1);
 				}.bind(this)).catch(function(v) {
-					console.log("Image failed to load! " + v);
+					console.log("图片载入失败 " + v);
 				})
 			},
 
@@ -144,7 +148,7 @@
 				}.bind(this)).catch(function(error){
 				    console.log(error);
 				    this.$Notice.error({
-				        title: 'Failed',
+				        title: '━Σ(ﾟДﾟ|||)━',
 				        desc: error.message
 				    });
 				}.bind(this));
@@ -187,19 +191,19 @@
 			},
 
 			getRectData() {
-				let origin = _.cloneDeep(this.rectData);
+				let origin = this.rectData;
 				let update = {x: _.round(this.rect.x+this.imgData.x),
 							y: _.round(this.rect.y+this.imgData.y),
 							w: _.round(this.rect.w),
 							h: _.round(this.rect.h)};
 
-				origin.op = origin.x == update.x
+				this.rect.op = origin.x == update.x
 										&& origin.y == update.y
 										&& origin.w == update.w
 										&& origin.h == update.h
 										? 1 : this.op;
 
-				return _.merge(origin, update);
+				return _.assign(this.rect, update);
 			},
 
 			correct(rect) {

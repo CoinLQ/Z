@@ -1,3 +1,5 @@
+import util from "@/libs/util";
+
 const canvas = {
     state: {
         // for glyph block callback
@@ -116,6 +118,20 @@ const canvas = {
         pushRects(state, payload) {
             // here rect was marked as created and not deleted
             state.rects.push(payload.rect);
+        },
+
+        startNewRect(state, payload) {
+            let r = payload.rect;
+            r.id = '';
+            r.tempId = ~~(Math.random() * 100);
+            r.w = 1;
+            r.h = 1;
+            r.op = 4;
+            r.cc = 0.5;
+            r.ch = '';
+            r.deleted = false;
+            r.created = true;
+            state.rects.push(r);
         },
 
         pullRect(state, payload) {
@@ -318,6 +334,55 @@ const canvas = {
                 commit('setCtrlState', {press: false});
             }
 
+        },
+
+        closeNewRect({commit, state}, payload) {
+            let r = payload.rect;
+            if (r.w < 0) {
+                r.x += r.w;
+                r.w *= -1;
+            }
+            if (r.h < 0) {
+                r.y += r.h;
+                r.h *= -1;
+            }
+            if (r.w <5 || r.h < 5) {
+                // too small to be valuable for use
+                return _.pull(state.rects, r);
+            }
+
+
+            let clip = util.getImageClip(state.image, r.w, r.h, r.x, r.y, 1);
+            //console.log(clip)
+            clip = clip.substr(clip.indexOf(',')+1);
+            util.ajax.post('/api/rect/get_ocr_text/', {id: r.tempId, img_data: clip})
+            .then(function (response) {
+                // console.log(response.data)
+                if (response.data.status != 0)
+                    throw response.data;
+
+                if (response.data.rects.length == 1) {
+                    Object.assign(_.cloneDeep(r), response.data.rects[0]);
+                    r.x += r.x;
+                    r.y += r.y;
+                    state.curRect = r;
+                } else if (response.data.rects.length > 1) {
+                    // Now here are a column of glyphs returned.
+                    // save them and mark the last one curRect.
+                    _.pull(state.rects, r);
+                    _.forEach(response.data.rects, function(newR) {
+                        let final = Object.assign(_.cloneDeep(r), newR);
+                        final.x += r.x;
+                        final.y += r.y;
+                        state.rects.push(final);
+                        payload.canvas.redraw_canvas();
+                    })
+                    // state.curRect = state.rects[state.rects.length-1];
+                }
+            })
+            .catch(function (error) {
+                console.log("读取识别过程中出错了 " + error);
+            })
         }
     }
 };

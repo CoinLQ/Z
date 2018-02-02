@@ -111,7 +111,7 @@ export default {
             } else {
                 // Pop user diabled
                 this.$Notice.info({
-                    title: 'The account is not activated, please contact admin.',
+                    title: '账号未激活，请联系管理员。',
                     desc: ''
                 });
             }
@@ -126,7 +126,7 @@ export default {
 
             // }
             this.$Notice.error({
-                title: 'Failed',
+                title: '━Σ(ﾟДﾟ|||)━',
                 desc: error.message
             });
         }

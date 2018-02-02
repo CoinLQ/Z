@@ -133,7 +133,7 @@ export default {
                     })
                     .then(function (response) {
                         that.$Notice.success({
-                            title: 'Now please use new password to login.',
+                            title: '请用新密码重新登录。',
                             desc: ''
                         });
 
@@ -148,7 +148,7 @@ export default {
 
         handleFailure(error) {
             this.$Notice.error({
-                title: 'Failed',
+                title: '━Σ(ﾟДﾟ|||)━',
                 desc: error.message
             });
         },
@@ -168,7 +168,7 @@ export default {
                     })
                     .then(function (response) {
                         that.$Notice.info({
-                            title: 'Vericode has been sent, please check email.',
+                            title: '验证码已发送，请查收邮件。',
                             desc: ''
                         });
                     })

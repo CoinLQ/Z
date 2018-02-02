@@ -135,7 +135,7 @@ export default {
             this.updateCanvas += 1;
           }.bind(this)
         ).catch(function(v) {
-          console.log("Image failed to load! " + v);
+          console.log("图片载入失败 " + v);
         });
     },
     submit() {
