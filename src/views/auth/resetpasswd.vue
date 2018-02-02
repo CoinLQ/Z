@@ -81,12 +81,13 @@ export default {
             util.ajax.get('/auth/staff/exist_email?email='+value)
             .then(function (response) {
                 if (response.data.status == 0) {
-                    callback(new Error('Email doesn\'t exist.'));
+                    callback(new Error('Email does not exist.'));
                 }
             })
             .catch(function (error) {
                 callback();
             });
+            // TODO: 目前禁止邮件验证码重置
             callback(new Error(this.$t('Email does not exist.')));
         };
         const validateVericode = (rule, value, callback) => {
