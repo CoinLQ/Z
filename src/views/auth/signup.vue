@@ -107,7 +107,7 @@ export default {
             let that = this;
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
-                    util.ajax.get('/auth/api-register/', {
+                    util.ajax.post('/auth/api-register/', {
                             email: that.form.email,
                             password: that.form.password
                     })
