@@ -8,7 +8,7 @@ let util = {
 
 };
 util.title = function(title) {
-    title = title ? title : 'Admin';
+    title = title ? title : '欢迎加入';
     window.document.title = title;
 };
 

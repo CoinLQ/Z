@@ -7,7 +7,7 @@
 .wrapper {
     margin: 10px;
 }
-</style>>
+</style>
 
 <template>
 <div>
@@ -102,7 +102,7 @@ export default {
                 that.pagination = response.data.pagination;
             }).catch(function (error) {
                 that.$Notice.error({
-                    title: '━Σ(ﾟДﾟ|||)━',
+                    title: this.$t('Failed'),
                     desc: error.message
                 });
                 that.loading = false;

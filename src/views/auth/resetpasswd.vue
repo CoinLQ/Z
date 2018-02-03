@@ -77,17 +77,18 @@ export default {
             }
         };
         const validateEmail = (rule, value, callback) => {
-            // TODO: Check available account name
-            // util.ajax.post('/auth/check-avail-email', {
-            //     email: value
-            // })
-            // .then(function (response) {
 
-            // })
-            // .catch(function (error) {
-
-            // });
-            callback();
+            util.ajax.get('/auth/staff/exist_email?email='+value)
+            .then(function (response) {
+                if (response.data.status == 0) {
+                    callback(new Error('Email does not exist.'));
+                }
+            })
+            .catch(function (error) {
+                callback();
+            });
+            // TODO: 目前禁止邮件验证码重置
+            callback(new Error(this.$t('Email does not exist.')));
         };
         const validateVericode = (rule, value, callback) => {
             // TODO: Check vericode
@@ -103,7 +104,7 @@ export default {
             },
             rules: {
                 email: [
-                    { type: 'email', required: true },
+                    { type: 'email', required: true, message: this.$t('email required')  },
                     { validator: validateEmail, trigger: 'blur' }
                 ],
                 vericode: [
@@ -111,11 +112,11 @@ export default {
                     { validator: validateVericode, trigger: 'blur'}
                 ],
                 password: [
-                    { type: 'string', min: 6, required: true },
+                    { type: 'string', min: 6, required: true, message: this.$t('password required')},
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [
-                    { type: 'string', required: true },
+                    { type: 'string', required: true, message: this.$t('password must be same') },
                     { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }
@@ -148,7 +149,7 @@ export default {
 
         handleFailure(error) {
             this.$Notice.error({
-                title: '━Σ(ﾟДﾟ|||)━',
+                title: this.$t('Failed'),
                 desc: error.message
             });
         },
