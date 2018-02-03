@@ -207,6 +207,7 @@ export default {
             if (event.preventDefault) {
                 event.preventDefault()
             }
+	    return false;
         }, 100);
         _this.canvas.onmouseup = function (event) {
             if (_this.drag.draggable) {
