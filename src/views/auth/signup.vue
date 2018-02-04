@@ -73,6 +73,8 @@ export default {
             .then(function (response) {
                 if (response.data.status == -1) {
                     callback(new Error('Email has been registered.'));
+                } else {
+                    callback();
                 }
             })
             .catch(function (error) {
