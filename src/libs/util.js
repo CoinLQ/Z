@@ -8,15 +8,15 @@ let util = {
 
 };
 util.title = function(title) {
-    title = title ? title : '欢迎加入';
+    title = title ? title : '龙泉藏经';
     window.document.title = title;
 };
 
 const ajaxUrl = env === 'development' ?
     'http://localhost:8000' :
     env === 'production' ?
-    'http://ccapi.lqdzj.cn' :
-    'http://ccapi-stage.lqdzj.cn';
+    'http://api.lqdzj.cn' :
+    'http://api-stage.lqdzj.cn';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
@@ -341,6 +341,18 @@ util.getPageImageUrlFromCode = function (code) {
     if (!re2) return '';
 
     return prefix + re2[1] + re2[3].replace(/_/g, '/') + '/' + re2[1] + re2[3] + '_' + re2[5] + '.jpg'
+}
+
+/*
+ * "page_code": "YB_27_1"
+ * https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/YB/27/YB_27_1.jpg
+ */
+util.getPageImageUrlFromCode2 = function(page_code) {
+    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
+    var last_underline_pos = page_code.lastIndexOf('_');
+    var path = page_code.substr(0, last_underline_pos).replace('_', '/');
+    var url = prefix + path + '/' + page_code  + '.jpg';
+    return url;
 }
 
 util.getColumnImageUrlFromCode = function (column_code) {
