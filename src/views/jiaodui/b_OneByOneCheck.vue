@@ -108,7 +108,7 @@ export default {
             that.task_id = response.data.task_id;
             that.s3_id = response.data.s3_id;
             that.rects = response.data.rects;
-            return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.s3_id));
+            return util.createImgObjWithUrl(util.getPageImageUrlFromCode2(that.s3_id));
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
             that.updateCanvas += 1;
