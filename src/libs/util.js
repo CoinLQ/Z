@@ -3,6 +3,7 @@ import semver from 'semver';
 import env from '../config/env';
 import packjson from '../../package.json';
 import Cookies from 'js-cookie';
+import _ from 'lodash';
 
 let util = {
 
@@ -61,6 +62,11 @@ util.showThisRoute = function (itAccess, currentAccess) {
         return itAccess === currentAccess;
     }
 };
+
+util.includedThisRoute = function(p_path, path, menus) {
+    let c_path = p_path + '/' + path;
+    return !!_.find(menus, function(o) { return c_path.indexOf(o) >= 0; });
+}
 
 util.getRouterObjByName = function (routers, name) {
     if (!name || !routers || !routers.length) {

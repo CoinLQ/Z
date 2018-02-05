@@ -6,6 +6,8 @@ import Vue from 'vue';
 const app = {
     state: {
         cachePage: [],
+        menus: [],
+        is_admin: false, //如果是admin用户就true，打开所有菜单过滤
         lang: '',
         isFullScreen: false,
         openedSubmenuArr: [], // 要展开的菜单数组
@@ -33,6 +35,14 @@ const app = {
         messageCount: 0,
         dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
     },
+    getters: {
+        menus: state => {
+            return state.menus;
+        },
+        is_admin: state => {
+            return state.is_admin;
+        },
+    },
     mutations: {
         setTagsList (state, list) {
             state.tagsList.push(...list);
@@ -41,45 +51,17 @@ const app = {
             let accessCode = parseInt(Cookies.get('access'));
             let menuList = [];
             appRouter.forEach((item, index) => {
-                if (item.access !== undefined) {
-                    if (Util.showThisRoute(item.access, accessCode)) {
-                        if (item.children.length === 1) {
-                            menuList.push(item);
-                        } else {
-                            let len = menuList.push(item);
-                            let childrenArr = [];
-                            childrenArr = item.children.filter(child => {
-                                if (child.access !== undefined) {
-                                    if (child.access === accessCode) {
-                                        return child;
-                                    }
-                                } else {
-                                    return child;
-                                }
-                            });
-                            menuList[len - 1].children = childrenArr;
-                        }
+                let _item = _.cloneDeep(item)
+                let childrenArr = _item.children.filter(child => {
+                    if (state.is_admin || Util.includedThisRoute(item.path, child.path, state.menus)) {
+                            return child;
                     }
-                } else {
-                    if (item.children.length === 1) {
-                        menuList.push(item);
-                    } else {
-                        let len = menuList.push(item);
-                        let childrenArr = [];
-                        childrenArr = item.children.filter(child => {
-                            if (child.access !== undefined) {
-                                if (Util.showThisRoute(child.access, accessCode)) {
-                                    return child;
-                                }
-                            } else {
-                                return child;
-                            }
-                        });
-                        let handledItem = JSON.parse(JSON.stringify(menuList[len - 1]));
-                        handledItem.children = childrenArr;
-                        menuList.splice(len - 1, 1, handledItem);
-                    }
+                })
+                _item.children = childrenArr;
+                if (childrenArr.length != 0){
+                    let len = menuList.push(_item);
                 }
+
             });
             state.menuList = menuList;
         },
@@ -159,6 +141,12 @@ const app = {
         },
         setOpenedList (state) {
             state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]];
+        },
+        setMenus (state, menu) {
+            state.menus = menu;
+        },
+        setAdmin (state, is_admin) {
+            state.is_admin = is_admin;
         },
         setCurrentPath (state, pathArr) {
             state.currentPath = pathArr;

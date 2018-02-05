@@ -90,12 +90,8 @@ export default {
         handleSuccess(response) {
             if (response.data.staff.is_active) {
 
-                // this.$Notice.success({
-                //     title: 'Succesfully logged in.',
-                //     desc: ''
-                // });
-
-                Cookies.set('user', response.data.staff.email);
+                let staff = response.data.staff;
+                Cookies.set('user', staff.email);
                 // Cookies.set('last_login', response.data.staff.last_login);
 
                 if (this.keepLogin) {
@@ -103,6 +99,8 @@ export default {
                 } else {
                     Cookies.set('token', response.data.token);
                 }
+                this.$store.commit('setMenus', staff.menus);
+                this.$store.commit('setAdmin', staff.is_admin);
 
                 this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
 
@@ -122,9 +120,9 @@ export default {
 
         handleFailure(error) {
             let message = this.$t(error.message);
-            if (error.response && error.response.status == 400) { 
+            if (error.response && error.response.status == 400) {
                 message = error.response.data.non_field_errors;
-                
+
             }
             this.$Notice.error({
                 title: this.$t('Failed'),
