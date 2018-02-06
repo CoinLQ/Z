@@ -9,15 +9,15 @@ let util = {
 
 };
 util.title = function(title) {
-    title = title ? title : '欢迎加入';
+    title = title ? title : '龙泉藏经';
     window.document.title = title;
 };
 
 const ajaxUrl = env === 'development' ?
     'http://localhost:8000' :
     env === 'production' ?
-    'http://ccapi.lqdzj.cn' :
-    'http://ccapi-stage.lqdzj.cn';
+    'http://api.lqdzj.cn' :
+    'http://api-stage.lqdzj.cn';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
@@ -342,6 +342,18 @@ util.getImageUrlFromCode = function(code) {
 
 util.getPageImageUrlFromCode = function (page_code) {
     //  GL000790_79_2_p30 ZH000010_1_p10a01n02
+    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
+    var last_underline_pos = page_code.lastIndexOf('_');
+    var path = page_code.substr(0, last_underline_pos).replace('_', '/');
+    var url = prefix + path + '/' + page_code  + '.jpg';
+    return url;
+}
+
+/*
+ * "page_code": "YB_27_1"
+ * https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/YB/27/YB_27_1.jpg
+ */
+util.getPageImageUrlFromCode2 = function(page_code) {
     const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
     var last_underline_pos = page_code.lastIndexOf('_');
     var path = page_code.substr(0, last_underline_pos).replace('_', '/');
