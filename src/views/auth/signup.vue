@@ -72,14 +72,14 @@ export default {
             util.ajax.get('/auth/staff/exist_email?email='+value)
             .then(function (response) {
                 if (response.data.status == -1) {
-                    callback(new Error('Email has been registered.'));
+                    callback(new Error('此邮箱已被注册.'));
                 } else {
                     callback();
                 }
             })
             .catch(function (error) {
                 callback();
-            });  
+            });
         };
 
         return {
