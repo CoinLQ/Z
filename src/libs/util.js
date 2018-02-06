@@ -340,13 +340,13 @@ util.getImageUrlFromCode = function(code) {
     return prefix + re[1] + '/' + re[3] + '/' + code + '.jpg';
 }
 
-util.getPageImageUrlFromCode = function (code) {
+util.getPageImageUrlFromCode = function (page_code) {
     //  GL000790_79_2_p30 ZH000010_1_p10a01n02
     const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
-    let re2 = /^([A-Z]{2})(\w{6})((_\d+)*)_p(\d+)(.)(.....){0,1}$/.exec(code);
-    if (!re2) return '';
-
-    return prefix + re2[1] + re2[3].replace(/_/g, '/') + '/' + re2[1] + re2[3] + '_' + re2[5] + '.jpg'
+    var last_underline_pos = page_code.lastIndexOf('_');
+    var path = page_code.substr(0, last_underline_pos).replace('_', '/');
+    var url = prefix + path + '/' + page_code  + '.jpg';
+    return url;
 }
 
 util.getColumnImageUrlFromCode = function (column_code) {

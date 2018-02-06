@@ -57,18 +57,24 @@ export default {
             let url = '/api/classifytask/'+ this.task_id +'/done/';
             let sender_this = sender._this;
             sender_this.$data.isBtnLoading = true;
-
+            that.$Loading.start();
             util.ajax.post(url, {rects: sender.rects})
             .then(function(response){
                 let suc = response.data.status == 0;
+                that.$Loading.finish();
                 if (!suc) {
                     throw {message: response.data.msg}
                 }
                 sender_this.$data.isBtnLoading = false;
                 that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
-                that.getWorkingData();
+                if (that.$route.params.tid) {
+                    that.$router.push({ path: '/mytask/classify'});
+                } else {
+                    that.getWorkingData();
+                }
             })
             .catch(function (error) {
+                that.$Loading.error();
                 sender_this.$data.isBtnLoading = false;
                 that.$Notice.error({
                     title: this.$t('Failed'),

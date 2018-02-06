@@ -202,7 +202,7 @@ export default {
                     _this.drag.current = {};
                     _this.redraw_canvas(); }, 100)
             }
-            else if (_this.current.mselected) {
+            else if (_this.current && _this.current.mselected) {
                 // 此情况是将rect拖动到新的位置
                 _this.current.x += point.x - _this.current.$.x;
                 _this.current.y += point.y - _this.current.$.y;

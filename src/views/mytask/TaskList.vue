@@ -50,7 +50,7 @@ export default {
                 },
                 {
                   title: '领取时间',
-                  key: 'assigned_date'
+                  key: 'obtain_date'
                 },
                 {
                     title: '最后处理时间',

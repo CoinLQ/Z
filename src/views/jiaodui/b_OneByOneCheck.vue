@@ -72,7 +72,7 @@ export default {
     return {
       switch1: false,
       rects: [],
-      page_id: '',
+      page_code: '',
       task_id: '',
       updateCanvas: 1,
       isBtnLoading: false
@@ -100,19 +100,21 @@ export default {
         if (this.$route.params.tid) {
           url = '/api/pagetask/' + this.$route.params.tid + '/';
         }
+        that.$Loading.start();
         util.ajax(url).then(function (response) {
+            that.$Loading.finish();
             if (response.data.status != 0)
                 throw {message: response.data.msg}
 
-            that.page_id = response.data.page_id;
             that.task_id = response.data.task_id;
-            that.s3_id = response.data.s3_id;
+            that.page_code = response.data.page_code;
             that.rects = response.data.rects;
-            return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.s3_id));
+            return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.page_code));
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
             that.updateCanvas += 1;
         }).catch(function(error) {
+            that.$Loading.finish();
             that.$Notice.error({
                 title: that.$t('Failed'),
                 desc: that.$t(error.message||'')
@@ -132,7 +134,11 @@ export default {
             }
             that.isBtnLoading = false;
             that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
-            that.getWorkingData();
+            if (that.$route.params.tid) {
+                that.$router.push({ path: '/mytask/onebyone'});
+            } else {
+                that.getWorkingData();
+            }
         }).catch(function (error) {
             that.isBtnLoading = false;
             that.$Notice.error({
