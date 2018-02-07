@@ -1,0 +1,79 @@
+.reel-text-region {
+    position: fixed;
+    overflow: scroll;
+    height: 580px;
+    margin: 20px;
+}
+.correct-submit {
+    position: fixed;
+    top: 600px;
+    margin: 20px 20px;
+}
+.reel-text-compare {
+    font-size: 18px;
+    height: 580px;
+}
+.reel-textarea {
+    font-size: 18px;
+    width: 400px;
+    height: 400px;
+}
+.page-img {
+    position: fixed;
+    overflow: scroll;
+    width: 760px;
+    height: 400px;
+}
+.page-img-bg {
+    height: 400px;
+}
+.deletedtext {
+    background-color: #fdd;
+}
+.addedtext {
+    background-color: #cfc;
+}
+.difftext {
+    background-color: #fdd;
+}
+.seg-row {
+    font-size: 20px;
+}
+.doubt {
+    background-color: #fdd;
+}
+.judge-base-text {
+    padding: 10px;
+    height: 400px;
+    overflow: scroll;
+    border: 1px #ccc solid;
+}
+ul.diffseg-region {
+    list-style-type: none;
+    padding: 10px 0px;
+}
+.diffseg-box {
+    border: 1px #ccc solid;
+    padding: 10px;
+    margin: 10px 0px 0px 0px;
+}
+.recheck-tag {
+    background-color: yellow;
+    margin-left: 10px;
+}
+.diffseg-tag-notext {
+    background: #337ab7;
+}
+.diffseg-tag-notext-selected {
+    background: darkred;
+}
+.diffseg-tag-white {
+    display: inline-block;
+    width: 4px;
+}
+.diffseg-tag-selected {
+    color: red;
+}
+.diffseg-btn {
+    margin-right: 10px;
+}

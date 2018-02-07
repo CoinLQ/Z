@@ -120,6 +120,12 @@ const canvas = {
             state.rects.push(payload.rect);
         },
 
+        /*
+            op :=1 original state
+            op :=2 modified
+            op :=3 deleted
+            op :=4 created, also set cc=0.5 by default, which will be replaced by OCR result.
+        */
         startNewRect(state, payload) {
             let r = payload.rect;
             r.id = '';
