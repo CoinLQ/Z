@@ -33,17 +33,18 @@ export default {
             if (this.$route.params.tid) {
                 url = '/api/cctask/' + this.$route.params.tid + '/';
             }
+            that.$Loading.start();
             // Fetch glyphs data
             util.ajax.get(url).then(function(response){
                 let suc = response.data.status == 0;
-
+                that.$Loading.finish();
                 if (!suc) {
                     throw {message: response.data.msg}
                 }
                 that.rects = response.data.rects;
                 that.task_id = response.data.task_id;
             }).catch(function(error){
-                console.log(error);
+                that.$Loading.error();
                 that.$Notice.error({
                     title: that.$t('Failed'),
                     desc: that.$t(error.message)
@@ -65,7 +66,11 @@ export default {
                 }
                 sender_this.$data.isBtnLoading = false;
                 that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
-                that.getWorkingData();
+                if (that.$route.params.tid) {
+                    that.$router.push({ path: '/mytask/confidence'});
+                } else {
+                    that.getWorkingData();
+                }
             })
             .catch(function (error) {
                 sender_this.$data.isBtnLoading = false;
