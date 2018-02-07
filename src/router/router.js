@@ -86,7 +86,7 @@ export const appRouter = [
             path: '/jiaodui',
             icon: 'ios-grid-view',
             name: 'jiaodui',
-            title: '切分校对',
+            title: '切分流程',
             component: Main,
             children: [
                 { path: 'confidence/:tid*', access: 0, title: '置信校对', name: 'confidence', icon: 'arrow-graph-up-right', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
@@ -111,8 +111,18 @@ export const appRouter = [
                 { path: 'checkdel', access: 0, title: '删除审定', name: 'shanchu-task', icon: 'ios-close-outline', component: resolve => { require(['@/views/mytask/task_CheckDel.vue'], resolve); } },
                 // { path: 'compare', title: '反馈审查', name: 'fankui-task', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/mytask/task_compare.vue'], resolve); } },
             ]
-        }
-
+        },
+        {
+            path: '/collate',
+            icon: 'ios-list-outline',
+            name: 'collate',
+            title: '校勘流程',
+            component: Main,
+            children: [
+                { path: 'correct', title: '文字校对', name: 'correct', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/correct.vue'], resolve); } },
+                { path: 'judge', title: '校勘判取', name: 'judge', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/collate/judge.vue'], resolve); } },
+            ]
+        },
     ]
 
 // // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
