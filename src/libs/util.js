@@ -155,7 +155,7 @@ util.setCurrentPath = function (vm, name) {
                 return false;
             }
         })[0];
-        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
+        if (currentPathObj && currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
             currentPathArr = [
                 {
                     title: '首页',
@@ -163,7 +163,7 @@ util.setCurrentPath = function (vm, name) {
                     name: 'home_index'
                 }
             ];
-        } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
+        } else if (currentPathObj && currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
             currentPathArr = [
                 {
                     title: '首页',
@@ -177,24 +177,11 @@ util.setCurrentPath = function (vm, name) {
                 }
             ];
         } else {
-            let childObj = currentPathObj.children.filter((child) => {
-                return child.name === name;
-            })[0];
             currentPathArr = [
                 {
                     title: '首页',
                     path: '/home',
                     name: 'home_index'
-                },
-                {
-                    title: currentPathObj.title,
-                    path: '',
-                    name: currentPathObj.name
-                },
-                {
-                    title: childObj.title,
-                    path: currentPathObj.path + '/' + childObj.path,
-                    name: name
                 }
             ];
         }
@@ -277,9 +264,6 @@ util.fullscreenEvent = function (vm) {
 util.checkUpdate = function (vm) {
     axios.get('https://api.github.com/repos/iview/iview-admin/releases/latest').then(res => {
         let version = res.data.tag_name;
-        vm.$Notice.config({
-            duration: 0
-        });
         if (semver.lt(packjson.version, version)) {
             // vm.$Notice.info({
             //     title: '后台已更新啦',
