@@ -54,6 +54,11 @@ window.nn = new Vue({
         this.$store.commit('updateMenulist');
         // iview-admin检查更新
         util.checkUpdate(this);
+        // 全局iview配置
+        this.$Notice.config({
+            top: 50,
+            duration: 3
+        });
     },
     created () {
         let tagsList = [];

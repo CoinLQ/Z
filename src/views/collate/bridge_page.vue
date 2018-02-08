@@ -6,7 +6,6 @@ iframe {
 </style>
 <template>
   <iframe class="iframe" :style="{height: getHeight}" :src=getPageUrl></iframe>
-  <!-- <div id="container" class="iframe" ref="container"></div> -->
 </template>
 <script>
 import util from '@/libs/util'
@@ -19,19 +18,11 @@ export default {
       },
 
       getPageUrl() {
-        return util.ajax.defaults.baseURL + "/correct/" + this.$route.params.id
+        let base_path = this.$route.query.base_path;
+        return util.ajax.defaults.baseURL + "/" + this.$route.name +"/" + this.$route.params.id
       }
   },
 
-  mounted() {
-    this.init();
-  },
-
-  methods: {
-    init() {
-
-    }
-  }
 }
 
 </script>

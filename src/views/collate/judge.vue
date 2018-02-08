@@ -42,6 +42,8 @@
 <script src="./js/tripitaka.js"></script>>
 <script>
 import axios from 'axios';
+import util from '@/libs/util'
+
 import tripitaka from './js/tripitaka.js'
 import splitDialog from './comps/splitDialog'
 import mergeDialog from './comps/mergeDialog'
@@ -68,7 +70,7 @@ export default {
   },
   mounted() {
     var vm = this
-    axios.get('http://localhost:9000/api/judge/' + vm.sharedata.task_id + '/')
+    util.ajax.get('/api/judge/' + vm.sharedata.task_id + '/')
     .then(function(response) {
       vm.base_text = response.data.base_text;
       vm.diffseg_pos_lst = response.data.diffseg_pos_lst;
@@ -123,7 +125,7 @@ export default {
     },
     reloadDiffsegs: function(newPage) {
       var vm = this
-      axios.get('http://localhost:9000/api/judge/' + vm.sharedata.task_id + '/diffsegresults/?page=' + newPage)
+      util.ajax.get('/api/judge/' + vm.sharedata.task_id + '/diffsegresults/?page=' + newPage)
       .then(function(response) {
         var diffseg_count = response.data.count;
         if (diffseg_count > 1) {
@@ -152,7 +154,7 @@ export default {
     },
     checkAllSelected: function() {
       var vm = this
-      axios.get('http://localhost:9000/api/judge/' + vm.sharedata.task_id + '/allselected/')
+      util.ajax.get('/api/judge/' + vm.sharedata.task_id + '/allselected/')
       .then(function(response) {
         vm.not_all_selected = ! response.data.all_selected;
       })
@@ -170,7 +172,7 @@ export default {
     },
     finishJudgeTask: function() {
       var vm = this;
-      axios.post('http://localhost:9000/api/judge/' + this.sharedata.task_id + '/finish/')
+      util.ajax.post('/api/judge/' + this.sharedata.task_id + '/finish/')
       .then(function(response) {
         alert('提交成功！');
       })
