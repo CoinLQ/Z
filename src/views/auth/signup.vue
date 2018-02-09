@@ -122,7 +122,7 @@ export default {
                     })
                     .catch(function (error) {
                         that.$Notice.error({
-                            title: this.$t('Failed'),
+                            title: that.$t('Failed'),
                             desc: error.message
                         });
                     });

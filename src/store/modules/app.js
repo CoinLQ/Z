@@ -2,12 +2,13 @@ import {otherRouter, appRouter} from '@/router/router';
 import Util from '@/libs/util';
 import Cookies from 'js-cookie';
 import Vue from 'vue';
+import env from '@/config/env';
 
 const app = {
     state: {
         cachePage: [],
         menus: [],
-        is_admin: false, //如果是admin用户就true，打开所有菜单过滤
+        is_admin: env === 'development', //如果是admin用户就true，打开所有菜单过滤
         lang: '',
         isFullScreen: false,
         openedSubmenuArr: [], // 要展开的菜单数组
