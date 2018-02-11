@@ -12,7 +12,7 @@
             <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3><img src="./img/title-v1.png" alt=""></h3>
+                    <h3>登录校勘平台</h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">

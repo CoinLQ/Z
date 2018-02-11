@@ -12,7 +12,7 @@
             <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3><img src="./img/reset-v1.png" alt=""></h3>
+                    <h3>重置密码</h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">
