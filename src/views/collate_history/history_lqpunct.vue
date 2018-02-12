@@ -25,10 +25,6 @@ export default {
                     key: 'lqreel_no'
                 },
                 {
-                    title: '底本',
-                    key: 'base_tripitaka_name'
-                },
-                {
                     title: '优先级',
                     key: 'priority'
                 },

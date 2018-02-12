@@ -17,16 +17,16 @@ export default {
                     key: 'batch_task',
                 },
                 {
-                    title: '龙泉经名',
-                    key: 'lqsutra_name'
+                    title: '藏',
+                    key: 'tripitaka_name'
+                },
+                {
+                    title: '经',
+                    key: 'sutra'
                 },
                 {
                     title: '第几卷',
-                    key: 'lqreel_no'
-                },
-                {
-                    title: '底本',
-                    key: 'base_tripitaka_name'
+                    key: 'reel_no'
                 },
                 {
                     title: '优先级',
