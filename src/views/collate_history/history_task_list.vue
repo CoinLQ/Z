@@ -114,7 +114,7 @@ export default {
         },
         obtain(index){
             let id = this.rows[index].id
-            this.$router.push({name: that.viewRouteName, params: {id: id}})
+            this.$router.push({name: this.viewRouteName, params: {id: id}})
         }
     },
     mounted() {
