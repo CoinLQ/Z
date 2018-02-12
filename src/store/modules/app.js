@@ -175,6 +175,27 @@ const app = {
             }
             state.pageOpenedList.push(tagObj);
             localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
+        },
+        refressh_token (state) {
+            if (state.menus.length == 0) {
+                Util.ajax.post('/auth/auth-token-refresh/', {
+                        token: Cookies.get('token'),
+                })//, { baseURL: '/' }
+                .then(function (response) {
+                    if (response.data.staff.is_active) {
+                        let staff = response.data.staff;
+                        Cookies.set('token', response.data.token, { expires: 7 });
+                        state.menus = staff.menus;
+                        state.is_admin = staff.is_admin;
+                    } else {
+                        state.menus = [];
+                        state.is_admin = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
         }
     }
 };
