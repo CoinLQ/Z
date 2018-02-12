@@ -76,7 +76,7 @@ export default {
                     util.ajax.post('/auth/api-auth/', {
                             email: that.form.email,
                             password: that.form.password
-                    })
+                    }, { baseURL: '/' })
                     .then(function (response) {
                         that.handleSuccess(response);
                     })
