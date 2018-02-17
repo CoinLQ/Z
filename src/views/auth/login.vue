@@ -42,6 +42,7 @@
 <script>
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
+import env from '@/config/env';
 
 export default {
 
@@ -73,10 +74,17 @@ export default {
             let that = this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
+                    let baseURL;
+                    if (env === 'development') {
+                        baseURL = 'http://localhost:8000'
+                    }
+                    else {
+                        baseURL = '/'
+                    }
                     util.ajax.post('/auth/api-auth/', {
                             email: that.form.email,
                             password: that.form.password
-                    }, { baseURL: '/' })
+                        }, { baseURL })
                     .then(function (response) {
                         that.handleSuccess(response);
                     })

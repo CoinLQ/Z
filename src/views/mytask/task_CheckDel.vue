@@ -29,20 +29,11 @@ export default {
     componenets: [ButtonWrapper],
     data () {
         return {
+            inner_height: 100,
             dataUrl: '/api/deltask/history/',
             viewRouteName : 'checkdel',
             loading: false,
             columns: [
-                // {
-                //     type: 'selection',
-                //     width: 60,
-                //     fixed: 'left',
-                //     align: 'center'
-                // },
-                // {
-                //     title: '批次号',
-                //     key: 'schedule_no',
-                // },
                 {
                     title: '任务号',
                     key: 'tid'
@@ -59,27 +50,6 @@ export default {
                     title: '最后处理时间',
                     key: 'update_date'
                 },
-                // {
-                //   title: '操作',
-                //   key: 'op',
-                //   fixed: 'right',
-                //   align: 'center',
-                //   width: 100,
-                //   render: (h, params) => {
-                //         return h(ButtonWrapper, {
-                //             props: {
-                //                 size: 'large',
-                //                 text: '查看'
-                //             },
-                //             on: {
-                //                 click: (e) => {
-                //                     let tid = e.vm.$options.parent.$props.row.tid;
-                //                     this.$router.push({name: this.viewRouteName, params: {tid: tid}})
-                //                 }
-                //             }
-                //         });
-                //     }
-                // }
             ],
             rows: [],
             pagination: {},
@@ -87,7 +57,7 @@ export default {
     },
     computed: {
       getHeight() {
-        return window.innerHeight
+        return this.inner_height
       }
     },
     methods: {
@@ -113,10 +83,18 @@ export default {
         },
         changePageSize(size) {
             this.gotoPage(this.pagination.page, size);
+        },
+        handleResize() {
+            this.inner_height = window.innerHeight - 140
         }
     },
     mounted() {
         this.gotoPage(1, 10)
+        this.handleResize();
+        on(window, 'resize', this.handleResize);
+    },
+    beforeDestroy () {
+        off(window, 'resize', this.handleResize);
     }
 }
 </script>

@@ -37,6 +37,7 @@
 <script>
 import util from '@/libs/util';
 import ButtonWrapper from '../mytask/ButtonWrapper';
+import { on, off } from 'iview/src/utils/dom';
 
 export default {
     name: 'HistoryTaskList',
@@ -115,11 +116,19 @@ export default {
         obtain(index){
             let id = this.rows[index].id
             this.$router.push({name: this.viewRouteName, params: {id: id}})
+        },
+        handleResize() {
+            console.log(window.innerHeight)
+            this.inner_height = window.innerHeight - 180
         }
     },
     mounted() {
         this.gotoPage(1, 10)
-        this.inner_height = window.innerHeight - 180
+        this.handleResize();
+        on(window, 'resize', this.handleResize);
+    },
+    beforeDestroy () {
+        off(window, 'resize', this.handleResize);
     }
 }
 </script>

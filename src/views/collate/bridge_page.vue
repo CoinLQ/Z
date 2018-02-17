@@ -5,13 +5,15 @@ iframe {
 }
 </style>
 <template>
-  <iframe class="iframe" :style="{height: getHeight}" :src=getPageUrl></iframe>
+  <IframeTask :task-path="getPageUrl"></IframeTask>
 </template>
 <script>
 import util from '@/libs/util'
+import IframeTask from './iframe_task';
+
 export default {
   name: 'correct',
-
+  components: { IframeTask },
   computed: {
       getHeight: function() {
           return (window.innerHeight - 100) + 'px';
@@ -19,10 +21,8 @@ export default {
 
       getPageUrl() {
         let base_path = this.$route.query.base_path;
-        return util.ajax.defaults.baseURL + "/" + this.$route.name +"/" + this.$route.params.id
+        return this.$route.name
       }
-  },
-
+  }
 }
-
 </script>

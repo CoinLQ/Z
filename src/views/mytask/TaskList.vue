@@ -21,6 +21,7 @@
 <script>
 import util from '@/libs/util';
 import ButtonWrapper from './ButtonWrapper';
+import { on, off } from 'iview/src/utils/dom';
 
 export default {
     name: 'TaskList',
@@ -28,14 +29,9 @@ export default {
     componenets: [ButtonWrapper],
     data () {
         return {
+            inner_height: 100,
             loading: false,
             columns: [
-                // {
-                //     type: 'selection',
-                //     width: 60,
-                //     fixed: 'left',
-                //     align: 'center'
-                // },
                 {
                     title: '批次号',
                     key: 'schedule_no',
@@ -84,7 +80,7 @@ export default {
     },
     computed: {
       getHeight() {
-        return window.innerHeight
+        return this.inner_height
       }
     },
     methods: {
@@ -110,10 +106,18 @@ export default {
         },
         changePageSize(size) {
             this.gotoPage(this.pagination.page, size);
+        },
+        handleResize() {
+            this.inner_height = window.innerHeight - 140
         }
     },
     mounted() {
         this.gotoPage(1, 10)
+        this.handleResize();
+        on(window, 'resize', this.handleResize);
+    },
+    beforeDestroy () {
+        off(window, 'resize', this.handleResize);
     }
 }
 </script>

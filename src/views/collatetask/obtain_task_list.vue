@@ -36,6 +36,7 @@
 </template>
 <script>
 import util from '@/libs/util';
+import { on, off } from 'iview/src/utils/dom';
 import ButtonWrapper from '../mytask/ButtonWrapper';
 
 export default {
@@ -136,11 +137,18 @@ export default {
                 });
                 that.loading = false;
             })
+        },
+        handleResize() {
+            this.inner_height = window.innerHeight - 180
         }
     },
     mounted() {
         this.gotoPage(1, 10)
-        this.inner_height = window.innerHeight - 180
+        this.handleResize();
+        on(window, 'resize', this.handleResize);
+    },
+    beforeDestroy () {
+        off(window, 'resize', this.handleResize);
     }
 }
 </script>
