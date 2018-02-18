@@ -191,6 +191,21 @@ const app = {
                         state.menus = [];
                         state.is_admin = false;
                     }
+                    let menuList = [];
+                    appRouter.forEach((item, index) => {
+                        let _item = _.cloneDeep(item)
+                        let childrenArr = _item.children.filter(child => {
+                            if (state.is_admin || Util.includedThisRoute(item.path, child.path, state.menus)) {
+                                    return child;
+                            }
+                        })
+                        _item.children = childrenArr;
+                        if (childrenArr.length != 0){
+                            let len = menuList.push(_item);
+                        }
+
+                    });
+                    state.menuList = menuList;
                 })
                 .catch(function (error) {
                     console.log(error);

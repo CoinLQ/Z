@@ -63,7 +63,7 @@
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
             <div class="layout">
-                <div class="layout-content" :height="content_height">
+                <div class="layout-content" :style="{height: content_height+'px'}">
                 <keep-alive :include="cachePage">
                     <router-view></router-view>
                 </keep-alive>
