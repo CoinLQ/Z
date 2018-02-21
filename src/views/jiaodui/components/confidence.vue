@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import canvasOp from './canvas_op3.vue';
+import canvasOp from './canvas_op_disable_draw.vue';
 import glyphBlock from './glyph_block.vue';
 import util from '@/libs/util';
 import _ from 'lodash';
@@ -125,8 +125,8 @@ export default {
         },
 
         getDirection: function() {
-            // return this.rectData.length > 20? 'column' : 'row';
-            return 'column';
+            return this.rectData.length > 20? 'column' : 'row';
+            // return 'column';
         }
     },
     data () {

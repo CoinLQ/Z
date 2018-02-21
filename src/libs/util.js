@@ -353,7 +353,7 @@ util.getColumnImageUrlFromCode = function (column_code) {
            return this.slice(start, this.length+1-(end*-1));
         }
         let column_path = column_code.split('_').subarray(0,-2).join("/")
-        return "https://s3.cn-north-1.amazonaws.com.cn/lqdzj-col/" + column_path + "/" + column_code + ".jpg"
+        return "https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/" + column_path + "/" + column_code + ".jpg"
     }
     //说明column_code不匹配规则, 默认显示加载中...todo 后续改加载失败的图片.
     // this.clip = '/static/img/FhHRx.gif';

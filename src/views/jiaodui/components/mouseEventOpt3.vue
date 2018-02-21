@@ -6,7 +6,7 @@
 import  _ from 'lodash';
 
 export default {
-	props:["canvasId"],
+	props:["canvasId", "drawEnable"],
 
     computed: {
         canvas() {
@@ -20,7 +20,7 @@ export default {
             draw: {
                 drawing: false,
                 additions: null,
-                enable: true,
+                enable: this.drawEnable != "false",
             },
             drag: {
                 current: null,
@@ -131,6 +131,7 @@ export default {
                 if (!rect && _this.draw.enable) {
                     _this.draw.drawing = true;
                     let new_rect = Object.assign({}, rects[0]);
+                    new_rect.id = '';
                     new_rect.x = point.x;
                     new_rect.y = point.y;
                     _this.draw.additions = new_rect;

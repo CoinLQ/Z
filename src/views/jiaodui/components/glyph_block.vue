@@ -20,13 +20,13 @@
 	}
 
 	.glyph {
-		width: 120px;
-		height: 120px;
+		width: 160px;
+		height: 160px;
 		border-radius: 3px 3px 0 0;
 	}
 
 	.char {
-		/*display: none;*/
+		display: none;
 	    text-align: center;
 	    background-color: #2E363F;
 	    color: #fffdddee;
@@ -53,6 +53,10 @@
 		background-color: #27A9E3;
 	}
 
+	.bottom_lb {
+		width: 50%;
+	}
+
 	.glyph-wrapper {
 		/*display: flex;*/
 	}
@@ -66,7 +70,7 @@
 				<div class="glyph char"><div class="char-wrapper">{{rectData.ch}}</div></div>
 			</div>
 			<div class="confidence" :class="{active:isActive}">
-				<label>{{ rectData.cc }}</label>
+				<label class="bottom_lb">{{ rectData.cc }}</label>|<label class="bottom_lb">{{ rectData.ch }}</label>
 			</div>
 		</div>
 	</div>
