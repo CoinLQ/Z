@@ -94,7 +94,7 @@
         },
         data () {
             return {
-                topHeight: 103,
+                topHeight: 95,
                 shrink: false,
                 userName: '',
                 isFullScreen: false,

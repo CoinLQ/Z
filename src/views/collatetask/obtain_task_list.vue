@@ -139,7 +139,7 @@ export default {
             })
         },
         handleResize() {
-            this.inner_height = window.innerHeight - 180
+            this.inner_height = window.innerHeight - 192
         }
     },
     mounted() {

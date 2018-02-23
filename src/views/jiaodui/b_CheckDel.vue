@@ -47,8 +47,7 @@ export default {
             columns: [
                 {
                     title: '经字号',
-                    key: 'cid',
-                    fixed: 'left'
+                    key: 'cid'
                 },
                 {
                     title: '提交人',

@@ -1,6 +1,6 @@
 <style scoped>
 .table {
-    box-shadow: 0px 0px 3px 3px #363E4E;
+    box-shadow: 0px 0px 3px 3px #dddee1;
     border-radius: 2px;
 }
 
@@ -85,7 +85,7 @@ export default {
             this.gotoPage(this.pagination.page, size);
         },
         handleResize() {
-            this.inner_height = window.innerHeight - 140
+            this.inner_height = window.innerHeight - 150
         }
     },
     mounted() {

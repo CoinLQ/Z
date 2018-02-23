@@ -119,7 +119,7 @@ export default {
         },
         handleResize() {
             console.log(window.innerHeight)
-            this.inner_height = window.innerHeight - 180
+            this.inner_height = window.innerHeight - 192
         }
     },
     mounted() {

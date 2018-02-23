@@ -20,8 +20,8 @@
 	}
 
 	.glyph {
-		width: 160px;
-		height: 160px;
+		width: 140px;
+		height: 140px;
 		border-radius: 3px 3px 0 0;
 	}
 

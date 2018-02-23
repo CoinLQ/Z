@@ -53,6 +53,7 @@ const canvas = {
     },
     mutations: {
         resetAll (state) {
+            state.curGlyph = null;
             state.curRect = {empty: true};
             state.rects.length = 0;
             state.scale = 1;
