@@ -75,7 +75,7 @@ export default {
             window.rects = rects;
             _(rects).forEach(function(rect,i){
                 ctx.lineWidth=1.5*scale;
-
+                ctx.globalAlpha = 0.5;
                 if (rect.mselected) {
                     ctx.strokeStyle="#1892e8bf"; // blue
                     ctx.fillStyle = '#1892e8a0';
