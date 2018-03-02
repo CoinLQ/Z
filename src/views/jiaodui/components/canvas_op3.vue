@@ -95,7 +95,7 @@ export default {
                     ctx.fillStyle = '#BEB7ADE0';
                 }
 
-                if (rect.deleted) {
+                if (rect.deleted || rect.op == 3) {
                     ctx.fillStyle = '#000000a0';
                     ctx.lineWidth=4*scale;
                 }

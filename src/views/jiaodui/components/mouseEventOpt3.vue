@@ -101,11 +101,14 @@ export default {
                 return;
             }
             window.nn = this;
-            // if (this.current.id) {
-                this.current.mselected = false;
-            // }
             this.current = rect;
-            this.current.mselected = true;
+            if (this.current && this.current.id) {
+                this.current.mselected = false;
+            }else {
+                this.current.mselected = true; 
+            }
+            
+            
             this.current.$ = point;
             this.$store.commit('setCurRect',{rect: this.current});
         },
@@ -220,6 +223,13 @@ export default {
             if (_this.draw.drawing) {
                 let r = _this.draw.additions;
                 _this.$store.dispatch('closeNewRect', {rect: r, canvas: _this});
+                _this.$nextTick(function(){
+                    let point= this.translat_point(event)
+                    let rect = this.getRectOverByPoint(point, rects);
+                    this.markRectSelected(rect, point);
+                    this.current.mselected = false;
+                }.bind(_this))
+                
             }
             _this.draw.drawing = false;
 
