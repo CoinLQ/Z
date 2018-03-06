@@ -309,7 +309,7 @@ util.createImgObjWithUrl = function(url) {
     });
 }
 
-util.getImageUrlFromCode = function(code) {
+util.getImageUrlFromCode_old = function(code) {
     /*  e.g. code = GZ000790v030p0010005
         https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
         https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/YB/027/YBv027p00010.jpg
@@ -324,7 +324,7 @@ util.getImageUrlFromCode = function(code) {
     return prefix + re[1] + '/' + re[3] + '/' + code + '.jpg';
 }
 
-util.getPageImageUrlFromCode = function (page_code) {
+util.getPageImageUrlFromCode_old = function (page_code) {
     //  GL000790_79_2_p30 ZH000010_1_p10a01n02
     const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
     var last_underline_pos = page_code.lastIndexOf('_');
@@ -337,7 +337,7 @@ util.getPageImageUrlFromCode = function (page_code) {
  * "page_code": "YB_27_1"
  * https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/YB/27/YB_27_1.jpg
  */
-util.getPageImageUrlFromCode2 = function(page_code) {
+util.getPageImageUrlFromCode = function(page_code) {
     const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
     var last_underline_pos = page_code.lastIndexOf('_');
     var path = page_code.substr(0, last_underline_pos).replace('_', '/');
@@ -353,7 +353,7 @@ util.getColumnImageUrlFromCode = function (column_code) {
            return this.slice(start, this.length+1-(end*-1));
         }
         let column_path = column_code.split('_').subarray(0,-2).join("/")
-        return "https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/" + column_path + "/" + column_code + ".jpg"
+        return "https://s3.cn-north-1.amazonaws.com.cn/lqdzj-col/" + column_path + "/" + column_code + ".jpg"
     }
     //说明column_code不匹配规则, 默认显示加载中...todo 后续改加载失败的图片.
     // this.clip = '/static/img/FhHRx.gif';
