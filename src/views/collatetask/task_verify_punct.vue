@@ -32,10 +32,6 @@ export default {
                     title: '优先级',
                     key: 'priority'
                 },
-                {
-                    title: '阶段',
-                    key: 'progress'
-                },
             ],
         }
     }

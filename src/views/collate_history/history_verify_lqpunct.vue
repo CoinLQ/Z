@@ -29,10 +29,6 @@ export default {
                     key: 'priority'
                 },
                 {
-                    title: '阶段',
-                    key: 'progress'
-                },
-                {
                     title: '状态',
                     key: 'status'
                 },

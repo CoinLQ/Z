@@ -33,6 +33,10 @@ export default {
                     key: 'reel_no'
                 },
                 {
+                    title: '阶段',
+                    key: 'task_no'
+                },
+                {
                     title: '优先级',
                     key: 'priority'
                 },

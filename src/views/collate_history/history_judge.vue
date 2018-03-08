@@ -29,6 +29,10 @@ export default {
                     key: 'base_tripitaka_name'
                 },
                 {
+                    title: '阶段',
+                    key: 'task_no'
+                },
+                {
                     title: '优先级',
                     key: 'priority'
                 },
