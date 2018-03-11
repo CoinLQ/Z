@@ -71,7 +71,8 @@ export const otherRouter =  {
     component: Main,
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/blank.vue'], resolve); } },
-        { path: 'error-page', title: '错误页面', name: 'errorpage_index', component: resolve => { require(['@/views/error-page/error-page.vue'], resolve); } }
+        { path: 'error-page', title: '错误页面', name: 'errorpage_index', component: resolve => { require(['@/views/error-page/error-page.vue'], resolve); } },
+        { path: 'pick-task/:task*', title: '任务领取页面', name: 'picktask_index', component: resolve => { require(['@/views/collatetask/welcome.vue'], resolve); } }
     ]
 };
 
@@ -95,27 +96,10 @@ export const collateRouter = {
 
 export const appRouter = [
         {
-            path: '/collate_tasks',
-            icon: 'ios-list-outline',
-            name: 'collate_tasks',
-            title: '校勘流程',
-            component: Main,
-            children: [
-                { path: 'correct', access: 0, title: '文字校对', name: 'correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct.vue'], resolve); } },
-                { path: 'verify_correct', access: 0, title: '文字校对审定', name: 'verify-correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_verify_correct.vue'], resolve); } },
-                { path: 'judge', access: 0, title: '校勘判取', name: 'judge-task', icon: 'map', component: resolve => { require(['@/views/collatetask/task_judge.vue'], resolve); } },
-                { path: 'verify_judge', access: 0, title: '校勘判取审定', name: 'verify-judge-task', icon: 'map', component: resolve => { require(['@/views/collatetask/task_verify_judge.vue'], resolve); } },
-                { path: 'punct', access: 0, title: '基础标点', name: 'punct-task', icon: 'quote', component: resolve => { require(['@/views/collatetask/task_punct.vue'], resolve); } },
-                { path: 'verify_punct', access: 0, title: '基础标点审定', name: 'verify-punct-task', icon: 'quote', component: resolve => { require(['@/views/collatetask/task_verify_punct.vue'], resolve); } },
-                { path: 'lqpunct', access: 0, title: '定本标点', name: 'lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_lqpunct.vue'], resolve); } },
-                { path: 'verify_lqpunct', access: 0, title: '定本标点审定', name: 'verify-lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_verify_lqpunct.vue'], resolve); } },
-            ]
-        },
-        {
             path: '/collate_history',
             icon: 'ios-list-outline',
             name: 'collate_history',
-            title: '校勘任务历史',
+            title: '我的校勘任务',
             component: Main,
             children: [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correct.vue'], resolve); } },
@@ -129,25 +113,27 @@ export const appRouter = [
             ]
         },
         {
-            path: '/jiaodui',
-            icon: 'ios-grid-view',
-            name: 'jiaodui',
-            title: '切分流程',
+            path: '/collate_tasks',
+            icon: 'ios-list-outline',
+            name: 'collate_tasks',
+            title: '校勘任务大厅',
             component: Main,
             children: [
-                { path: 'confidence/:tid*', access: 0, title: '置信校对', name: 'confidence', icon: 'arrow-graph-up-right', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
-                { path: 'classify/:tid*', access: 0, title: '聚类校对', name: 'classify', icon: 'ios-keypad', component: resolve => { require(['@/views/jiaodui/b_classify.vue'], resolve); } },
-                // { path: 'checkleak/:tid*', title: '查漏校对', name: 'chalou-jiaodui', icon: 'pinpoint', component: resolve => { require(['@/views/jiaodui/b_CheckLeak.vue'], resolve); } },
-                { path: 'onebyone/:tid*', access: 0, title: '逐字校对', name: 'onebyone', icon: 'images', component: resolve => { require(['@/views/jiaodui/b_OneByOneCheck.vue'], resolve); } },
-                { path: 'checkdel/:tid*', access: 0, title: '删除审定', name: 'checkdel', icon: 'ios-close-outline', component: resolve => { require(['@/views/jiaodui/b_CheckDel.vue'], resolve); } },
-                // { path: 'compare/:tid*', title: '反馈审查', name: 'fankui-jiaodui', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/jiaodui/b_compare.vue'], resolve); } },
+                { path: 'correct', access: 0, title: '文字校对', name: 'correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct.vue'], resolve); } },
+                { path: 'verify_correct', access: 0, title: '文字校对审定', name: 'verify_correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_verify_correct.vue'], resolve); } },
+                { path: 'judge', access: 0, title: '校勘判取', name: 'judge-task', icon: 'map', component: resolve => { require(['@/views/collatetask/task_judge.vue'], resolve); } },
+                { path: 'verify_judge', access: 0, title: '校勘判取审定', name: 'verify_judge-task', icon: 'map', component: resolve => { require(['@/views/collatetask/task_verify_judge.vue'], resolve); } },
+                { path: 'punct', access: 0, title: '基础标点', name: 'punct-task', icon: 'quote', component: resolve => { require(['@/views/collatetask/task_punct.vue'], resolve); } },
+                { path: 'verify_punct', access: 0, title: '基础标点审定', name: 'verify_punct-task', icon: 'quote', component: resolve => { require(['@/views/collatetask/task_verify_punct.vue'], resolve); } },
+                { path: 'lqpunct', access: 0, title: '定本标点', name: 'lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_lqpunct.vue'], resolve); } },
+                { path: 'verify_lqpunct', access: 0, title: '定本标点审定', name: 'verify_lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_verify_lqpunct.vue'], resolve); } },
             ]
         },
         {
             path: '/mytask',
             icon: 'ios-list-outline',
             name: 'task',
-            title: '切分任务历史',
+            title: '我的切分任务',
             component: Main,
             children: [
                 { path: 'confidence', access: 0, title: '置信校对', name: 'zhixin-task', icon: 'arrow-graph-up-right', component: resolve => { require(['@/views/mytask/task_confidence.vue'], resolve); } },
@@ -158,6 +144,22 @@ export const appRouter = [
                 // { path: 'compare', title: '反馈审查', name: 'fankui-task', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/mytask/task_compare.vue'], resolve); } },
             ]
         },
+        {
+            path: '/jiaodui',
+            icon: 'ios-grid-view',
+            name: 'jiaodui',
+            title: '切分任务大厅',
+            component: Main,
+            children: [
+                { path: 'confidence/:tid*', access: 0, title: '置信校对', name: 'confidence', icon: 'arrow-graph-up-right', component: resolve => { require(['@/views/jiaodui/b_confidence.vue'], resolve); } },
+                { path: 'classify/:tid*', access: 0, title: '聚类校对', name: 'classify', icon: 'ios-keypad', component: resolve => { require(['@/views/jiaodui/b_classify.vue'], resolve); } },
+                // { path: 'checkleak/:tid*', title: '查漏校对', name: 'chalou-jiaodui', icon: 'pinpoint', component: resolve => { require(['@/views/jiaodui/b_CheckLeak.vue'], resolve); } },
+                { path: 'onebyone/:tid*', access: 0, title: '逐字校对', name: 'onebyone', icon: 'images', component: resolve => { require(['@/views/jiaodui/b_OneByOneCheck.vue'], resolve); } },
+                { path: 'checkdel/:tid*', access: 0, title: '删除审定', name: 'checkdel', icon: 'ios-close-outline', component: resolve => { require(['@/views/jiaodui/b_CheckDel.vue'], resolve); } },
+                // { path: 'compare/:tid*', title: '反馈审查', name: 'fankui-jiaodui', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/jiaodui/b_compare.vue'], resolve); } },
+            ]
+        },
+
     ]
 
 // // 所有上面定义的路由都要写在下面的routers里

@@ -81,6 +81,7 @@
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
+    import { on, off } from 'iview/src/utils/dom';
     import util from '@/libs/util.js';
 
     export default {
@@ -96,9 +97,10 @@
             return {
                 topHeight: 95,
                 shrink: false,
+                content_height: 0,
                 userName: '',
                 isFullScreen: false,
-                openedSubmenuArr: this.$store.state.app.openedSubmenuArr
+                openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
             };
         },
         computed: {
@@ -126,9 +128,6 @@
             mesCount () {
                 return this.$store.state.app.messageCount;
             },
-            content_height() {
-                return window.innerHeight - this.topHeight;
-            }
         },
         methods: {
             init () {
@@ -183,7 +182,15 @@
                 return true;
             },
             fullscreenChange (isFullScreen) {
-                // console.log(isFullScreen);
+
+                console.log(this.isFullScreen);
+            },
+            handleResize() {
+                if (this.isFullScreen) {
+                    this.content_height = window.outerHeight - this.topHeight;
+                } else {
+                    this.content_height = window.innerHeight - this.topHeight;
+                }
             }
         },
         watch: {
@@ -202,9 +209,11 @@
         },
         mounted () {
             this.init();
-            window.onresize = function() {
-                this.content_height = window.innerHeight - this.topHeight;
-            };
+            this.content_height = window.innerHeight - this.topHeight;
+            on(window, 'resize', this.handleResize);
+        },
+        beforeDestroy () {
+            off(window, 'resize', this.handleResize);
         },
         created () {
             // 显示打开的页面的列表

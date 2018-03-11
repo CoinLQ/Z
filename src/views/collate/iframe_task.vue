@@ -25,7 +25,6 @@ export default {
     },
     methods: {
         handleResize() {
-            console.log(window.innerHeight)
             this.inner_height = window.innerHeight - 100
         },
 

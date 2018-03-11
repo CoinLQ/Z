@@ -6,28 +6,50 @@
 #search {
     padding: 0px 0px 10px 5px;
     position: relative;
-    left: 70%;
-    width: 30%;
+    display: inline-block;
+    width: 100%
 }
 .wrapper {
     margin: 10px;
+}
+#header {
+    padding: 0px 0px 10px 5px;
+    position: relative;
+    width: 100%;
+    height: 48px;
+}
+.l-actions {
+    padding: 0px 0px 10px 5px;
+    position: relative;
+    width: 100%;
+    height: 48px;
+}
+
+.l-actions > .ivu-btn {
+    line-height: 2;
+    color: white;
 }
 </style>
 
 <template>
 <div>
     <div class="wrapper">
-        <div id="search">
-            <Input type="text"
-                placeholder="关键字..."
-                size="default"
-                autocomplete="off"
-                v-model="keyword"
-                icon="close-circled"
-                @on-click="clear"
-                autofocus
-                @keyup.native.enter="search(keyword)"/>
-        </div>
+         <Row>
+            <Col span="6"><div class="l-actions"><Button type="info" @click="startTask">开始任务</Button></div></Col>
+            <Col span="6" offset="12">
+                <div id="search">
+                    <Input type="text"
+                        placeholder="关键字..."
+                        size="default"
+                        autocomplete="off"
+                        v-model="keyword"
+                        icon="close-circled"
+                        @on-click="clear"
+                        autofocus
+                        @keyup.native.enter="search(keyword)"/>
+                </div>
+            </Col>
+        </Row>
         <Table stripe border class="table" size="large" :height="inner_height" :loading="loading" :columns="total_column" :data="rows"></Table>
     </div>
 
@@ -81,6 +103,14 @@ export default {
         }
     },
     methods: {
+        startTask() {
+            let task = _.find(this.rows, function(v) { return v.status=="进行中" });
+            if (!task) {
+                this.gotoPickTask()
+            } else {
+               this.$router.push({name: this.viewRouteName, params: {id: task.id}}) 
+            }
+        },
         gotoPage(page, page_size) {
             this.loadData({ params: {page, page_size} })
         },
@@ -118,8 +148,11 @@ export default {
             this.$router.push({name: this.viewRouteName, params: {id: id}})
         },
         handleResize() {
-            console.log(window.innerHeight)
             this.inner_height = window.innerHeight - 192
+            return
+        },
+        gotoPickTask () {
+            return this.$router.push({name: 'picktask_index', params: {task: this.viewRouteName}})
         }
     },
     mounted() {
