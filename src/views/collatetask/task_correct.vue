@@ -17,10 +17,6 @@ export default {
                     key: 'batch_task',
                 },
                 {
-                    title: '龙泉经名',
-                    key: 'lqsutra_name'
-                },
-                {
                     title: '藏',
                     key: 'tripitaka_name'
                 },
