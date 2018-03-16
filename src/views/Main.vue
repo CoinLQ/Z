@@ -16,6 +16,7 @@
                     <img v-show="shrink" src="../images/logo-min.png" key="min-logo" />
                 </div>
             </shrinkable-menu>
+            <a class="mail-us" href="mailto://lqdzj@longquan.org">问题反馈</a>
         </div>
         <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
             <div class="main-header">
