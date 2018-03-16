@@ -1,4 +1,4 @@
-import {otherRouter, appRouter} from '@/router/router';
+import {routers, otherRouter, appRouter} from '@/router/router';
 import Util from '@/libs/util';
 import Cookies from 'js-cookie';
 import Vue from 'vue';
@@ -29,8 +29,7 @@ const app = {
         ], // 面包屑数组
         menuList: [],
         routers: [
-            otherRouter,
-            ...appRouter
+            ...routers
         ],
         tagsList: [...otherRouter.children],
         messageCount: 0,

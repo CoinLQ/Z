@@ -72,7 +72,6 @@ util.getRouterObjByName = function (routers, name) {
     if (!name || !routers || !routers.length) {
         return null;
     }
-    // debugger;
     let routerObj = null;
     for (let item of routers) {
         if (item.name === name) {
@@ -97,95 +96,72 @@ util.handleTitle = function (vm, item) {
 util.setCurrentPath = function (vm, name) {
     let title = '';
     let isOtherRouter = false;
-    vm.$store.state.app.routers.forEach(item => {
-        if (item.children.length === 1) {
-            if (item.children[0].name === name) {
-                title = util.handleTitle(vm, item);
+    let routers = vm.$store.state.app.routers;
+    routers.forEach(item => {
+        if (!item.children) {
+            return
+        }
+        item.children.forEach(child => {
+            if (child.name === name) {
+                title = util.handleTitle(vm, child);
                 if (item.name === 'otherRouter') {
                     isOtherRouter = true;
                 }
             }
-        } else {
-            item.children.forEach(child => {
-                if (child.name === name) {
-                    title = util.handleTitle(vm, child);
-                    if (item.name === 'otherRouter') {
-                        isOtherRouter = true;
-                    }
-                }
-            });
-        }
+        });
+        
     });
     let currentPathArr = [];
-    if (name === 'home_index') {
+    let currentPathObj = routers.filter(item => {
+        if (!item.children) {
+            return false
+        }
+        if (_.find(item.children, function(child) { return child.name === name })) {
+            return true
+        }    
+    })[0];
+    let detailPathObj = util.getRouterObjByName(routers, name);
+    if (currentPathObj && detailPathObj.name === 'home_index') {
         currentPathArr = [
             {
-                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
+                title: util.handleTitle(vm, util.getRouterObjByName(routers, 'home_index')),
                 path: '',
                 name: 'home_index'
             }
         ];
-    } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'home_index') {
+    } else if (currentPathObj && currentPathObj.children.length >=1 && isOtherRouter) {
         currentPathArr = [
             {
-                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
-                path: '/home',
+                title: '首页',
+                path: '',
                 name: 'home_index'
             },
             {
-                title: title,
+                title: detailPathObj.title,
                 path: '',
                 name: name
             }
         ];
-    } else {
-        let currentPathObj = vm.$store.state.app.routers.filter(item => {
-            if (item.children.length <= 1) {
-                return item.children[0].name === name;
-            } else {
-                let i = 0;
-                let childArr = item.children;
-                let len = childArr.length;
-                while (i < len) {
-                    if (childArr[i].name === name) {
-                        return true;
-                    }
-                    i++;
-                }
-                return false;
+    } else if (currentPathObj && currentPathObj.children.length >=1 && !isOtherRouter) {
+        currentPathArr = [
+            {
+                title: '首页',
+                path: '',
+                name: 'home_index'
+            },
+            {
+                title: currentPathObj.title,
+                path: '',
+                name: name
+            },
+            {
+                title: detailPathObj.title,
+                path: '',
+                name: name
             }
-        })[0];
-        if (currentPathObj && currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '',
-                    name: 'home_index'
-                }
-            ];
-        } else if (currentPathObj && currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '/home',
-                    name: 'home_index'
-                },
-                {
-                    title: currentPathObj.title,
-                    path: '',
-                    name: name
-                }
-            ];
-        } else {
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '/home',
-                    name: 'home_index'
-                }
-            ];
-        }
+        ];
     }
+
     vm.$store.commit('setCurrentPath', currentPathArr);
 
     return currentPathArr;

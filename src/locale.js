@@ -1,6 +1,6 @@
 export default {
     'zh-CN': {
-      'home': '主页',
+      'home': '首页',
       'Failed': '━Σ(ﾟДﾟ|||)━',
       'success': '成功',
       'The account is not activated, please contact admin.': '该账户未激活，请联系系统管理员。',
