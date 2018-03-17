@@ -112,7 +112,7 @@ export default {
             }
         },
         gotoPage(page, page_size) {
-            this.loadData({ params: {page, page_size} })
+            this.loadData({page, page_size})
         },
         changePage(page) {
             this.gotoPage(page, this.pagination.page_size);
@@ -129,6 +129,9 @@ export default {
         },
         loadData(data) {
             let that = this;
+            if (!data.search && !!this.keyword) {
+                data.search = this.keyword
+            }
             let param = { params: data }
             that.loading = true;
             util.ajax.get(this.dataUrl, param).then(function (response) {
