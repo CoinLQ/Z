@@ -105,6 +105,7 @@ export default {
             this.gotoPage(page, this.pagination.page_size);
         },
         changePageSize(size) {
+            this.pagination.page_size = size;
             this.gotoPage(this.pagination.page, size);
         },
         handleResize() {

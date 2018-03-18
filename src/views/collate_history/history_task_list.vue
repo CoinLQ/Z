@@ -118,6 +118,7 @@ export default {
             this.gotoPage(page, this.pagination.page_size);
         },
         changePageSize(size) {
+            this.pagination.page_size = size;
             this.gotoPage(this.pagination.page, size);
         },
         clear() {
@@ -131,6 +132,9 @@ export default {
             let that = this;
             if (!data.search && !!this.keyword) {
                 data.search = this.keyword
+            }
+            if (!!this.pagination.page_size) {
+                data.page_size = this.pagination.page_size;
             }
             let param = { params: data }
             that.loading = true;
