@@ -31,7 +31,7 @@
         <Table stripe border class="table" size="large" :height="inner_height" :loading="loading" :columns="total_column" :data="rows"></Table>
     </div>
 
-    <Page :total="pagination.total_pages" :current="pagination.page" :pageSize="pagination.page_size" @on-change="changePage" @on-page-size-change="changePageSize" size="small" show-elevator show-sizer></Page>
+    <Page :total="pagination.total_entries" :current="pagination.page" :pageSize="pagination.page_size" @on-change="changePage" @on-page-size-change="changePageSize" size="small" show-elevator show-sizer></Page>
 </div>
 </template>
 <script>
@@ -149,6 +149,11 @@ export default {
         this.gotoPage(1, 10)
         this.handleResize();
         on(window, 'resize', this.handleResize);
+        let pathArr = util.setCurrentPath(this, this.$route.name);
+        this.$store.commit('updateMenulist');
+        if (pathArr.length >= 2) {
+            this.$store.commit('addOpenSubmenu', pathArr[1].name);
+        }
     },
     beforeDestroy () {
         off(window, 'resize', this.handleResize);

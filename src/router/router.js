@@ -114,7 +114,7 @@ export const appRouter = [
         },
         {
             path: '/collate_tasks',
-            icon: 'ios-list-outline',
+            icon: 'ios-grid-view',
             name: 'collate_tasks',
             title: '校勘任务大厅',
             component: Main,

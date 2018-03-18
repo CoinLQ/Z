@@ -155,19 +155,22 @@ util.setCurrentPath = function (vm, name) {
                 name: name
             },
             {
-                title: util.handleTitle(vm, detailPathObj.title),
+                title: util.handleTitle(vm, detailPathObj),
                 path: '',
                 name: name
             }
         ];
     }
-    
+    if (currentPathObj) {
+        vm.$store.commit('addOpenSubmenu', currentPathObj.name);
+    }
     vm.$store.commit('setCurrentPath', currentPathArr);
     util.title(util.handleTitle(vm, detailPathObj));
     return currentPathArr;
 };
 
 util.openNewPage = function (vm, name, argu, query) {
+
     return ;
     if (!vm.$store) {
       return

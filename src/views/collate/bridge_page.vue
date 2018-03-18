@@ -23,6 +23,9 @@ export default {
         let base_path = this.$route.query.base_path;
         return this.$route.name
       }
+
+  },
+  mounted: function () {
   }
 }
 </script>
