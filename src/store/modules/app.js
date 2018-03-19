@@ -20,13 +20,11 @@ const app = {
             name: 'home_index'
         }],
         currentPageName: '',
-        currentPath: [
-            {
+        currentPath: [{
                 title: '首页',
                 path: '',
                 name: 'home_index'
-            }
-        ], // 面包屑数组
+        }], // 面包屑数组
         menuList: [],
         routers: [
             ...routers
