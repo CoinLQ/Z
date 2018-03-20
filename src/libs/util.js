@@ -17,7 +17,7 @@ const ajaxUrl = env === 'development' ?
     'http://localhost:8000' :
     env === 'production' ?
     'http://api.lqdzj.cn' :
-    'http://api-stage.lqdzj.cn';
+    'http://work-api.lqdzj.cn';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
@@ -64,8 +64,14 @@ util.showThisRoute = function (itAccess, currentAccess) {
 };
 
 util.includedThisRoute = function(p_path, path, menus) {
-    let c_path = p_path + '/' + path;
-    return !!_.find(menus, function(o) { return c_path.indexOf(o) >= 0; });
+    let c_path;
+    if (path) {
+        c_path = p_path + '/' + path;
+    } else {
+        c_path = p_path;
+    }
+    
+    return _.includes(menus, c_path);
 }
 
 util.getRouterObjByName = function (routers, name) {

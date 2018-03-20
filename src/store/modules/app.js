@@ -3,6 +3,7 @@ import Util from '@/libs/util';
 import Cookies from 'js-cookie';
 import Vue from 'vue';
 import env from '@/config/env';
+import _ from 'lodash';
 
 const app = {
     state: {
@@ -26,6 +27,8 @@ const app = {
                 name: 'home_index'
         }], // 面包屑数组
         menuList: [],
+        openMenuPaths: ['/help'],
+        disableMenuPaths: ['/mytask', '/jiaodui'],
         routers: [
             ...routers
         ],
@@ -49,13 +52,19 @@ const app = {
             let accessCode = parseInt(Cookies.get('access'));
             let menuList = [];
             appRouter.forEach((item, index) => {
+                if (_.includes(state.disableMenuPaths, item.path)) {
+                    return false;
+                }
                 let _item = _.cloneDeep(item)
                 let childrenArr = _item.children.filter(child => {
                     if (state.is_admin || Util.includedThisRoute(item.path, child.path, state.menus)) {
-                            return child;
+                        return child;
+                    } else if (_.includes(state.openMenuPaths, item.path)) {
+                        return child;
                     }
                 })
                 _item.children = childrenArr;
+
                 if (childrenArr.length != 0){
                     let len = menuList.push(_item);
                 }
@@ -174,10 +183,12 @@ const app = {
             localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
         },
         refressh_token (state) {
+            
             if (state.menus.length == 0) {
+                let baseURL = env === 'development' ? 'http://localhost:8000' : '/';
                 Util.ajax.post('/auth/auth-token-refresh/', {
                         token: Cookies.get('token'),
-                })//, { baseURL: '/' }
+                }, { baseURL })
                 .then(function (response) {
                     if (response.data.staff.is_active) {
                         let staff = response.data.staff;
@@ -188,22 +199,10 @@ const app = {
                         state.menus = [];
                         state.is_admin = false;
                     }
-                    let menuList = [];
-                    appRouter.forEach((item, index) => {
-                        let _item = _.cloneDeep(item)
-                        let childrenArr = _item.children.filter(child => {
-                            if (state.is_admin || Util.includedThisRoute(item.path, child.path, state.menus)) {
-                                    return child;
-                            }
-                        })
-                        _item.children = childrenArr;
-                        if (childrenArr.length != 0){
-                            let len = menuList.push(_item);
-                        }
 
-                    });
-                    state.menuList = menuList;
-                })
+                    this.commit('updateMenulist')
+                    
+                }.bind(this))
                 .catch(function (error) {
                     console.log(error);
                 });

@@ -74,13 +74,7 @@ export default {
             let that = this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    let baseURL;
-                    if (env === 'development') {
-                        baseURL = 'http://localhost:8000'
-                    }
-                    else {
-                        baseURL = '/'
-                    }
+                    let baseURL = env === 'development' ? 'http://localhost:8000' : '/';
                     util.ajax.post('/auth/api-auth/', {
                             email: that.form.email,
                             password: that.form.password

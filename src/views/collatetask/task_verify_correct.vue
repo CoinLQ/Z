@@ -14,7 +14,7 @@ export default {
             columns: [
                 {
                     title: '批次号',
-                    key: 'batch_task',
+                    key: 'batchtask',
                 },
                 {
                     title: '藏',
