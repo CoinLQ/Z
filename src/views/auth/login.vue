@@ -6,13 +6,17 @@
 <template>
     <div class="wrapper" @keydown.enter="handleSubmit">
         <div class="header">
-            <h1><img src="./img/logo-v1.png" alt=""></h1>
+            <h1>
+                <span class="banner-logo">
+                    <img src="../../images/logo-min.png" key="min-logo" />
+                </span>龙泉大藏经校勘平台
+            </h1>
         </div>
         <div class="main w">
             <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3>登录校勘平台</h3>
+                    <h3>登录</h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">
