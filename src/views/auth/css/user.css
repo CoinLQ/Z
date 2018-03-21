@@ -132,9 +132,7 @@ body{
 .item .hidden{
 	top:10px;
 }
-.header h1 img {
-    margin-top:18px;
-}
+
 .header h1 {
 	color: white;
     font-size: 30px;
@@ -146,12 +144,18 @@ body{
     color: darkgrey;
 }
 .banner-logo{
-    padding: 8px 5px;
+    padding: 0px 4px;
+    margin: 0px 6px;
+    display: inline-block;
     text-align: center;
-    
-    background-color: #c32221;
+    background-color: #ce0d1f;
 }
 .banner-logo > img{
-    height: 44px;
+	
+    height: 50px;
     width: auto;
+}
+
+.header h1 img {
+	margin-top: 15px;
 }

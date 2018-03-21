@@ -8,7 +8,7 @@
         <div class="header">
             <h1>
                 <span class="banner-logo">
-                    <img src="../../images/logo-min.png" key="min-logo" />
+                    <img src="./img/logo-icon.jpg" key="min-logo" />
                 </span>龙泉大藏经校勘平台
             </h1>
         </div>
