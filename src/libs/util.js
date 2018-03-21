@@ -9,7 +9,7 @@ let util = {
 
 };
 util.title = function(title) {
-    title = title ? title : '龙泉藏经';
+    title = title ? title : '龙泉大藏经校勘平台';
     window.document.title = title;
 };
 
