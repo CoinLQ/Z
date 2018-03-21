@@ -135,7 +135,6 @@ export default {
                         title: that.$t('Failed'),
                         desc: response.data.msg
                     });
-                    that.rows.splice(index, 1);
                 }
             }).catch(function (error) {
                 that.$Notice.error({
