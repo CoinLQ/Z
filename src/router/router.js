@@ -37,6 +37,15 @@ export const page404 = {
     component: resolve => { require(['@/views/error-page/404.vue'], resolve); }
 };
 
+export const pagenoie = {
+    path: '/noie',
+    meta: {
+        title: 'IE不被支持'
+    },
+    name: 'ie-403',
+    component: resolve => { require(['@/views/error-page/forbidden_ie.vue'], resolve); }
+};
+
 export const page403 = {
     path: '/403',
     meta: {
@@ -196,7 +205,8 @@ export const routers = [
     collateRouter,
     page500,
     page403,
-    page404
+    pagenoie,
+    page404,
 ];
 
 
