@@ -12,8 +12,8 @@
 			<p>二、请在邮件内容中详细描述您遇到的问题或建议。包括：</p>
 			<p class="ft14"><span>1. </span>页面的url链接地址。</p>
 			<p class="ft14"><span>2. </span>页面截图。</p>
-			<p class="ft14"><span>3. </span>所使用的操作系统和浏览器版本</p>
-			<p class="ft14"><span>4. </span>问题或建议详细描述</p>
+			<p class="ft14"><span>3. </span>所使用的操作系统和浏览器版本。</p>
+			<p class="ft14"><span>4. </span>问题或建议详细描述。</p>
 		</div>
 	</div>
 </template>
