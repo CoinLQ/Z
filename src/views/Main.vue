@@ -14,7 +14,7 @@
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
                     <img v-show="!shrink"  src="../images/logo.png" key="max-logo" />
-                    <img v-show="shrink" src="../images/logo-min.png" key="min-logo" />
+                    <img class="mini" v-show="shrink" src="../images/logo-min.png" key="min-logo" />
                 </div>
             </shrinkable-menu>
         </div>
