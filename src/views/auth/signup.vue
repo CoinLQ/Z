@@ -50,6 +50,7 @@
 <script>
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
+import config from '@/config/config.js';
 
 let saved_username = Cookies.get('user');
 
@@ -122,7 +123,7 @@ export default {
                             title: '注册完成，请重新登录。',
                             desc: ''
                         });
-                        that.gotoLogin();
+                        that.registerDiscouse(that.form.email, that.form.password)
                     })
                     .catch(function (error) {
                         that.$Notice.error({
@@ -133,7 +134,30 @@ export default {
                 }
             });
         },
-
+        registerDiscouse (email, password) {
+            let baseURL = config.env === 'development' ? 'http://local-bbs.lqdzj.cn' : 'http://bbs.lqdzj.cn';
+            let username = email.split('.')[0].replace('@', '')
+            let url = '/users?api_username=' + config.um + '&apikey='+ config.ak;
+            let that = this;
+            util.ajax.post(url, {
+                    name: username,
+                    email: email,
+                    password: password,
+                    username: username,
+                    active: true,
+                    approved: true
+                }, { baseURL })
+            .then(function (response) {
+                that.gotoLogin();
+            })
+            .catch(function (error) {
+                that.$Notice.error({
+                    title: that.$t('Failed'),
+                    desc: error.message
+                });
+                that.gotoLogin();
+            });
+        },
         gotoLogin() {
              this.$router.push({
                 name: 'login'
