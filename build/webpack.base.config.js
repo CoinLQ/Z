@@ -11,6 +11,9 @@ function resolve (dir) {
 }
 
 module.exports = {
+    devServer: {
+        public: 'test.lqdzj.cn'
+    },
     entry: {
         main: '@/main',
         vendors: '@/vendors'

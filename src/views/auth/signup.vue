@@ -59,10 +59,10 @@ export default {
     data () {
 
         const validatePass = (rule, value, callback) => {
-            var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}');
+            var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('密码长度为6-30，必须包含数字、大小写字母、特殊符号'))
+                callback(new Error('密码长度为8-30，必须包含数字、大小写字母、特殊符号'))
             }
             callback();
         };
@@ -135,7 +135,7 @@ export default {
             });
         },
         registerDiscouse (email, password) {
-            let baseURL = config.env === 'development' ? 'http://local-bbs.lqdzj.cn' : 'http://bbs.lqdzj.cn';
+            let baseURL = config.env === 'development' ? 'http://bbs-local.lqdzj.cn' : 'http://bbs.lqdzj.cn';
             let username = email.split('.')[0].replace('@', '')
             let url = '/users?api_username=' + config.um + '&apikey='+ config.ak;
             let that = this;
