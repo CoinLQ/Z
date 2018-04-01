@@ -20,7 +20,7 @@
                     <MenuItem :name="child.name" :key="child.name">
                         <Icon v-if="child.type != 'href'" :type="child.icon" :size="iconSize" :key="child.name"></Icon>
                         <span v-if="child.type != 'href'" class="layout-text" :key="child.name">{{ itemTitle(child) }}</span>
-                        <a v-if="child.type == 'href'" style='color: inherit' :href="child.href" target="_blank">
+                        <a style="padding: 10px 140px 10px 80px;margin: 0px -30px 0px -80px;color:inherit;" v-if="child.type == 'href'" :href="child.href" target="_blank">
                             <Icon :type="child.icon" :size="iconSize" :key="child.name" style="margin: 3px 6px 3px -3px;"></Icon>
                             <span class="layout-text" :key="child.name">{{ itemTitle(child) }}</span>
                         </a>
