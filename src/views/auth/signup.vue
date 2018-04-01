@@ -137,7 +137,7 @@ export default {
         registerDiscouse (email, password) {
             let baseURL = config.env === 'development' ? 'http://bbs-local.lqdzj.cn' : 'http://bbs.lqdzj.cn';
             let username = email.split('.')[0].replace('@', '')
-            let url = '/users?api_username=' + config.um + '&apikey='+ config.ak;
+            let url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
             let that = this;
             util.ajax.post(url, {
                     name: username,
