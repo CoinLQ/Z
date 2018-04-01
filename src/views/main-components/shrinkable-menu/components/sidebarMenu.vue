@@ -18,8 +18,12 @@
                 </template>
                 <template v-for="child in item.children">
                     <MenuItem :name="child.name" :key="child.name">
-                        <Icon :type="child.icon" :size="iconSize" :key="child.name"></Icon>
-                        <span class="layout-text" :key="child.name">{{ itemTitle(child) }}</span>
+                        <Icon v-if="child.type != 'href'" :type="child.icon" :size="iconSize" :key="child.name"></Icon>
+                        <span v-if="child.type != 'href'" class="layout-text" :key="child.name">{{ itemTitle(child) }}</span>
+                        <a v-if="child.type == 'href'" style='color: inherit' :href="child.href" target="_blank">
+                            <Icon :type="child.icon" :size="iconSize" :key="child.name" style="margin: 3px 6px 3px -3px;"></Icon>
+                            <span class="layout-text" :key="child.name">{{ itemTitle(child) }}</span>
+                        </a>
                     </MenuItem>
                 </template>
             </Submenu>

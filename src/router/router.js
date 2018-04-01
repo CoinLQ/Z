@@ -146,7 +146,7 @@ export const appRouter = [
             component: Main,
             children: [
                 { path: '', title: '帮助', name: 'help_index', icon: 'help', component: resolve => { require(['@/views/help/index.vue'], resolve); } },
-                { path: 'mailus', title: '联系我们', name: 'help_mailus', icon: 'erlenmeyer-flask', component: resolve => { require(['@/views/help/mail-us.vue'], resolve); } },
+                { path: 'bbs', title: '论坛', name: 'help_bbs', type: 'href', icon: 'erlenmeyer-flask', href: 'http://bbs.lqdzj.cn' },
             ]
         },
         {
@@ -182,17 +182,6 @@ export const appRouter = [
 
     ]
 
-export const helpRouter = {
-    path: '/help',
-    icon: 'ios-list-outline',
-    name: 'help',
-    title: '系统说明',
-    component: Main,
-    children: [
-        { path: '', title: '帮助', name: 'help_index', component: resolve => { require(['@/views/help/index.vue'], resolve); } },
-        { path: 'mailus', title: '联系我们', name: 'help_mailus', component: resolve => { require(['@/views/help/mail-us.vue'], resolve); } },
-    ]
-};
 
 // // 所有上面定义的路由都要写在下面的routers里
 export const routers = [
@@ -201,7 +190,6 @@ export const routers = [
     resetPasswdRouter,
     otherRouter,
     ...appRouter,
-    helpRouter,
     collateRouter,
     page500,
     page403,
