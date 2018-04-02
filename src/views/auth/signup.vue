@@ -111,6 +111,9 @@ export default {
     },
     methods: {
         handleSubmit (event) {
+            this.registerDiscouse(this.form.email, this.form.password, event)
+        },
+        registerSubmit (event) {
             let that = this;
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
@@ -123,7 +126,7 @@ export default {
                             title: '注册完成，请重新登录。',
                             desc: ''
                         });
-                        that.registerDiscouse(that.form.email, that.form.password)
+                        that.gotoLogin();
                     })
                     .catch(function (error) {
                         that.$Notice.error({
@@ -134,7 +137,7 @@ export default {
                 }
             });
         },
-        registerDiscouse (email, password) {
+        registerDiscouse (email, password, event) {
             let baseURL = config.env === 'development' ? 'http://bbs-local.lqdzj.cn' : 'http://bbs.lqdzj.cn';
             let username = email.split('.')[0].replace('@', '')
             let url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
@@ -148,14 +151,20 @@ export default {
                     approved: true
                 }, { baseURL })
             .then(function (response) {
-                that.gotoLogin();
+                if (response.data.success) {
+                    that.registerSubmit(event)
+                } else {
+                    that.$Notice.error({
+                    title: that.$t('Failed'),
+                    desc: response.data.message
+                    });
+                }
             })
             .catch(function (error) {
                 that.$Notice.error({
                     title: that.$t('Failed'),
                     desc: error.message
                 });
-                that.gotoLogin();
             });
         },
         gotoLogin() {
