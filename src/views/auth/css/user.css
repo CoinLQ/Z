@@ -1,6 +1,15 @@
 body{
 	background:#eee;
 }
+.username:before{
+	content:"";
+	position: absolute;
+	left:0;
+	top:27px;
+	width: 28px;
+	height:28px;
+	background:url(../img/user-v1.png) no-repeat;
+}
 .email:before{
 	content:"";
 	position: absolute;
