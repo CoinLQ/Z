@@ -188,7 +188,7 @@ export default {
             })
             .catch(function (error) {
                 that.$Notice.error({  
-                    title: that.$t('Failed:'+username),
+                    title: that.$t('Failed'),
                     desc: error.message
                 });
             });

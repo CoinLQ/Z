@@ -65,6 +65,7 @@ export default {
                     menu: '#495060',
                     element: '#e43e31'
                 }
+               
             ]
         };
     },

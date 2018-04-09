@@ -62,6 +62,7 @@ export default {
         shrinkIconColor () {
             return this.theme === 'dark' ? '#fff' : '#495060';
         }
+        
     },
     methods: {
         handleChange (name) {
