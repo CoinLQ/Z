@@ -5,6 +5,7 @@ export default {
       'success': '成功',
       'The account is not activated, please contact admin.': '该账户未激活，请联系系统管理员。',
       'Network Error': '网络故障',
+      'username required': '需要有效的用户名',
       'email required': '需要有效email地址',
       'password required': '需要输入有效密码',
       'password must be same': '两次输入的密码必须一致',

@@ -21,9 +21,14 @@
                 </div>
                 <div class="bd">
                     <Form ref="regForm" :model="form" :rules="rules">
+                        <div class="item username">
+                            <FormItem prop="username">
+                                <Input v-model.trim="form.username" placeholder="请输入用户名"></Input>
+                            </FormItem>
+                        </div>
                         <div class="item email">
                             <FormItem prop="email">
-                                <Input v-model.trim="form.email" placeholder="请输入用户名"></Input>
+                                <Input v-model.trim="form.email" placeholder="请输入邮箱"></Input>
                             </FormItem>
                         </div>
                         <div class="item password">
@@ -86,14 +91,33 @@ export default {
                 callback();
             });
         };
-
+        const validateUsername = (rule, value, callback) => {
+           
+            util.ajax.get('/auth/staff/exist_username?username='+value)
+            
+            .then(function (response) {
+                if (response.data.status == -1) {
+                    callback(new Error('此用户名已被注册.'));
+                } else {
+                    callback();
+                }
+            })
+            .catch(function (error) {
+                callback(new Error('无法查询用户名.'));
+            });
+        };
         return {
             form: {
+                username: '',
                 email: saved_username,
                 password: '',
                 repassword: ''
             },
             rules: {
+                username: [
+                    { type: 'string', required: true, message: this.$t('username required') },
+                    { validator: validateUsername, trigger: 'blur' }
+                ],
                 email: [
                     { type: 'email', required: true, message: this.$t('email required') },
                     { validator: validateEmail, trigger: 'blur' }
@@ -111,13 +135,14 @@ export default {
     },
     methods: {
         handleSubmit (event) {
-            this.registerDiscouse(this.form.email, this.form.password, event)
+            this.registerDiscouse(this.form.username,this.form.email, this.form.password, event)
         },
         registerSubmit (event) {
             let that = this;
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
                     util.ajax.post('/auth/api-register/', {
+                            username: that.form.username,
                             email: that.form.email,
                             password: that.form.password
                     })
@@ -143,7 +168,7 @@ export default {
             let url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
             let that = this;
             util.ajax.post(url, {
-                    name: username,
+                    name: this.form.username,
                     email: email,
                     password: password,
                     username: username,
@@ -151,6 +176,7 @@ export default {
                     approved: true
                 }, { baseURL })
             .then(function (response) {
+                
                 if (response.data.success) {
                     that.registerSubmit(event)
                 } else {
@@ -161,7 +187,7 @@ export default {
                 }
             })
             .catch(function (error) {
-                that.$Notice.error({
+                that.$Notice.error({  
                     title: that.$t('Failed'),
                     desc: error.message
                 });
