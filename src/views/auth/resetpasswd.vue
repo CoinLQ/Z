@@ -107,10 +107,6 @@ export default {
                 repassword: ''
             },
             rules: {
-                username: [
-                    { type: 'email', required: true, message: this.$t('username required')  },
-                    { validator: validateUsername, trigger: 'blur' }
-                ],
                 email: [
                     { type: 'email', required: true, message: this.$t('email required')  },
                     { validator: validateEmail, trigger: 'blur' }
