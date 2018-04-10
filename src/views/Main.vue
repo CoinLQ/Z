@@ -57,7 +57,7 @@
             </div>
             <div class="tags-con">
                 <div class="main-breadcrumb">
-                     <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+                     <breadcrumb-nav :currentPath="currentPath" ></breadcrumb-nav>
                 </div>
                 <!-- <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened> -->
             </div>

@@ -1,5 +1,5 @@
 <template>
-    <Breadcrumb>
+    <Breadcrumb  separator=">">
         <icon type="ios-home-outline"></icon>
         <BreadcrumbItem
             v-for="item in currentPath"
