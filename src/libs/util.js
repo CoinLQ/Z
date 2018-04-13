@@ -130,7 +130,7 @@ util.setCurrentPath = function (vm, name) {
     if (currentPathObj && detailPathObj.name === 'home_index') {
         currentPathArr = [
             {
-                title: '首页',//util.handleTitle(vm, util.getRouterObjByName(routers, 'home_index')),
+                title: '首页',
                 path: '',
                 name: 'home_index'
             }
