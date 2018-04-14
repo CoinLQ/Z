@@ -92,7 +92,11 @@ export default {
             });
         };
         const validateUsername = (rule, value, callback) => {
-           
+            var regex = new RegExp('^(?=.*[-_a-zA-Z0-9]).{5,10}$');
+            if (!regex.test(value)) {
+                // Complexity match checking
+                callback(new Error('用户名必须只包括数字、字母、连字号或下划线，长度在5-10之间'))
+            }
             util.ajax.get('/auth/staff/exist_username?username='+value)
             
             .then(function (response) {
@@ -135,7 +139,7 @@ export default {
     },
     methods: {
         handleSubmit (event) {
-            this.registerDiscouse(this.form.username,this.form.email, this.form.password, event)
+            this.registerSubmit(event)
         },
         registerSubmit (event) {
             let that = this;
@@ -154,43 +158,20 @@ export default {
                         that.gotoLogin();
                     })
                     .catch(function (error) {
-                        that.$Notice.error({
+                        if (error.response.data.msg) {
+                            that.$Notice.error({
+                            title: that.$t('Failed'),
+                            desc: error.response.data.msg
+                        });
+                        } else {
+                            that.$Notice.error({
                             title: that.$t('Failed'),
                             desc: error.message
                         });
+                        }
+                        
                     });
                 }
-            });
-        },
-        registerDiscouse (email, password, event) {
-            let baseURL = config.env === 'development' ? 'http://bbs-local.lqdzj.cn' : 'http://bbs.lqdzj.cn';
-            let username = email.split('.')[0].replace('@', '')
-            let url = '/users?api_username=' + config.um + '&api_key='+ config.ak;
-            let that = this;
-            util.ajax.post(url, {
-                    name: this.form.username,
-                    email: email,
-                    password: password,
-                    username: username,
-                    active: true,
-                    approved: true
-                }, { baseURL })
-            .then(function (response) {
-                
-                if (response.data.success) {
-                    that.registerSubmit(event)
-                } else {
-                    that.$Notice.error({
-                    title: that.$t('Failed'),
-                    desc: response.data.message
-                    });
-                }
-            })
-            .catch(function (error) {
-                that.$Notice.error({  
-                    title: that.$t('Failed'),
-                    desc: error.message
-                });
             });
         },
         gotoLogin() {
