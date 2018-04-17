@@ -27,6 +27,16 @@ export default {
         handleResize() {
             this.inner_height = window.innerHeight - 100
         },
+        updateBannerHeader() {
+            let url = util.ajax.defaults.baseURL + "/api/v1/tasks/" + this.taskPath + "/" + this.$route.params.id + "/detail";
+            util.ajax.put(url, {})
+            .then(function (response) {
+                this.$store.commit('updateBannerHeader', response.data.title);
+            }.bind(this))
+            .catch(function (error) {
+                console.log(error)
+            });
+        }
 
     },
     data () {
@@ -36,6 +46,7 @@ export default {
     },
     mounted() {
         this.handleResize();
+        this.updateBannerHeader();
         on(window, 'resize', this.handleResize);
     },
     beforeDestroy () {

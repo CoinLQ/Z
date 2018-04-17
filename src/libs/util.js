@@ -14,7 +14,7 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://localhost:8000' :
+    'http://api.lqdzj.cn' :
     env === 'production' ?
     'http://api.lqdzj.cn' :
     'http://work-api.lqdzj.cn';
@@ -103,6 +103,7 @@ util.setCurrentPath = function (vm, name) {
     let title = '';
     let isOtherRouter = false;
     let routers = vm.$store.state.app.routers;
+    vm.$store.commit('updateBannerHeader', '');
     routers.forEach(item => {
         if (!item.children) {
             return
