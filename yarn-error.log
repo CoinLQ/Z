@@ -2,7 +2,7 @@ Arguments:
   /usr/local/bin/node /usr/share/yarn/bin/yarn.js run dev
 
 PATH: 
-  /home/xian/.local/share/umake/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  /home/xian/.local/share/umake/bin:/home/xian/.local/share/umake/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 
 Yarn version: 
   1.5.1

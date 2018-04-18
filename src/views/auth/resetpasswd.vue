@@ -34,14 +34,16 @@
                         </div>
                         <div class="item password">
                             <FormItem prop="password">
-                                <Input v-model.trim="form.password" placeholder="请输入您的新密码" type="password" ></Input>
-                                <span class="hidden"><img src="./img/hidden.png" alt=""></span> 
+                                <input v-model.trim="form.password" placeholder="请输入您的新密码" type="text" v-if="form.show_passwd">
+                                <input v-model.trim="form.password" placeholder="请输入您的新密码" type="password" v-else>
+                                <span :class="{'hidden': true, 'show-passwd': form.show_passwd}" @click="form.show_passwd = !form.show_passwd"><img src="./img/hidden.png" alt=""></span>
                             </FormItem>
                         </div>
                         <div class="item checkmark">
                             <FormItem prop="repassword">
-                                <Input v-model.trim="form.repassword" placeholder="再次输入您的新密码" type="password" ></Input>
-                                <span class="hidden"><img src="./img/hidden.png" alt=""></span> 
+                                <input v-model.trim="form.repassword" placeholder="再次输入您的新密码" type="text" v-if="form.show_repasswd">
+                                <input v-model.trim="form.repassword" placeholder="再次输入您的新密码" type="password" v-else>
+                                <span :class="{'hidden': true, 'show-passwd': form.show_repasswd}" @click="form.show_repasswd = !form.show_repasswd"><img src="./img/hidden.png" alt=""></span>
                             </FormItem>
                         </div>
                     </Form>
@@ -103,7 +105,9 @@ export default {
                 vericode: '',
                 email: saved_username,
                 password: '',
-                repassword: ''
+                repassword: '',
+                show_passwd: false,
+                show_repasswd: false,
             },
             rules: {
                 email: [
@@ -146,10 +150,6 @@ export default {
                         that.gotoLogin();
                     })
                     .catch(function (error) {
-                        that.$Notice.error({
-                                title: that.$t('Failed'),
-                                desc: ''
-                        });
                         if (error.response.data.msg) {
                             that.$Notice.error({
                                 title: that.$t('Failed'),
@@ -244,8 +244,10 @@ export default {
                 S = '0' + S ;
             }
             return Y + '-' + M + '-' + D + ' ' + H + ':' + Min + ':' + S;
-        }
-    }
+        },
+
+    },
+    
 };
 </script>
 
