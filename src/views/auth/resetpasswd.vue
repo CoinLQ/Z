@@ -20,36 +20,36 @@
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">
-                    <Form ref="resetForm" :model="form" :rules="rules">
+                    <Form ref="regForm" :model="form" :rules="rules">
                         <div class="item email">
                             <FormItem prop="email">
-                                <input v-model.trim="form.email" type="text" placeholder="请输入您的注册邮箱">
+                                <Input v-model.trim="form.email" placeholder="请输入邮箱"></Input>
                             </FormItem>
                         </div>
                         <div class="item vericode">
                             <FormItem prop="vericode">
-                                <input v-model.trim="form.vericode" type="text" placeholder="请输入您收到的验证码">
+                                <Input v-model.trim="form.vericode" placeholder="请输入您收到的验证码"></Input>
                                 <span class="send" @click="handleSendVericode">点击发送验证码</span>
                             </FormItem>
                         </div>
                         <div class="item password">
                             <FormItem prop="password">
-                                <input v-model.trim="form.password" type="password" placeholder="请输入您的新密码">
-                                <span class="hidden"><img src="./img/hidden.png" alt=""></span>
+                                <Input v-model.trim="form.password" placeholder="请输入您的新密码" type="password" ></Input>
+                                <span class="hidden"><img src="./img/hidden.png" alt=""></span> 
                             </FormItem>
                         </div>
                         <div class="item checkmark">
                             <FormItem prop="repassword">
-                                <input v-model.trim="form.repassword" type="password" placeholder="再次输入您的新密码">
-                                <span class="hidden"><img src="./img/hidden.png" alt=""></span>
+                                <Input v-model.trim="form.repassword" placeholder="再次输入您的新密码" type="password" ></Input>
+                                <span class="hidden"><img src="./img/hidden.png" alt=""></span> 
                             </FormItem>
                         </div>
-                        <div class="item clearfix">
-                            <p><span class="fr">想起来了?&nbsp;点我<em @click="handleLogin">登录</em></span></p>
-                        </div>
                     </Form>
+                    <div class="item clearfix">
+                        <p><span class="fr">想起来了?&nbsp;点我<em @click='gotoLogin'>登录</em></span></p>
+                    </div>
                 </div>
-                <div class="btn" @click="handleSubmit"><img src="./img/btn-v1.png" alt=""></div>
+                <div class="btn" @click="handleSubmit"><img src="././img/btn-v1.png" alt=""></div>
             </div>
         </div>
     </div>
@@ -58,6 +58,7 @@
 <script>
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
+import config from '@/config/config.js';
 
 let saved_username = Cookies.get('user');
 
@@ -66,74 +67,75 @@ export default {
     data () {
 
         const validatePass = (rule, value, callback) => {
-            var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,30}');
+            var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('The password must contain at least 6 and max 30 of mixings of numbers, alphabets, specials.'))
+                callback(new Error('密码长度为8-30，必须包含数字、大小写字母、特殊符号'))
             }
             callback();
         };
         const validatePassCheck = (rule, value, callback) => {
             if (value !== this.form.password) {
-                callback(new Error('The two input passwords do not match!'));
+                callback(new Error('两次密码输入的不同。'));
             } else {
                 callback();
             }
         };
         const validateEmail = (rule, value, callback) => {
-
             util.ajax.get('/auth/staff/exist_email?email='+value)
             .then(function (response) {
-                if (response.data.status == 0) {
-                    callback(new Error('Email does not exist.'));
+                if (response.data.status == -1) {
+                    callback();
+                } else {
+                    callback(new Error('此邮箱还未注册.'));
                 }
             })
             .catch(function (error) {
                 callback();
             });
-            // TODO: 目前禁止邮件验证码重置
-            callback(new Error(this.$t('Email does not exist.')));
         };
         const validateVericode = (rule, value, callback) => {
             // TODO: Check vericode
             callback();
-        }
-
+        };
         return {
             form: {
-                email: saved_username,
                 vericode: '',
+                email: saved_username,
                 password: '',
                 repassword: ''
             },
             rules: {
                 email: [
-                    { type: 'email', required: true, message: this.$t('email required')  },
+                    { type: 'email', required: true, message: this.$t('需要有效email地址') },
                     { validator: validateEmail, trigger: 'blur' }
                 ],
                 vericode: [
-                    { type: 'string', required: true },
+                    { type: 'string', required: true, message: this.$t('需要有效验证码')  },
                     { validator: validateVericode, trigger: 'blur'}
                 ],
                 password: [
-                    { type: 'string', min: 6, required: true, message: this.$t('password required')},
+                    { type: 'string', min: 6, required: true, message: this.$t('密码长度为8-30，必须包含数字、大小写字母、特殊符号') },
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [
-                    { type: 'string', required: true, message: this.$t('password must be same') },
+                    { type: 'string', required: true, message: this.$t('两次输入的密码必须一致') },
                     { validator: validatePassCheck, trigger: 'blur' }
                 ]
             }
         };
     },
     methods: {
-        handleSubmit () {
-            console.log('handleSubmit');
+        handleSubmit (event) {
+            this.resetpasswordSubmit(event)
+        },
+        resetpasswordSubmit (event) {
             let that = this;
-            this.$refs.resetForm.validate((valid) => {
+            this.$refs.regForm.validate((valid) => {
                 if (valid) {
-                    util.ajax.post('/auth/api-resetpw/', {
+                    util.ajax.put('/auth/api-resetpw/', {
                             email: that.form.email,
+                            vericode:that.form.vericode,
                             password: that.form.password
                     })
                     .then(function (response) {
@@ -141,47 +143,107 @@ export default {
                             title: '请用新密码重新登录。',
                             desc: ''
                         });
-
-                        that.handleLogin();
+                        that.gotoLogin();
                     })
                     .catch(function (error) {
-                        that.handleFailure(error);
+                        that.$Notice.error({
+                                title: that.$t('Failed'),
+                                desc: ''
+                        });
+                        if (error.response.data.msg) {
+                            that.$Notice.error({
+                                title: that.$t('Failed'),
+                                desc: error.response.data.msg
+                            });
+                        } else {
+                            that.$Notice.error({
+                                title: that.$t('Failed'),
+                                desc: error.message
+                            });
+                        }
+                        
                     });
+                }else{
+                    that.$Notice.error({
+                        title: that.$t('Failed'),
+                        desc: '错误的请求参数'
+                    });
+
                 }
             });
         },
-
-        handleFailure(error) {
-            this.$Notice.error({
-                title: this.$t('Failed'),
-                desc: error.message
-            });
-        },
-
-        handleLogin() {
+        gotoLogin() {
              this.$router.push({
                 name: 'login'
             });
         },
-
-        handleSendVericode() {
+        handleSendVericode(event) {
             let that = this;
-            this.$refs.resetForm.validateField('email',(error) => {
-                if (!error) {
+            var time_value = new Date().getTime();
+            util.ajax.get('/auth/staff/exist_email?email='+this.form.email)
+            .then(function (response) {
+                if (response.data.status == -1) {
+                    
                     util.ajax.post('/auth/api-vericode/', {
-                        email: that.form.email
+                            code:200,
+                            email: that.form.email,
+                            send_type:'forget',
+                            send_time:that.get_format_time()
                     })
                     .then(function (response) {
-                        that.$Notice.info({
-                            title: '验证码已发送，请查收邮件。',
+                        that.$Notice.success({
+                            title: '验证码已发送至邮箱，请查收。',
                             desc: ''
                         });
                     })
                     .catch(function (error) {
-                        that.handleFailure(error);
+                        that.$Notice.error({
+                            title: '验证码发送失败了，请重试。',
+                            desc: error.message
+                        });
+                        
+                    });
+                } else {
+                    that.$Notice.error({
+                        title: that.$t('邮箱不合法。'),
+                        desc: ''
                     });
                 }
+            })
+            .catch(function (error) {
+                callback();
+                that.$Notice.error({
+                    title: that.$t('请求参数不合法。'),
+                    desc: ''
+                });
             });
+        },
+        get_format_time(){//获取当前时间，格式必须和后台要求的一致。
+            let myDate = new Date();
+
+            let Y = myDate.getFullYear(),
+                M = myDate.getMonth() + 1,
+                D = myDate.getDate() + 1,
+                H = myDate.getHours(),
+                Min = myDate.getMinutes(),
+                S = myDate.getSeconds();
+
+            if(M < 10){
+                M = '0' + M ;
+            }
+            if(D < 10){
+                D = '0' + D ;
+            }
+            if(H < 10){
+                H = '0' + H ;
+            }
+            if(Min < 10){
+                Min = '0' + Min ;
+            }
+            if(S < 10){
+                S = '0' + S ;
+            }
+            return Y + '-' + M + '-' + D + ' ' + H + ':' + Min + ':' + S;
         }
     }
 };
