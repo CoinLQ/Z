@@ -23,7 +23,7 @@
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <div class="item email">
                             <FormItem prop="email">
-                                <Input v-model.trim="form.email" placeholder="请输入邮箱地址"></Input>
+                                <Input v-model.trim="form.email" placeholder="请输入用户名/邮箱"></Input>
                             </FormItem>
                         </div>
                         <div class="item password">
