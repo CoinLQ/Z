@@ -82,3 +82,11 @@ input[type="number"]{
     margin:0 auto;
     position: relative;
 }
+
+.show-passwd {
+    opacity: 0.5;
+}
+
+.show-repasswd {
+    opacity: 0.5;
+}
