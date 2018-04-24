@@ -279,8 +279,8 @@ const canvas = {
             let next = 0;
             let action = payload.action;
 
-            if (action == 'mov-left' || action == 'mov-up') next = -1;
-            else if (action == 'mov-right' || action == 'mov-down') next = 1;
+            if (action == 'mov-left' || action == 'mov-up') next = 1;
+            else if (action == 'mov-right' || action == 'mov-down') next = -1;
             else return
 
             let index = _(state.rects).indexOf(state.curRect) + next;

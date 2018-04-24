@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      switch1: false,
+      switch1: true,
       rects: [],
       page_code: '',
       task_id: '',

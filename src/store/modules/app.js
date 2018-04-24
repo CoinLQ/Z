@@ -29,7 +29,7 @@ const app = {
         banner_header: '',
         menuList: [],
         openMenuPaths: ['/help'],
-        disableMenuPaths: ['/mytask', '/jiaodui'],
+        disableMenuPaths: [],
         routers: [
             ...routers
         ],
