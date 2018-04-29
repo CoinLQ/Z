@@ -64,12 +64,12 @@ export default {
         // document.body.onkeyup = _.throttle(this.handler, 200);
         window.staticfunc = this.handler;
         document.body.addEventListener('keydown', window.staticfunc);
-    	document.body.addEventListener('keyup', window.staticfunc);
+    	//document.body.addEventListener('keyup', window.staticfunc);
     },
 
     beforeDestroy: function() {
     	document.body.removeEventListener('keydown', window.staticfunc);
-    	document.body.removeEventListener('keyup', window.staticfunc);
+    	//document.body.removeEventListener('keyup', window.staticfunc);
       bus.$off('keyEvent');
     }
 }

@@ -83,6 +83,7 @@ const canvas = {
 
         setCurRect(state, payload) {
             state.curRect = payload.rect;
+            state.curRect.kselmarked = true;
         },
 
         setRects(state, payload) {
@@ -237,6 +238,7 @@ const canvas = {
 
         correctCurRect(state, payload) {
             let cur = state.curRect;
+            if (!cur) return;
             // validate and correct rect parameters
             if (cur.x < 0 ) cur.x = 0;
             if (cur.y < 0 ) cur.y = 0;
@@ -274,19 +276,40 @@ const canvas = {
                 cur.kselected = true;
             }
         },
-
+        enableSelectState(state, payload) {
+            let cur = state.curRect;
+            if (cur) cur.kselected = true;
+        },
         shiftCurRect(state, payload) {
             let next = 0;
             let action = payload.action;
+            let line_offset = 0;
+            let char_offset = 0;
+            if (action == 'mov-up') char_offset -= 1;
+            else if (action == 'mov-down') char_offset +=1;
+            else if (action == 'mov-left') line_offset +=1;
+            else if (action == 'mov-right') line_offset -=1;
 
-            if (action == 'mov-left' || action == 'mov-up') next = 1;
+            let nextRectPos = _.findIndex(state.rects, {'char_no': state.curRect.char_no + char_offset, 'line_no': state.curRect.line_no + line_offset});
+            if (nextRectPos == -1 && (action == 'mov-left' || action == 'mov-right')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + line_offset});
+            if (nextRectPos == -1 && (action == 'mov-down')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + 1});
+
+            if (nextRectPos == -1 && (action == 'mov-up')) {
+               let max_char = _.maxBy(_.filter(state.rects, {'line_no': state.curRect.line_no - 1}, 'char_no'));
+               let max_char_no = max_char && max_char['char_no'];
+               nextRectPos = _.findIndex(state.rects, {'char_no': max_char_no || 1, 'line_no': state.curRect.line_no - 1});
+            } 
+            if (nextRectPos == -1) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': 1});
+            
+            if (nextRectPos != -1) next = nextRectPos - _(state.rects).indexOf(state.curRect);
+            else if (action == 'mov-left' || action == 'mov-up') next = 1;
             else if (action == 'mov-right' || action == 'mov-down') next = -1;
-            else return
-
+            
             let index = _(state.rects).indexOf(state.curRect) + next;
             let len = state.rects.length;
             index = index < 0 ? len + index : (index >= len ? index - len : index);
             state.curRect = state.rects[index];
+            state.curRect.kselmarked = true;
         }
     },
     actions: {
@@ -317,14 +340,16 @@ const canvas = {
                 let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
 
-                if (!cur.kselected) {
-                    commit('shiftCurRect', {action: action});
-
-                } else if (payload.modify.enlarge) {
+                if (payload.modify.enlarge) {
+                    commit('enableSelectState');
                     commit('enlargeRect', {action: action, unit: unit, all: all});
 
                 } else if (payload.modify.shrink) {
+                    commit('enableSelectState');
                     commit('shrinkRect', {action: action, unit: unit, all: all});
+
+                } else if (!cur.kselected) {
+                    commit('shiftCurRect', {action: action});
 
                 } else { // Move
                     commit('moveRect', {action: action, unit: unit});

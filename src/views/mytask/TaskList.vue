@@ -41,6 +41,10 @@ export default {
                     key: 'tid'
                 },
                 {
+                    title: '页信息',
+                    key: 'page_info'
+                },
+                {
                     title: '任务状态',
                     key: 'status'
                 },

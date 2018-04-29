@@ -51,10 +51,13 @@
   <div class="switch">
     <Switch v-model="switch1" @on-change="changeSwitch" style="margin: auto 5px;"></Switch>打开覆盖
   </div>
-  <Button type="info" size="large" icon="checkmark-round" class="button" long @click="submit" :loading="isBtnLoading">
-    <span v-if="!isBtnLoading">提交</span>
+  
+
+  <Button :type="submitType" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
+    <span v-if="!isBtnLoading">暂存</span>
     <span v-else>进行中</span>
   </Button>
+  
   <help></help>
 </div>
 </template>
@@ -62,6 +65,7 @@
 import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 import help from "./components/help";
+import {mapState} from "vuex";
 
 export default {
   name: "bCheckLeak",
@@ -72,17 +76,28 @@ export default {
     return {
       switch1: true,
       rects: [],
+      solidRects: [],
       page_code: '',
       task_id: '',
       updateCanvas: 1,
+      //submitType: 'error',
       isBtnLoading: false
     };
   },
   computed: {
       // Make sure canvas is properly displayed within the window height.
+      r: function() {
+          return this.$store.getters.solidRects;
+      },
       getHeight: function () {
           return (window.innerHeight - 160) + 'px';
-      }
+      },
+      submitType: function () {
+          if (_.filter(this.r, function(o) { return !o.kselmarked }).length != 0) {
+              return 'error'
+          }
+          return 'success'
+      },
   },
   mounted() {
     this.getWorkingData();
@@ -109,6 +124,7 @@ export default {
             that.task_id = response.data.task_id;
             that.page_code = response.data.page_code;
             that.rects = response.data.rects;
+            that.$store.commit('updateBannerHeader', response.data.page_info);
             return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.page_code));
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
@@ -125,7 +141,14 @@ export default {
         let url = '/api/pagetask/' + this.task_id + '/done/';
         let that = this;
         let r = this.$store.getters.solidRects;
-
+        if (_.filter(r, function(o) { return !o.kselmarked }).length != 0) {
+            console.log(_.filter(r, function(o) { return !o.kselmarked }).length);
+            that.$Notice.error({
+                title: that.$t('Failed'),
+                desc: '还有未处理过的字块，请处理后再提交！'
+            });
+            return;
+        }
         this.isBtnLoading = true;
         util.ajax.post(url, {rects: r}).then(function (response) {
             let suc = response.data.status == 0;
@@ -133,7 +156,7 @@ export default {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
+            that.$Notice.success({title: '٩(˘◡˘ )', desc: '提交成功'});
             if (that.$route.params.tid) {
                 that.$router.push({ path: '/mytask/onebyone'});
             } else {
@@ -150,10 +173,20 @@ export default {
 
     scrollToRect() {
       let scale = this.$store.getters.scale;
-
-      if (scale == 1) return;
-
+      let canvas = document.getElementsByClassName('canvas-layout')[0];
+      let viewWidth = canvas.clientWidth;
+      let viewHeight = canvas.clientHeight -20;
+      let offsetTop = canvas.scrollTop;
+      let offsetLeft = canvas.scrollLeft;
+      
       let rect = this.$store.getters.curRect;
+      
+      if (rect.y * scale > offsetTop && rect.y * scale + rect.h < offsetTop + viewHeight) {
+        if (rect.x * scale > offsetLeft && rect.x * scale + rect.w < offsetLeft + viewWidth) {
+          return true
+        }
+      } 
+      
       let x = Math.max(rect.x * scale - (window.innerWidth/3), rect.x);
       let y = Math.max(rect.y * scale - (window.innerHeight/3), rect.y);
       this.$nextTick(function() {
