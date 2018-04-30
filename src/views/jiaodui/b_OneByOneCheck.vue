@@ -54,7 +54,7 @@
   
 
   <Button :type="submitType" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
-    <span v-if="!isBtnLoading">暂存</span>
+    <span v-if="!isBtnLoading">{{submitText}}</span>
     <span v-else>进行中</span>
   </Button>
   
@@ -76,28 +76,33 @@ export default {
     return {
       switch1: true,
       rects: [],
-      solidRects: [],
       page_code: '',
       task_id: '',
       updateCanvas: 1,
-      //submitType: 'error',
+      submitType: 'error',
+      submitText: '暂存结果',
       isBtnLoading: false
     };
   },
   computed: {
       // Make sure canvas is properly displayed within the window height.
-      r: function() {
-          return this.$store.getters.solidRects;
-      },
       getHeight: function () {
           return (window.innerHeight - 160) + 'px';
       },
-      submitType: function () {
-          if (_.filter(this.r, function(o) { return !o.kselmarked }).length != 0) {
-              return 'error'
+      ...mapState({
+        solidRects: state => state.canvas.rects,
+        curRect: state => state.canvas.curRect,
+      }) 
+  },
+  watch: {
+      curRect(val, oldVal) {
+          if (_.filter(this.solidRects, function(o) { return !o.kselmarked }).length != 0) {
+              this.submitType = 'error'
+          } else {
+              this.submitType = 'success';
+              this.submitText = '完成任务';
           }
-          return 'success'
-      },
+      }
   },
   mounted() {
     this.getWorkingData();
@@ -138,25 +143,46 @@ export default {
         });
     },
     submit() {
-        let url = '/api/pagetask/' + this.task_id + '/done/';
-        let that = this;
-        let r = this.$store.getters.solidRects;
-        if (_.filter(r, function(o) { return !o.kselmarked }).length != 0) {
-            console.log(_.filter(r, function(o) { return !o.kselmarked }).length);
-            that.$Notice.error({
-                title: that.$t('Failed'),
-                desc: '还有未处理过的字块，请处理后再提交！'
-            });
+        if (_.filter(this.solidRects, function(o) { return !o.kselmarked }).length == 0) {
+            this.done_submit();
             return;
         }
+        let url = '/api/pagetask/' + this.task_id + '/save/';
+        let that = this;
+        that.$Notice.error({
+            title: that.$t('Failed'),
+            desc: '还有未处理过的字块，请全部检查处理后再提交！'
+        });
         this.isBtnLoading = true;
-        util.ajax.post(url, {rects: r}).then(function (response) {
+        document.getElementsByClassName("canvas-layout")[0].focus()
+        util.ajax.post(url, {rects: this.solidRects}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: '提交成功'});
+            that.$Notice.success({title: '٩(˘◡˘ )', desc: '调整结果暂存成功'});
+            
+        }).catch(function (error) {
+            that.isBtnLoading = false;
+            that.$Notice.error({
+                title: that.$t('Failed'),
+                desc: that.$t(error.message)
+            });
+        })
+    },
+    done_submit() {
+        let url = '/api/pagetask/' + this.task_id + '/done/';
+        let that = this;
+        this.isBtnLoading = true;
+        document.getElementsByClassName("canvas-layout")[0].focus()
+        util.ajax.post(url, {rects: this.solidRects}).then(function (response) {
+            let suc = response.data.status == 0;
+            if (!suc) {
+                throw {message: response.data.msg}
+            }
+            that.isBtnLoading = false;
+            that.$Notice.success({title: '٩(˘◡˘ )', desc: '任务提交成功，自动领取下一任务'});
             if (that.$route.params.tid) {
                 that.$router.push({ path: '/mytask/onebyone'});
             } else {
@@ -170,7 +196,6 @@ export default {
             });
         })
     },
-
     scrollToRect() {
       let scale = this.$store.getters.scale;
       let canvas = document.getElementsByClassName('canvas-layout')[0];
