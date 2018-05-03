@@ -58,6 +58,8 @@
             <div class="tags-con">
                 <div class="main-breadcrumb">
                      <breadcrumb-nav :currentPath="currentPath" ></breadcrumb-nav>
+
+                     <span v-if="bannerHeader != ''" class="ivu-breadcrumb-item-separator">&ndash;</span>
                      <div class='banner-header'>{{bannerHeader}}</div>
                 </div>
                 <!-- <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened> -->

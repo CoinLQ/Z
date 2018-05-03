@@ -51,10 +51,23 @@
   <div class="switch">
     <Switch v-model="switch1" @on-change="changeSwitch" style="margin: auto 5px;"></Switch>打开覆盖
   </div>
-  <Button type="info" size="large" icon="checkmark-round" class="button" long @click="submit" :loading="isBtnLoading">
-    <span v-if="!isBtnLoading">提交</span>
-    <span v-else>进行中</span>
-  </Button>
+  
+  <Row>
+        <Col span="12">
+            <Button type="error" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
+                <span v-if="!isBtnLoading">暂存结果</span>
+                <span v-else>进行中</span>
+            </Button>
+        </Col>
+        <Col span="12">
+            <Button type="success" :disabled="submitType != 'error' || status != 5" icon="checkmark-round" long @click="done_submit" :loading="isBtnLoading">
+                <span v-if="!isBtnLoading">完成任务</span>
+                <span v-else>进行中</span>
+            </Button>
+        </Col>
+  </Row>
+
+  
   <help></help>
 </div>
 </template>
@@ -62,6 +75,7 @@
 import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 import help from "./components/help";
+import {mapState} from "vuex";
 
 export default {
   name: "bCheckLeak",
@@ -70,11 +84,13 @@ export default {
   },
   data() {
     return {
-      switch1: false,
+      status: 0,
+      switch1: true,
       rects: [],
       page_code: '',
       task_id: '',
       updateCanvas: 1,
+      submitType: 'error',
       isBtnLoading: false
     };
   },
@@ -82,6 +98,19 @@ export default {
       // Make sure canvas is properly displayed within the window height.
       getHeight: function () {
           return (window.innerHeight - 160) + 'px';
+      },
+      ...mapState({
+        solidRects: state => state.canvas.rects,
+        curRect: state => state.canvas.curRect,
+      }) 
+  },
+  watch: {
+      curRect(val, oldVal) {
+          if (_.filter(this.solidRects, function(o) { return !o.kselmarked }).length != 0) {
+              this.submitType = 'error'
+          } else {
+              this.submitType = 'success';
+          }
       }
   },
   mounted() {
@@ -103,12 +132,11 @@ export default {
         that.$Loading.start();
         util.ajax(url).then(function (response) {
             that.$Loading.finish();
-            if (response.data.status != 0)
-                throw {message: response.data.msg}
-
+            that.status = response.data.status;
             that.task_id = response.data.task_id;
             that.page_code = response.data.page_code;
             that.rects = response.data.rects;
+            that.$store.commit('updateBannerHeader', response.data.page_info);
             return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.page_code));
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
@@ -122,18 +150,48 @@ export default {
         });
     },
     submit() {
-        let url = '/api/pagetask/' + this.task_id + '/done/';
+        let url = '/api/pagetask/' + this.task_id + '/save/';
         let that = this;
-        let r = this.$store.getters.solidRects;
-
+        // that.$Notice.error({
+        //     title: that.$t('Failed'),
+        //     desc: '还有未处理过的字块，请全部检查处理后再提交！'
+        // });
         this.isBtnLoading = true;
+        document.getElementsByClassName("canvas-layout")[0].focus()
+        let r = _.forEach(_.cloneDeep(_.filter(this.solidRects, function(o) { return o.kselmarked })), function (item) {
+            if (item.deleted) item.op = 3;
+        })
         util.ajax.post(url, {rects: r}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
+            that.$Notice.success({title: '٩(˘◡˘ )', desc: '调整结果暂存成功'});
+            that.getWorkingData();
+        }).catch(function (error) {
+            that.isBtnLoading = false;
+            that.$Notice.error({
+                title: that.$t('Failed'),
+                desc: that.$t(error.message)
+            });
+        })
+    },
+    done_submit() {
+        let url = '/api/pagetask/' + this.task_id + '/done/';
+        let that = this;
+        this.isBtnLoading = true;
+        document.getElementsByClassName("canvas-layout")[0].focus()
+        let r = _.forEach(_.cloneDeep(this.solidRects), function (item) {
+            if (item.deleted) item.op = 3;
+        })
+        util.ajax.post(url, {rects: r}).then(function (response) {
+            let suc = response.data.status == 0;
+            if (!suc) {
+                throw {message: response.data.msg}
+            }
+            that.isBtnLoading = false;
+            that.$Notice.success({title: '٩(˘◡˘ )', desc: '任务提交成功，自动领取下一任务'});
             if (that.$route.params.tid) {
                 that.$router.push({ path: '/mytask/onebyone'});
             } else {
@@ -147,13 +205,22 @@ export default {
             });
         })
     },
-
     scrollToRect() {
       let scale = this.$store.getters.scale;
-
-      if (scale == 1) return;
-
+      let canvas = document.getElementsByClassName('canvas-layout')[0];
+      let viewWidth = canvas.clientWidth;
+      let viewHeight = canvas.clientHeight -20;
+      let offsetTop = canvas.scrollTop;
+      let offsetLeft = canvas.scrollLeft;
+      
       let rect = this.$store.getters.curRect;
+      
+      if (rect.y * scale > offsetTop && rect.y * scale + rect.h < offsetTop + viewHeight) {
+        if (rect.x * scale > offsetLeft && rect.x * scale + rect.w < offsetLeft + viewWidth) {
+          return true
+        }
+      } 
+      
       let x = Math.max(rect.x * scale - (window.innerWidth/3), rect.x);
       let y = Math.max(rect.y * scale - (window.innerHeight/3), rect.y);
       this.$nextTick(function() {

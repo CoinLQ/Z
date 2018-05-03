@@ -76,16 +76,21 @@ export default {
             _(rects).forEach(function(rect,i){
                 ctx.lineWidth=1.5*scale;
                 ctx.globalAlpha = 0.5;
+                
                 if (rect.mselected) {
-                    ctx.strokeStyle="#1892e8bf"; // blue
-                    ctx.fillStyle = '#1892e8a0';
+                    ctx.strokeStyle="#203462bf"; // blue
+                    ctx.fillStyle = '#203462a0';
                 } else if (rect.kselected) {
-                    ctx.strokeStyle="#e8e818bf"; // yellow // #e32764e6
-                    ctx.fillStyle = '#e8e818a0';
+                    ctx.strokeStyle="#db6161bf"; // yellow // #e32764e6
+                    ctx.fillStyle = '#db6161a0';
                 } else if (rect == current) {
                     ctx.strokeStyle="#2aa766"; //green //"#2aa366";
                     ctx.fillStyle = '#2aa766a0';
-                } else {
+                } else if (rect.kselmarked) {
+                    ctx.strokeStyle="#1892e8bf"; // blue
+                    ctx.fillStyle = '#1892e8a0';
+                }
+                else {
                     rect.red = rect.red || util.getRed();
                     ctx.strokeStyle=rect.red;
                     ctx.fillStyle = '#0000';
