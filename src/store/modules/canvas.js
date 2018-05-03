@@ -154,17 +154,15 @@ const canvas = {
             state.cover = payload.cover;
         },
 
-        setNextCurRect(state, payload) { // TODO: deprecated
-            let index = _(state.rects).indexOf(state.curRect) + payload.next;
-            let len = state.rects.length;
-            index = index < 0 ? 0 : (index >= len ? len - 1 : index);
-            state.curRect = state.rects[index];
-        },
-
         setImageAndRects(state, payload) {
             state.rects = payload.rects;
             state.image = payload.image;
-            state.curRect = state.rects[0];
+            let idx = _.findIndex(state.rects, function(o){ return o.line_no ==1 && o.char_no ==1});
+            if (idx != -1) {
+                state.curRect = state.rects[idx];
+                state.curRect.kselmarked = true; 
+            }
+            
         },
 
         enlargeRect(state, payload) {
@@ -197,18 +195,18 @@ const canvas = {
             let action = payload.action;
             let all = payload.all;
 
-            if (all || action == 'mov-up') {
-                cur.h -= unit;
-            }
-            if (all || action == 'mov-right') {
-                cur.w -= unit;
-                cur.x += unit;
-            }
             if (all || action == 'mov-down') {
-                cur.y += unit;
                 cur.h -= unit;
             }
             if (all || action == 'mov-left') {
+                cur.w -= unit;
+                cur.x += unit;
+            }
+            if (all || action == 'mov-up') {
+                cur.y += unit;
+                cur.h -= unit;
+            }
+            if (all || action == 'mov-right') {
                 cur.w -= unit;
             }
 
@@ -220,16 +218,16 @@ const canvas = {
             let unit = payload.unit;
             let action = payload.action;
 
-            if (action == 'mov-up') {
+            if (action == 'mov-up' || action == 'mov-up-w') {
                 cur.y -= unit;
             }
-            if (action == 'mov-right') {
+            if (action == 'mov-right' || action == 'mov-right-d') {
                 cur.x += unit;
             }
-            if (action == 'mov-down') {
+            if (action == 'mov-down' || action == 'mov-down-s') {
                 cur.y += unit;
             }
-            if (action == 'mov-left') {
+            if (action == 'mov-left' || action == 'mov-left-a') {
                 cur.x -= unit;
             }
 
@@ -285,16 +283,16 @@ const canvas = {
             let action = payload.action;
             let line_offset = 0;
             let char_offset = 0;
-            if (action == 'mov-up') char_offset -= 1;
-            else if (action == 'mov-down') char_offset +=1;
-            else if (action == 'mov-left') line_offset +=1;
-            else if (action == 'mov-right') line_offset -=1;
+            if (action == 'mov-up-w' || action == 'mov-up') char_offset -= 1;
+            else if (action == 'mov-down-s' || action == 'mov-down') char_offset +=1;
+            else if (action == 'mov-left-a' || action == 'mov-left') line_offset +=1;
+            else if (action == 'mov-right-d' || action == 'mov-right') line_offset -=1;
 
             let nextRectPos = _.findIndex(state.rects, {'char_no': state.curRect.char_no + char_offset, 'line_no': state.curRect.line_no + line_offset});
-            if (nextRectPos == -1 && (action == 'mov-left' || action == 'mov-right')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + line_offset});
-            if (nextRectPos == -1 && (action == 'mov-down')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + 1});
+            if (nextRectPos == -1 && (action == 'mov-left-a' || action == 'mov-right-d' || action == 'mov-left' || action == 'mov-right')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + line_offset});
+            if (nextRectPos == -1 && (action == 'mov-down-s' || action == 'mov-down')) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': state.curRect.line_no + 1});
 
-            if (nextRectPos == -1 && (action == 'mov-up')) {
+            if (nextRectPos == -1 && (action == 'mov-up-w' || action == 'mov-up')) {
                let max_char = _.maxBy(_.filter(state.rects, {'line_no': state.curRect.line_no - 1}, 'char_no'));
                let max_char_no = max_char && max_char['char_no'];
                nextRectPos = _.findIndex(state.rects, {'char_no': max_char_no || 1, 'line_no': state.curRect.line_no - 1});
@@ -302,8 +300,8 @@ const canvas = {
             if (nextRectPos == -1) nextRectPos = _.findIndex(state.rects, {'char_no': 1, 'line_no': 1});
             
             if (nextRectPos != -1) next = nextRectPos - _(state.rects).indexOf(state.curRect);
-            else if (action == 'mov-left' || action == 'mov-up') next = 1;
-            else if (action == 'mov-right' || action == 'mov-down') next = -1;
+            else if (action == 'mov-left-a' || action == 'mov-up-w' || action == 'mov-left' || action == 'mov-up') next = 1;
+            else if (action == 'mov-right-d' || action == 'mov-down-s' || action == 'mov-right' || action == 'mov-down') next = -1;
             
             let index = _(state.rects).indexOf(state.curRect) + next;
             let len = state.rects.length;
@@ -336,7 +334,7 @@ const canvas = {
                 commit('setSelectState');
             }
 
-            if (_(action).startsWith('mov')) {
+            if (["mov-left", "mov-right", "mov-up", "mov-down"].includes(action)) {
                 let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
 
@@ -354,6 +352,17 @@ const canvas = {
                 } else { // Move
                     commit('moveRect', {action: action, unit: unit});
                 }
+                commit('correctCurRect');
+                commit('updateItemRect');
+                return
+            }
+
+            if (["mov-left-a", "mov-right-d", "mov-up-w", "mov-down-s"].includes(action)) {
+                let all = action == 'drul';
+                let unit = payload.modify.step ? 10 : 2;
+
+                commit('shiftCurRect', {action: action});
+
                 commit('correctCurRect');
                 commit('updateItemRect');
             }

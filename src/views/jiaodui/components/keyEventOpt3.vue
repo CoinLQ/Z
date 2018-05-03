@@ -33,7 +33,9 @@ export default {
 		        55: 'scale-7', // 7
 		        56: 'scale-8', // 8
 		        57: 'scale-9', // 9
-		        112: 'help', // F1
+				112: 'help', // F1
+				8: 'delete',
+				27: 'help',
 		        // 113: 'focusGlyphPanel', // F2
 		        // 114: 'focusCanvasPanel', // F3
 		        17: 'ctrl',

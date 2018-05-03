@@ -52,11 +52,21 @@
     <Switch v-model="switch1" @on-change="changeSwitch" style="margin: auto 5px;"></Switch>打开覆盖
   </div>
   
+  <Row>
+        <Col span="12">
+            <Button type="error" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
+                <span v-if="!isBtnLoading">暂存结果</span>
+                <span v-else>进行中</span>
+            </Button>
+        </Col>
+        <Col span="12">
+            <Button type="success" :disabled="submitType != 'error' || status != 5" icon="checkmark-round" long @click="done_submit" :loading="isBtnLoading">
+                <span v-if="!isBtnLoading">完成任务</span>
+                <span v-else>进行中</span>
+            </Button>
+        </Col>
+  </Row>
 
-  <Button :type="submitType" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
-    <span v-if="!isBtnLoading">{{submitText}}</span>
-    <span v-else>进行中</span>
-  </Button>
   
   <help></help>
 </div>
@@ -74,13 +84,13 @@ export default {
   },
   data() {
     return {
+      status: 0,
       switch1: true,
       rects: [],
       page_code: '',
       task_id: '',
       updateCanvas: 1,
       submitType: 'error',
-      submitText: '暂存结果',
       isBtnLoading: false
     };
   },
@@ -100,7 +110,6 @@ export default {
               this.submitType = 'error'
           } else {
               this.submitType = 'success';
-              this.submitText = '完成任务';
           }
       }
   },
@@ -123,9 +132,7 @@ export default {
         that.$Loading.start();
         util.ajax(url).then(function (response) {
             that.$Loading.finish();
-            if (response.data.status != 0)
-                throw {message: response.data.msg}
-
+            that.status = response.data.status;
             that.task_id = response.data.task_id;
             that.page_code = response.data.page_code;
             that.rects = response.data.rects;
@@ -143,26 +150,25 @@ export default {
         });
     },
     submit() {
-        if (_.filter(this.solidRects, function(o) { return !o.kselmarked }).length == 0) {
-            this.done_submit();
-            return;
-        }
         let url = '/api/pagetask/' + this.task_id + '/save/';
         let that = this;
-        that.$Notice.error({
-            title: that.$t('Failed'),
-            desc: '还有未处理过的字块，请全部检查处理后再提交！'
-        });
+        // that.$Notice.error({
+        //     title: that.$t('Failed'),
+        //     desc: '还有未处理过的字块，请全部检查处理后再提交！'
+        // });
         this.isBtnLoading = true;
         document.getElementsByClassName("canvas-layout")[0].focus()
-        util.ajax.post(url, {rects: this.solidRects}).then(function (response) {
+        let r = _.forEach(_.cloneDeep(_.filter(this.solidRects, function(o) { return o.kselmarked })), function (item) {
+            if (item.deleted) item.op = 3;
+        })
+        util.ajax.post(url, {rects: r}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
             that.$Notice.success({title: '٩(˘◡˘ )', desc: '调整结果暂存成功'});
-            
+            that.getWorkingData();
         }).catch(function (error) {
             that.isBtnLoading = false;
             that.$Notice.error({
@@ -176,7 +182,10 @@ export default {
         let that = this;
         this.isBtnLoading = true;
         document.getElementsByClassName("canvas-layout")[0].focus()
-        util.ajax.post(url, {rects: this.solidRects}).then(function (response) {
+        let r = _.forEach(_.cloneDeep(this.solidRects), function (item) {
+            if (item.deleted) item.op = 3;
+        })
+        util.ajax.post(url, {rects: r}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
                 throw {message: response.data.msg}
