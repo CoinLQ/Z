@@ -109,6 +109,18 @@ export const collateRouter = {
 
 export const appRouter = [
         {
+            path: '/tripitaka',
+            icon: 'ios-list-outline',
+            name: 'help',
+            title: '龙泉藏经',
+            component: Main,
+            children: [
+                { path: 'tripitaka', title: '实体藏经', name: 'tripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+                { path: 'lqtripitaka', title: '龙泉藏经', name: 'lqtripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+                
+            ]
+        },
+        {
             path: '/collate_history',
             icon: 'ios-list-outline',
             name: 'collate_history',
