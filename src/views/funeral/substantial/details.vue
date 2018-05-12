@@ -1,71 +1,51 @@
-<style lang="less" scoped>
+<style lang="less">
 @import "../funeral.less";
 </style>
 
 <template>
-  <div class="funeral-details">
-    <Tabs value="name1" class="funeral-details-tabs">
-      <TabPane label="经" name="name1" class="funeral-details-tabpane">
-          <div class="details">
-            <div class="details-left">
-              <div class="detail-search-content">
-                <Input v-model="detailValue" class="detail-search">
-                  <Button slot="append" icon="ios-search"></Button>
-                </Input>
-              </div>
-              <Tree :data="menus" class="details-menu"></Tree>
+  <div class="funeral-details sub-details">
+    <div class="details">
+      <div class="details-left">
+        <Tabs value="name1" class="funeral-details-tabs">
+          <TabPane label="经" name="name1" class="funeral-details-tabpane">
+            <div class="detail-search-content">
+              <Input v-model="detailValue" class="detail-search">
+                <Button slot="append" icon="ios-search"></Button>
+              </Input>
             </div>
-            <div class="details-right">
-              <p>
+            <Tree :data="menus" class="details-menu"></Tree>
+          </TabPane>
+          <TabPane label="册" name="name2" class="funeral-details-tabpane">
+            <div class="detail-search-content">
+              <Input v-model="detailValue" class="detail-search">
+                <Button slot="append" icon="ios-search"></Button>
+              </Input>
+            </div>
+            <Tree :data="menus" class="details-menu"></Tree>
+          </TabPane>
+        </Tabs>
+      </div>
+        <Card :bordered="false" class="details-right">
+          <p slot="title" class="details-right-title">
+            <Breadcrumb class="details-right-bread">
+              <BreadcrumbItem to="/">永乐北藏</BreadcrumbItem>
+              <BreadcrumbItem to="/components/breadcrumb">大波若金属</BreadcrumbItem>
+              <BreadcrumbItem>大波若金属</BreadcrumbItem>
+            </Breadcrumb>
+
+            <Page :current="2" :total="50" simple></Page>
+            <span class="details-right-switch">
+              <span>切分</span>
+              <Switch size="large" v-model="switchdata" @on-change="change">
+                <span slot="open">开启</span>
+                <span slot="close">隐藏</span>
+              </Switch>
+            </span>
+          </p>
+
+          <div  class="details-right-main">
+            <p>
                 No. 1164-10a 灵峰蕅益大师西斋净土诗赞
-
-　　稽首楚石大导师
-
-　　即是阿弥陀正觉(末法能如此高提祖印者甚难甚难)　　以兹微妙胜伽陀
-
-　　令我读诵当参学(此为后来读此诗者指示榜样。即二有参入妙三观令四悉冷然)　　一读二读尘念消　　三读四读染情薄　　读至十百千万遍　　此身已向莲花托　　亦愿后来读诵者　　同予毕竟生极乐(毕竟亦有事理。事则决定趣向。理则不在别处)　　还摄无边念佛人
-
-　　永破事理分张恶(此楚石大师赋怀净土宗旨。亦是灵峰老人选诗本旨)　　同居净故四俱净　　圆融直捷超方略(二句和盘托出。却深固幽远无人能到)
-
-　　成时曰。事理分张。恶者谓舍西方功德庄严之阿弥陀佛而别计自性弥陀。舍西方功德庄严之极乐世界而别取唯心净土。此则事理乖张成大邪见。自他俱贼隳正法轮。的是恶见恶业。当来必受十方阿鼻大恶报也。同居净故四俱净者。谓西方极乐世界超胜十方一切净土。然其故不在上三净土而在同居。良以博地凡夫圆证三不退。下品人民与一生补处之上善人俱会一处。正报既尔依报亦然。缘生胜妙五尘与妙中谛称性五尘非一非异非远非近。所以横竖俱超横竖俱即。最为不可思义。信则当下便是。拟议则乖。乖则贤智不可以为道。是则愚夫愚妇与知与能。故曰圆融直捷超方略也。
-
-　　No. 1164-10 西斋净土诗(卷一)
-
-　　稽首楚石大导师
-
-　　即是阿弥陀正觉(末法能如此高提祖印者甚难甚难)　　以兹微妙胜伽陀
-
-　　令我读诵当参学(此为后来读此诗者指示榜样。即二有参入妙三观令四悉冷然)　　一读二读尘念消　　三读四读染情薄　　读至十百千万遍　　此身已向莲花托　　亦愿后来读诵者　　同予毕竟生极乐(毕竟亦有事理。事则决定趣向。理则不在别处)　　还摄无边念佛人
-
-　　永破事理分张恶(此楚石大师赋怀净土宗旨。亦是灵峰老人选诗本旨)　　同居净故四俱净　　圆融直捷超方略(二句和盘托出。却深固幽远无人能到)
-
-　　成时曰。事理分张。恶者谓舍西方功德庄严之阿弥陀佛而别计自性弥陀。舍西方功德庄严之极乐世界而别取唯心净土。此则事理乖张成大邪见。自他俱贼隳正法轮。的是恶见恶业。当来必受十方阿鼻大恶报也。同居净故四俱净者。谓西方极乐世界超胜十方一切净土。然其故不在上三净土而在同居。良以博地凡夫圆证三不退。下品人民与一生补处之上善人俱会一处。正报既尔依报亦然。缘生胜妙五尘与妙中谛称性五尘非一非异非远非近。所以横竖俱超横竖俱即。最为不可思义。信则当下便是。拟议则乖。乖则贤智不可以为道。是则愚夫愚妇与知与能。故曰圆融直捷超方略也。
-
-　　No. 1164-10 西斋净土诗(卷一)
-
-　　稽首楚石大导师
-
-　　即是阿弥陀正觉(末法能如此高提祖印者甚难甚难)　　以兹微妙胜伽陀
-
-　　令我读诵当参学(此为后来读此诗者指示榜样。即二有参入妙三观令四悉冷然)　　一读二读尘念消　　三读四读染情薄　　读至十百千万遍　　此身已向莲花托　　亦愿后来读诵者　　同予毕竟生极乐(毕竟亦有事理。事则决定趣向。理则不在别处)　　还摄无边念佛人
-
-　　永破事理分张恶(此楚石大师赋怀净土宗旨。亦是灵峰老人选诗本旨)　　同居净故四俱净　　圆融直捷超方略(二句和盘托出。却深固幽远无人能到)
-
-　　成时曰。事理分张。恶者谓舍西方功德庄严之阿弥陀佛而别计自性弥陀。舍西方功德庄严之极乐世界而别取唯心净土。此则事理乖张成大邪见。自他俱贼隳正法轮。的是恶见恶业。当来必受十方阿鼻大恶报也。同居净故四俱净者。谓西方极乐世界超胜十方一切净土。然其故不在上三净土而在同居。良以博地凡夫圆证三不退。下品人民与一生补处之上善人俱会一处。正报既尔依报亦然。缘生胜妙五尘与妙中谛称性五尘非一非异非远非近。所以横竖俱超横竖俱即。最为不可思义。信则当下便是。拟议则乖。乖则贤智不可以为道。是则愚夫愚妇与知与能。故曰圆融直捷超方略也。
-
-　　No. 1164-10 西斋净土诗(卷一)
-
-　　稽首楚石大导师
-
-　　即是阿弥陀正觉(末法能如此高提祖印者甚难甚难)　　以兹微妙胜伽陀
-
-　　令我读诵当参学(此为后来读此诗者指示榜样。即二有参入妙三观令四悉冷然)　　一读二读尘念消　　三读四读染情薄　　读至十百千万遍　　此身已向莲花托　　亦愿后来读诵者　　同予毕竟生极乐(毕竟亦有事理。事则决定趣向。理则不在别处)　　还摄无边念佛人
-
-　　永破事理分张恶(此楚石大师赋怀净土宗旨。亦是灵峰老人选诗本旨)　　同居净故四俱净　　圆融直捷超方略(二句和盘托出。却深固幽远无人能到)
-
-　　成时曰。事理分张。恶者谓舍西方功德庄严之阿弥陀佛而别计自性弥陀。舍西方功德庄严之极乐世界而别取唯心净土。此则事理乖张成大邪见。自他俱贼隳正法轮。的是恶见恶业。当来必受十方阿鼻大恶报也。同居净故四俱净者。谓西方极乐世界超胜十方一切净土。然其故不在上三净土而在同居。良以博地凡夫圆证三不退。下品人民与一生补处之上善人俱会一处。正报既尔依报亦然。缘生胜妙五尘与妙中谛称性五尘非一非异非远非近。所以横竖俱超横竖俱即。最为不可思义。信则当下便是。拟议则乖。乖则贤智不可以为道。是则愚夫愚妇与知与能。故曰圆融直捷超方略也。
-
-　　No. 1164-10 西斋净土诗(卷一)
 
 　　稽首楚石大导师
 
@@ -109,25 +89,9 @@
 
 　　念佛功深罪自除(惑业净)。身归极乐国中居(苦果亡)。丛林草木璚瑶接。大地山河锦绣舒(承极乐国中来映上身字谓苦果亡而法身现)。香界来从移步后(应第一句)。宝莲结自放华初(应第二句)。玉毫炳焕黄金面。天上人间总不如。
               </p>
-            </div>
           </div>
-      </TabPane>
-      <TabPane label="册" name="name2">
-          <div class="details">
-            <div class="details-left">
-              <div class="detail-search-content">
-                <Input v-model="detailValue" class="detail-search">
-                  <Button slot="append" icon="ios-search"></Button>
-                </Input>
-              </div>
-              <Tree :data="menus" class="details-menu"></Tree>
-            </div>
-            <div class="details-right">
-
-            </div>
-          </div>
-      </TabPane>
-    </Tabs>
+        </Card>
+    </div>
   </div>
 </template>
 <script>
@@ -136,6 +100,7 @@ export default {
     return {
       localValue: "",
       detailValue: "",
+      switchdata: false,
       menus: [
         {
           title: "龙泉大葬经",
@@ -173,11 +138,33 @@ export default {
                   title: "第4卷"
                 }
               ]
+            },
+            {
+              title: "第3章（60）",
+              children: [
+                {
+                  title: "第1卷"
+                },
+                {
+                  title: "第2卷"
+                },
+                {
+                  title: "第3卷"
+                },
+                {
+                  title: "第4卷"
+                }
+              ]
             }
           ]
         }
       ]
     };
+  },
+  methods: {
+    change(status) {
+      this.$Message.info("开关状态：" + status);
+    }
   }
 };
 </script>

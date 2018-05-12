@@ -12,7 +12,7 @@ function resolve(dir) {
 
 module.exports = {
     devServer: {
-        public: 'localhost', // 'test.lqdzj.cn'
+        public: 'test.lqdzj.cn',
         disableHostCheck: true
     },
     entry: {

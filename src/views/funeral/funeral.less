@@ -10,15 +10,6 @@
     width: 380px;
     height: 30px;
     float: right;
-    
-    .ivu-input-group .ivu-input {
-      border-radius: 15px!important;
-    }
-    .ivu-input-group-append,
-    .ivu-input-group-prepend,
-    .ivu-tabs-content {
-      border-radius: 15px!important;
-    }
   }
   .details {
     display: flex;
@@ -83,6 +74,13 @@
       height: 250px;
       border: 1px solid #ddd;
       margin-bottom: 28px;
+      text-align: center;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+        margin: auto;
+      }
     }
   }
 
@@ -91,5 +89,91 @@
     .details-right {
       height: calc(100% - 10px);
     }
+
+
+    .details-right {
+      padding: 0;
+      overflow: hidden;
+      border-radius: 4px;
+      &:hover {
+        box-shadow: 0;
+      }
+
+      .ivu-card-body {
+        height: 100%;
+        overflow-y: auto;
+        height: calc(100% - 12px);
+      }
+    }
+    .details-right-title {
+      display: flex;
+      height: 24px;
+      font-weight: normal;
+      .details-right-bread {
+        flex: 1;
+      }
+      .details-right-page {
+        flex: 1;
+        text-align: right;
+      }
+      .details-right-switch {
+        width: 100px;
+        display: inline-block;
+        margin-left: 10px;
+        vertical-align: middle;
+
+        span {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  &.sub-details {
+    height: 100%;
+  
+    .details-left {
+      height: 100%;
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+    .details-right {
+      height: 100%;
+    }
+
+    .ivu-tabs-bar {
+      margin-bottom: 0;
+      .ivu-tabs-tab {
+        width: 70px;
+        height: 30px;
+        line-height: 14px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        margin-right: 0;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        margin-bottom: -2px;
+      }
+      .ivu-tabs-ink-bar {
+        display: none!important;
+      }
+      .ivu-tabs-tab-active {
+        background-color: #44b7f6;
+        color: #fff;
+      }
+    }
+
+    .ivu-tabs-content {
+      height: 100%;
+    }
+
+    .funeral-details-tabpane {
+      height: 100%;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+    }
   }
 }
+
