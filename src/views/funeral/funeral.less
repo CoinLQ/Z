@@ -1,0 +1,95 @@
+.funeral-details {
+  padding: 24px;
+  height: 100%;
+  .details-header {
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 34px;
+  }
+  .local-search {
+    width: 380px;
+    height: 30px;
+    float: right;
+    
+    .ivu-input-group .ivu-input {
+      border-radius: 15px!important;
+    }
+    .ivu-input-group-append,
+    .ivu-input-group-prepend,
+    .ivu-tabs-content {
+      border-radius: 15px!important;
+    }
+  }
+  .details {
+    display: flex;
+    height: 100%;
+    padding-bottom: 20px;
+  }
+
+  .funeral-details-tabs {
+    height: 100%;
+  }
+  .funeral-details-tabpane {
+    height: 100%;
+  }
+
+  .details-left {
+    width: 430px!important;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    height: calc(100% - 8px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .detail-search-content {
+    padding: 15px 25px;
+  }
+  .details-menu {
+    border-top: 1px solid #ddd;
+    width: 429px!important;
+    margin-right: -1px;
+    padding: 10px;
+
+    .ivu-tree-children {
+      font-size: 14px;
+    }
+  }
+  .ios-search {
+    background-color: #fff;
+  }
+  .details-menu {
+
+  }
+
+  .details-right {
+    border: 1px solid #ddd;
+    margin-left: 30px;
+    flex: 1;
+    padding: 20px;
+    font-size: 16px;
+    height: calc(100% - 8px);
+    overflow-y: auto;
+  }
+
+  .sub-funeral-list {
+    border: 1px solid #ddd;
+    height: calc(100%);
+    overflow-y: auto;
+    border-radius: 4px;
+    padding: 28px 30px;
+  
+    .sub-funeral-item {
+      width: 190px;
+      height: 250px;
+      border: 1px solid #ddd;
+      margin-bottom: 28px;
+    }
+  }
+
+  &.sub-details {
+    .details-left,
+    .details-right {
+      height: calc(100% - 10px);
+    }
+  }
+}
