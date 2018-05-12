@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import iView from 'iview';
-import {router} from './router/index';
-import {appRouter} from './router/router';
+import { router } from './router/index';
+import { appRouter } from './router/router';
 import store from './store';
 import VueRouter from 'vue-router';
 import util from '@/libs/util';
 import App from './app.vue';
-import 'iview/dist/styles/iview.css';
+// import 'iview/dist/styles/iview.css';
+import './views/theme.less';
 
 import VueI18n from 'vue-i18n';
 import Locales from './locale';
@@ -45,7 +46,7 @@ window.nn = new Vue({
     data: {
         currentPageName: ''
     },
-    mounted () {
+    mounted() {
         this.currentPageName = this.$route.name;
         // 显示打开的页面的列表
         this.$store.commit('setOpenedList');
@@ -60,7 +61,7 @@ window.nn = new Vue({
             duration: 3
         });
     },
-    created () {
+    created() {
         let tagsList = [];
         appRouter.map((item) => {
             if (item.children.length <= 1) {

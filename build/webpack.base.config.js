@@ -1,25 +1,26 @@
 const path = require('path');
 const webpack = require('webpack');
-const BundleTracker = require('webpack-bundle-tracker')
+const BundleTracker = require('webpack-bundle-tracker');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const os = require('os');
 const HappyPack = require('happypack');
 var happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
-function resolve (dir) {
+function resolve(dir) {
     return path.join(__dirname, dir);
 }
 
 module.exports = {
     devServer: {
-        public: 'test.lqdzj.cn'
+        public: 'localhost', // 'test.lqdzj.cn'
+        disableHostCheck: true
     },
     entry: {
         main: '@/main',
         vendors: '@/vendors'
     },
     plugins: [
-        new BundleTracker({filename: './webpack-stats.json'}),
+        new BundleTracker({ filename: './webpack-stats.json' }),
         new HappyPack({
             id: 'happybabel',
             loaders: ['babel-loader'],
@@ -31,36 +32,37 @@ module.exports = {
         path: path.join(__dirname, './dist')
     },
     module: {
-        rules: [{
+        rules: [
+            {
                 test: /.vue$/,
                 use: [{
-                        loader: 'vue-loader',
-                        options: {
-                            // loaders: {
-                            //     less: ExtractTextPlugin.extract({
-                            //         use: ['css-loader?minimize', 'autoprefixer-loader', 'less-loader'],
-                            //         fallback: 'vue-style-loader'
-                            //     }),
-                            //     css: ExtractTextPlugin.extract({
-                            //         use: ['css-loader', 'autoprefixer-loader', 'less-loader'],
-                            //         fallback: 'vue-style-loader'
-                            //     })
-                            // }
-                            loaders: {
-                                css: 'vue-style-loader!css-loader',
-                                less: 'vue-style-loader!css-loader!less-loader'
-                            },
-                            postLoaders: {
-                                html: 'babel-loader'
-                            }
-                        }
-                    },
-                    {
-                        loader: 'iview-loader',
-                        options: {
-                            prefix: false
+                    loader: 'vue-loader',
+                    options: {
+                        // loaders: {
+                        //     less: ExtractTextPlugin.extract({
+                        //         use: ['css-loader?minimize', 'autoprefixer-loader', 'less-loader'],
+                        //         fallback: 'vue-style-loader'
+                        //     }),
+                        //     css: ExtractTextPlugin.extract({
+                        //         use: ['css-loader', 'autoprefixer-loader', 'less-loader'],
+                        //         fallback: 'vue-style-loader'
+                        //     })
+                        // }
+                        loaders: {
+                            css: 'vue-style-loader!css-loader',
+                            less: 'vue-style-loader!css-loader!less-loader'
+                        },
+                        postLoaders: {
+                            html: 'babel-loader'
                         }
                     }
+                },
+                {
+                    loader: 'iview-loader',
+                    options: {
+                        prefix: false
+                    }
+                }
                 ]
             },
             // {
@@ -95,11 +97,10 @@ module.exports = {
                     fallback: 'style-loader'
                 })
             },
-
             {
                 test: /\.less/,
                 use: ExtractTextPlugin.extract({
-                    use: ['autoprefixer-loader', 'less-loader'],
+                    use: ['css-loader?minimize', 'autoprefixer-loader', 'less-loader'],
                     fallback: 'style-loader'
                 })
             },
