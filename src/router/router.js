@@ -109,22 +109,30 @@ export const collateRouter = {
 
 export const appRouter = [
         {
-            path: '/tripitaka',
+            path: '/lqtripitaka',
             icon: 'ios-list-outline',
-            name: 'help',
+            name: 'lqtripitaka_menu',
             title: '龙泉藏经',
             component: Main,
             children: [
-                { path: 'tripitaka', title: '实体藏经', name: 'tripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
-                { path: 'lqtripitaka', title: '龙泉藏经', name: 'lqtripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
-                
+                { path: 'lqtripitaka/', access: 0, title: '龙泉藏经', name: 'lqtripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+            ]
+        },
+        {
+            path: '/tripitaka',
+            icon: 'ios-list-outline',
+            name: 'tripitaka_menu',
+            title: '实体藏经',
+            component: Main,
+            children: [
+                { path: 'tripitaka/', access: 0, title: '实体藏经', name: 'tripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
             ]
         },
         {
             path: '/collate_history',
             icon: 'ios-list-outline',
             name: 'collate_history',
-            title: '我的校勘任务',
+            title: '我的任务',
             component: Main,
             children: [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correct.vue'], resolve); } },
@@ -145,7 +153,7 @@ export const appRouter = [
             path: '/collate_tasks',
             icon: 'ios-grid-view',
             name: 'collate_tasks',
-            title: '校勘任务大厅',
+            title: '任务大厅',
             component: Main,
             children: [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct.vue'], resolve); } },
