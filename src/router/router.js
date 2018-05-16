@@ -99,32 +99,42 @@ export const collateRouter = {
         { path: 'verify_judge/:id*', title: '校勘判取审定', name: 'verify_judge', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'judge_difficult/:id*', title: '校勘判取难字', name: 'judge_difficult', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'judgefeedback/:id*', title: '校勘判取反馈', name: 'judgefeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
+        { path: 'my_judgefeedback/:id*', title: '我的校勘判取反馈', name: 'my_judgefeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'punct/:id*', title: '基础标点', name: 'punct', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'verify_punct/:id*', title: '基础标点审定', name: 'verify_punct', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'lqpunct/:id*', title: '定本标点', name: 'lqpunct', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'verify_lqpunct/:id*', title: '定本标点审定', name: 'verify_lqpunct', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'lqpunctfeedback/:id*', title: '定本标点反馈', name: 'lqpunctfeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
+        { path: 'my_lqpunctfeedback/:id*', title: '我的定本标点反馈', name: 'my_lqpunctfeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
     ]
 };
 
 export const appRouter = [
         {
-            path: '/tripitaka',
+            path: '/lqtripitaka',
             icon: 'ios-list-outline',
-            name: 'help',
+            name: 'lqtripitaka_menu',
             title: '龙泉藏经',
             component: Main,
             children: [
-                { path: 'tripitaka', title: '实体藏经', name: 'tripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
-                { path: 'lqtripitaka', title: '龙泉藏经', name: 'lqtripitaka', icon: 'ios-paper', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
-                
+                { path: 'lqtripitaka/', access: 0, title: '龙泉藏经', name: 'lqtripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+            ]
+        },
+        {
+            path: '/tripitaka',
+            icon: 'ios-list-outline',
+            name: 'tripitaka_menu',
+            title: '实体藏经',
+            component: Main,
+            children: [
+                { path: 'tripitaka/', access: 0, title: '实体藏经', name: 'tripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
             ]
         },
         {
             path: '/collate_history',
             icon: 'ios-list-outline',
             name: 'collate_history',
-            title: '我的校勘任务',
+            title: '我的任务',
             component: Main,
             children: [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correct.vue'], resolve); } },
@@ -145,7 +155,7 @@ export const appRouter = [
             path: '/collate_tasks',
             icon: 'ios-grid-view',
             name: 'collate_tasks',
-            title: '校勘任务大厅',
+            title: '任务大厅',
             component: Main,
             children: [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct.vue'], resolve); } },
@@ -160,6 +170,18 @@ export const appRouter = [
                 { path: 'lqpunct', access: 0, title: '定本标点', name: 'lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_lqpunct.vue'], resolve); } },
                 { path: 'verify_lqpunct', access: 0, title: '定本标点审定', name: 'verify_lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_verify_lqpunct.vue'], resolve); } },
                 { path: 'lqpunctfeedback', access: 0, title: '定本标点反馈', name: 'lqpunctfeedback-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_lqpunctfeedback.vue'], resolve); } },
+            ]
+        },
+        {
+            path: '/myfeedback',
+            icon: 'ios-grid-view',
+            name: 'myfeedback',
+            title: '我的反馈',
+            component: Main,
+            children: [
+                { path: 'correct', access: 0, title: '文字校对', name: 'myfeedback-correct', icon: 'ios-paper', component: resolve => { require(['@/views/myfeedback/correct.vue'], resolve); } },
+                { path: 'judge', access: 0, title: '校勘判取', name: 'myfeedback-judge', icon: 'map', component: resolve => { require(['@/views/myfeedback/judge.vue'], resolve); } },
+                { path: 'lqpunct', access: 0, title: '定本标点', name: 'myfeedback-lqpunct', icon: 'ios-compose', component: resolve => { require(['@/views/myfeedback/lqpunct.vue'], resolve); } },
             ]
         },
         {
