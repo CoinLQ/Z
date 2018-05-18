@@ -15,7 +15,7 @@ export default {
         return '/api/pagetask/history/';
       },
       view() {
-        return 'onebyone';
+        return 'page_rects';
       }
     },
 }
