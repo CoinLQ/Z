@@ -87,7 +87,6 @@ export default {
       status: 0,
       switch1: true,
       rects: [],
-      page_code: '',
       task_id: '',
       updateCanvas: 1,
       submitType: 'error',
@@ -134,10 +133,10 @@ export default {
             that.$Loading.finish();
             that.status = response.data.status;
             that.task_id = response.data.task_id;
-            that.page_code = response.data.page_code;
+            that.image_url = response.data.image_url;
             that.rects = response.data.rects;
             that.$store.commit('updateBannerHeader', response.data.page_info);
-            return util.createImgObjWithUrl(util.getPageImageUrlFromCode(that.page_code));
+            return util.createImgObjWithUrl(that.image_url);
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
             that.updateCanvas += 1;
