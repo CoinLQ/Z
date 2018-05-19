@@ -111,7 +111,7 @@ export default {
       if (this.$route.path.includes('confidence') || this.$route.path.includes('classify')) {
         this.withGlyph = true;
       }
-      if (this.$route.path.includes('onebyone')) {
+      if (this.$route.path.includes('page_rects')) {
         this.withGlyph = false;
       }
     }

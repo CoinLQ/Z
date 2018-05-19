@@ -192,7 +192,7 @@ export default {
             that.isBtnLoading = false;
             that.$Notice.success({title: '٩(˘◡˘ )', desc: '任务提交成功，自动领取下一任务'});
             if (that.$route.params.tid) {
-                that.$router.push({ path: '/mytask/onebyone'});
+                that.$router.push({ path: '/collate_tasks/page_rects'});
             } else {
                 that.getWorkingData();
             }
