@@ -42,6 +42,10 @@
     .outter-wrapper {
       text-align: center;
     }
+    .ivu-btn {
+        padding: 1px 15px;
+        color: white;
+    }
 </style>
 <template>
 <div class="outter-wrapper">
@@ -60,7 +64,7 @@
             </Button>
         </Col>
         <Col span="12">
-            <Button type="success" :disabled="submitType != 'error' || status != 5" icon="checkmark-round" long @click="done_submit" :loading="isBtnLoading">
+            <Button type="success" v-if="status == 5" :disabled="submitType == 'error'" icon="checkmark-round" long @click="done_submit" :loading="isBtnLoading">
                 <span v-if="!isBtnLoading">完成任务</span>
                 <span v-else>进行中</span>
             </Button>
