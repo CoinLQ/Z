@@ -6,28 +6,50 @@
 #search {
     padding: 0px 0px 10px 5px;
     position: relative;
-    left: 70%;
-    width: 30%;
+    display: inline-block;
+    width: 100%
 }
 .wrapper {
     margin: 10px;
+}
+#header {
+    padding: 0px 0px 10px 5px;
+    position: relative;
+    width: 100%;
+    height: 48px;
+}
+.l-actions {
+    padding: 0px 0px 10px 5px;
+    position: relative;
+    width: 100%;
+    height: 48px;
+}
+
+.l-actions > .ivu-btn {
+    line-height: 2;
+    color: white;
 }
 </style>
 
 <template>
 <div>
     <div class="wrapper">
-        <div id="search">
-            <Input type="text"
-                placeholder="关键字..."
-                size="default"
-                autocomplete="off"
-                v-model="keyword"
-                icon="close-circled"
-                @on-click="clear"
-                autofocus
-                @keyup.native.enter="search(keyword)"/>
-        </div>
+         <Row>
+            <Col span="6"><div class="l-actions"><Button type="info" @click="startTask">开始任务</Button></div></Col>
+            <Col span="6" offset="12">
+                <div id="search">
+                    <Input type="text"
+                        placeholder="关键字..."
+                        size="default"
+                        autocomplete="off"
+                        v-model="keyword"
+                        icon="close-circled"
+                        @on-click="clear"
+                        autofocus
+                        @keyup.native.enter="search(keyword)"/>
+                </div>
+            </Col>
+        </Row>
         <Table stripe border class="table" size="large" :height="inner_height" :loading="loading" :columns="total_column" :data="rows"></Table>
     </div>
 
@@ -36,13 +58,13 @@
 </template>
 <script>
 import util from '@/libs/util';
-import { on, off } from 'iview/src/utils/dom';
 import ButtonWrapper from '../mytask/ButtonWrapper';
+import { on, off } from 'iview/src/utils/dom';
 
 export default {
-    name: 'ObtianTaskList',
+    name: 'HistoryApiList',
     componenets: [ButtonWrapper],
-    props: ['columns', 'viewRouteName'],
+    props: ['columns', 'viewRouteName', 'dataUri'],
     data () {
         return {
             loading: false,
@@ -58,7 +80,7 @@ export default {
                         return h(ButtonWrapper, {
                             props: {
                                 size: 'large',
-                                text: '领取'
+                                text: '查看'
                             },
                             on: {
                                 click: (e) => {
@@ -74,13 +96,21 @@ export default {
     },
     computed: {
         dataUrl() {
-            return "/api/v1/tasks/" + this.viewRouteName;
+            return "/api/v1/rect/" + this.viewRouteName + "/history";
         },
         total_column() {
             return this.columns.concat(this.action)
         }
     },
     methods: {
+        startTask() {
+            let task = _.find(this.rows, function(v) { return v.status=="进行中" });
+            if (!task) {
+                this.gotoPickTask()
+            } else {
+               this.$router.push({name: this.viewRouteName, params: {id: task.id}}) 
+            }
+        },
         gotoPage(page, page_size) {
             this.loadData({page, page_size})
         },
@@ -121,42 +151,21 @@ export default {
             })
         },
         obtain(index){
-            let that = this;
-            let id = this.rows[index].id
-            let url = this.dataUrl +"/" +id + "/obtain"
-            that.loading = true;
-            util.ajax.put(url).then(function (response) {
-                that.loading = false;
-                if (response.data.status == 0) {
-                    return that.$router.push({name: that.viewRouteName, params: {id: id}})
-                }
-                else {
-                    that.$Notice.error({
-                        title: that.$t('Failed'),
-                        desc: response.data.msg
-                    });
-                }
-            }).catch(function (error) {
-                that.$Notice.error({
-                    title: that.$t('Failed'),
-                    desc: error.message
-                });
-                that.loading = false;
-            })
+            let id = this.rows[index].tid
+            this.$router.push({name: this.viewRouteName, params: {id: id}})
         },
         handleResize() {
-            this.inner_height = window.innerHeight -                                    206
+            this.inner_height = window.innerHeight - 206
+            return
+        },
+        gotoPickTask () {
+            return this.$router.push({name: 'picktask_index', params: {task: this.viewRouteName}})
         }
     },
     mounted() {
         this.gotoPage(1, 10)
         this.handleResize();
         on(window, 'resize', this.handleResize);
-        let pathArr = util.setCurrentPath(this, this.$route.name);
-        this.$store.commit('updateMenulist');
-        if (pathArr.length >= 2) {
-            this.$store.commit('addOpenSubmenu', pathArr[1].name);
-        }
     },
     beforeDestroy () {
         off(window, 'resize', this.handleResize);

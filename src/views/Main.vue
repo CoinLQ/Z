@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="main" :class="{'main-hide-text': shrink}">
-        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
+        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflowY: shrink ? 'visible' : 'auto', overflowX: 'hidden'}">
             <shrinkable-menu
                 ref="shrinkmenu"
                 :shrink="shrink"
