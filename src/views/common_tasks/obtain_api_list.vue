@@ -40,7 +40,7 @@ import { on, off } from 'iview/src/utils/dom';
 import ButtonWrapper from '../mytask/ButtonWrapper';
 
 export default {
-    name: 'ObtianTaskList',
+    name: 'ObtianApiList',
     componenets: [ButtonWrapper],
     props: ['columns', 'viewRouteName'],
     data () {
@@ -74,7 +74,7 @@ export default {
     },
     computed: {
         dataUrl() {
-            return "/api/v1/tasks/" + this.viewRouteName;
+            return "/api/v1/rect/" + this.viewRouteName;
         },
         total_column() {
             return this.columns.concat(this.action)
@@ -122,7 +122,7 @@ export default {
         },
         obtain(index){
             let that = this;
-            let id = this.rows[index].id
+            let id = this.rows[index].tid
             let url = this.dataUrl +"/" +id + "/obtain"
             that.loading = true;
             util.ajax.put(url).then(function (response) {

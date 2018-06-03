@@ -129,8 +129,8 @@ export default {
         let that = this;
         let url = '/api/pagetask/obtain/';
 
-        if (this.$route.params.tid) {
-          url = '/api/pagetask/' + this.$route.params.tid + '/';
+        if (this.$route.params.id) {
+          url = '/api/pagetask/' + this.$route.params.id + '/';
         }
         that.$Loading.start();
         util.ajax(url).then(function (response) {
