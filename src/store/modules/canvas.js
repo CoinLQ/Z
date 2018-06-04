@@ -323,6 +323,7 @@ const canvas = {
 
             if (action == 'delete') {
                 commit('deleteCurRect');
+                commit('correctCurRect');
                 commit('updateItemRect');
             }
 

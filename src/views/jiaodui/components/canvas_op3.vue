@@ -77,32 +77,31 @@ export default {
                 ctx.lineWidth=1.5*scale;
                 ctx.globalAlpha = 0.5;
                 
-                if (rect.mselected) {
-                    ctx.strokeStyle="#203462bf"; // grey
-                    ctx.fillStyle = '#203462a0';
-                } else if (rect.kselected) {
-                    ctx.strokeStyle="#db6161bf"; // yellow // #e32764e6
-                    ctx.fillStyle = '#db6161a0';
-                } else if (rect == current) {
-                    ctx.strokeStyle="#1892e8bf"; // blue
-                    ctx.fillStyle = '#1892e8a0';
-                } else if (rect.kselmarked) {
-                    ctx.strokeStyle="#2aa766"; //green //"#2aa366";
-                    ctx.fillStyle = '#2aa766a0';
-                }
-                else {
+                if (rect.deleted || rect.op == 3) {
+                    ctx.fillStyle = '#000000a0';
+                    ctx.lineWidth=4*scale;
+                } else if (rect.changed || rect.op == 2) {
+                    ctx.strokeStyle="#2aa766"; //green
+                    ctx.fillStyle = '#0000';
+                    ctx.lineWidth= 2*scale;
+                } else {
                     rect.red = rect.red || util.getRed();
                     ctx.strokeStyle=rect.red;
                     ctx.fillStyle = '#0000';
                 }
-
-                if (cover) {
-                    ctx.fillStyle = '#BEB7ADE0';
-                }
-
-                if (rect.deleted || rect.op == 3) {
-                    ctx.fillStyle = '#000000a0';
-                    ctx.lineWidth=4*scale;
+                if (rect.kselected) {
+                    ctx.strokeStyle="#db6161bf"; // green // #e32764e6
+                    ctx.fillStyle = '#db6161a0';
+                    if (rect.deleted) {
+                        ctx.fillStyle = '#000000a0';
+                    }
+                } else if (rect == current) {
+                    ctx.strokeStyle = "#1892e8bf"; // blue
+                    ctx.fillStyle = '#1892e8a0';
+                    if (rect.deleted) {
+                        ctx.fillStyle = '#000000a0';
+                    }
+                    ctx.lineWidth=1*scale;
                 }
 
                 ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
