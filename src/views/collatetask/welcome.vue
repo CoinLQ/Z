@@ -1,11 +1,11 @@
 <style></style>
 <template>
-	<Card style="width:320px;margin:auto;margin-top: 50px;">
-        <div style="text-align:center">
-        	<div slot="top" class="logo-con">
-            <img src="../../images/logo-min.png">
+	<Card style="width:90%;height:90%;margin:auto;margin-top: 50px;">
+        <div style="text-align:center;margin-top:10%">
+        	<div slot="top" >
+            <img src="../../images/welcome.png">
         	</div>
-            <h3>您还没有任务，请前往<a @click="pickTask">任务大厅</a>领取任务</h3>
+            <h2>您还没有任务<br>请前往<a @click="pickTask">任务大厅</a>领取任务</h2>
         </div>
     </Card>
 </template>

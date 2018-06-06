@@ -42,9 +42,8 @@
     .outter-wrapper {
       text-align: center;
     }
-    .ivu-btn {
-        padding: 1px 15px;
-        color: white !important;
+    .ivu-btn.ivu-btn-text.ivu-btn-large {
+        color: grey;
     }
 </style>
 <template>
@@ -74,7 +73,7 @@
         title="任务提交确认"
         @on-ok="done_submit"
         @on-cancel="">
-        <p>任务提交后，将跳到做一个任务</p>
+        <p>此任务提交后，将执行下一个任务</p>
         <p>是否确认提交？</p>
     </Modal>
   </Row>
@@ -190,7 +189,7 @@ export default {
                 throw { message: response.data.msg }
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: '调整结果暂存成功'});
+            that.$Notice.success({title: '随喜', desc: '切分校对保存成功'});
             that.getWorkingData();
         }).catch(function (error) {
             that.isBtnLoading = false;
@@ -214,7 +213,7 @@ export default {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: '任务提交成功，自动领取下一任务'});
+            that.$Notice.success({title: '随喜', desc: '任务提交成功，自动领取下一任务'});
             that.$router.push({ path: '/collate_tasks/pagetask'});
         }).catch(function (error) {
             that.isBtnLoading = false;

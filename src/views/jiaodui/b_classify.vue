@@ -66,7 +66,7 @@ export default {
                     throw {message: response.data.msg}
                 }
                 sender_this.$data.isBtnLoading = false;
-                that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
+                that.$Notice.success({title: '随喜', desc: ''});
                 if (that.$route.params.tid) {
                     that.$router.push({ path: '/mytask/classify'});
                 } else {
