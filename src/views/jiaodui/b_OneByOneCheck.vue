@@ -73,7 +73,7 @@
         title="任务提交确认"
         @on-ok="done_submit"
         @on-cancel="">
-        <p>此任务提交后，将执行下一个任务</p>
+        <p>此任务提交后，将无法再次提交</p>
         <p>是否确认提交？</p>
     </Modal>
   </Row>
