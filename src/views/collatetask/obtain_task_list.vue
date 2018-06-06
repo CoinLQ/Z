@@ -145,7 +145,7 @@ export default {
             })
         },
         handleResize() {
-            this.inner_height = window.innerHeight -                                    206
+            this.inner_height = window.innerHeight - 206
         }
     },
     mounted() {

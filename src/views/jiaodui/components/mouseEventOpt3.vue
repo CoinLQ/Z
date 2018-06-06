@@ -196,7 +196,8 @@ export default {
                         break;
                 }
                 rect.kselmarked = true;
-                
+                rect.changed = true;
+                _this.$store.commit('setCurRect', {rect: rect});
                 _this.redraw_canvas();
             }
             else if (_this.current && _this.current.mselected) {

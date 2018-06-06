@@ -126,7 +126,7 @@ export default {
                     throw {message: response.data.msg}
                 }
                 that.isBtnLoading = false;
-                that.$Notice.success({title: '٩(˘◡˘ )', desc: ''});
+                that.$Notice.success({title: '随喜', desc: ''});
                 that.getWorkingData();
             })
             .catch(function (error) {

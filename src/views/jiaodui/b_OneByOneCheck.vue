@@ -42,14 +42,13 @@
     .outter-wrapper {
       text-align: center;
     }
-    .ivu-btn {
-        padding: 1px 15px;
-        color: white;
+    .ivu-btn.ivu-btn-text.ivu-btn-large {
+        color: grey;
     }
 </style>
 <template>
 <div class="outter-wrapper">
-  <div class="canvas-layout"  ref="wrapper" :style="{height: getHeight}">
+  <div class="canvas-layout"  ref="wrapper" :style="{height: inner_height}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
   <div class="switch">
@@ -59,16 +58,24 @@
   <Row>
         <Col span="12">
             <Button type="error" icon="checkmark-round" long @click="submit" :loading="isBtnLoading">
-                <span v-if="!isBtnLoading">暂存结果</span>
+                <span v-if="!isBtnLoading">保存结果</span>
                 <span v-else>进行中</span>
             </Button>
         </Col>
         <Col span="12">
-            <Button type="success" v-if="status == 5" :disabled="submitType == 'error'" icon="checkmark-round" long @click="done_submit" :loading="isBtnLoading">
+            <Button type="success" :disabled="status == 7" icon="checkmark-round" long @click="confirm_modal = true" :loading="isBtnLoading">
                 <span v-if="!isBtnLoading">完成任务</span>
                 <span v-else>进行中</span>
             </Button>
         </Col>
+        <Modal
+        v-model="confirm_modal"
+        title="任务提交确认"
+        @on-ok="done_submit"
+        @on-cancel="">
+        <p>此任务提交后，将无法再次提交</p>
+        <p>是否确认提交？</p>
+    </Modal>
   </Row>
 
   
@@ -80,6 +87,7 @@ import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 import help from "./components/help";
 import {mapState} from "vuex";
+import { on, off } from 'iview/src/utils/dom';
 
 export default {
   name: "bCheckLeak",
@@ -88,9 +96,12 @@ export default {
   },
   data() {
     return {
+      confirm_modal: false,
+      inner_height: 100,
       status: 0,
       switch1: true,
       rects: [],
+      current: {},
       task_id: '',
       updateCanvas: 1,
       submitType: 'error',
@@ -120,11 +131,17 @@ export default {
     this.getWorkingData();
     this.$store.commit('setScale', {scale: 1});
     this.$Notice.config({top: 50, duration: 3});
-  },
+    this.handleResize();
+    on(window, 'resize', this.handleResize);
+   },
   beforeDestroy() {
       this.$store.commit('resetAll')
+      off(window, 'resize', this.handleResize);
   },
   methods: {
+    handleResize() {
+        this.inner_height = (window.innerHeight - 150) + 'px';;
+    },
     getWorkingData() {
         let that = this;
         let url = '/api/pagetask/obtain/';
@@ -140,15 +157,17 @@ export default {
             that.image_url = response.data.image_url;
             that.rects = response.data.rects;
             that.$store.commit('updateBannerHeader', response.data.page_info);
+            that.current = _.find(that.rects, function(r) { return r.x == response.data.current_x && r.y == response.data.current_y}) || that.current;
             return util.createImgObjWithUrl(that.image_url);
         }).then(function (event) {
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
+            that.$store.commit('setCurRect', {rect: that.current});
             that.updateCanvas += 1;
         }).catch(function(error) {
             that.$Loading.finish();
             that.$Notice.error({
                 title: that.$t('Failed'),
-                desc: that.$t(error.message||'')
+                desc: that.$t(error.message || '')
             });
         });
     },
@@ -162,15 +181,15 @@ export default {
         this.isBtnLoading = true;
         document.getElementsByClassName("canvas-layout")[0].focus()
         let r = _.forEach(_.cloneDeep(_.filter(this.solidRects, function(o) { return o.kselmarked })), function (item) {
-            if (item.deleted) item.op = 3;
+            if (item.deleted) {item.op = 3;} else if (item.changed) { item.op = 2;}
         })
-        util.ajax.post(url, {rects: r}).then(function (response) {
+        util.ajax.post(url, {rects: r, current_x: this.curRect.x, current_y: this.curRect.y}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
-                throw {message: response.data.msg}
+                throw { message: response.data.msg }
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: '调整结果暂存成功'});
+            that.$Notice.success({title: '随喜', desc: '切分校对保存成功'});
             that.getWorkingData();
         }).catch(function (error) {
             that.isBtnLoading = false;
@@ -188,18 +207,14 @@ export default {
         let r = _.forEach(_.cloneDeep(this.solidRects), function (item) {
             if (item.deleted) item.op = 3;
         })
-        util.ajax.post(url, {rects: r}).then(function (response) {
+        util.ajax.post(url, {rects: r, current_x: this.curRect.x, current_y: this.curRect.y}).then(function (response) {
             let suc = response.data.status == 0;
             if (!suc) {
                 throw {message: response.data.msg}
             }
             that.isBtnLoading = false;
-            that.$Notice.success({title: '٩(˘◡˘ )', desc: '任务提交成功，自动领取下一任务'});
-            if (that.$route.params.tid) {
-                that.$router.push({ path: '/collate_tasks/page_rects'});
-            } else {
-                that.getWorkingData();
-            }
+            that.$Notice.success({title: '随喜', desc: '任务提交成功，自动领取下一任务'});
+            that.$router.push({ path: '/collate_tasks/pagetask'});
         }).catch(function (error) {
             that.isBtnLoading = false;
             that.$Notice.error({

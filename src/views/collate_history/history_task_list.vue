@@ -155,7 +155,7 @@ export default {
             this.$router.push({name: this.viewRouteName, params: {id: id}})
         },
         handleResize() {
-            this.inner_height = window.innerHeight - 192
+            this.inner_height = window.innerHeight - 206
             return
         },
         gotoPickTask () {
