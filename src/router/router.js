@@ -81,7 +81,8 @@ export const otherRouter =  {
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/blank.vue'], resolve); } },
         { path: 'error-page', title: '错误页面', name: 'errorpage_index', component: resolve => { require(['@/views/error-page/error-page.vue'], resolve); } },
-        { path: 'pick-task/:task*', title: '任务领取页面', name: 'picktask_index', component: resolve => { require(['@/views/collatetask/welcome.vue'], resolve); } }
+        { path: 'pick-task/:task*', title: '任务领取页面', name: 'picktask_index', component: resolve => { require(['@/views/collatetask/welcome.vue'], resolve); } },
+        { path: 'message', title: '消息中心', name: 'message_index', component: resolve => { require(['@/views/message/message.vue'], resolve); } }
     ]
 };
 

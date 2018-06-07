@@ -42,9 +42,9 @@
                     </Row>
                 </div>
                 <div class="header-avator-con">
+                    <message-tip v-model="mesCount"></message-tip>
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                     <!-- <lock-screen></lock-screen> -->
-                    <!-- <message-tip v-model="mesCount"></message-tip> -->
                 </div>
                 </Row>
                 <Row>
