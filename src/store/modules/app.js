@@ -198,6 +198,7 @@ const app = {
                     if (response.data.staff.is_active) {
                         let staff = response.data.staff;
                         Cookies.set('token', response.data.token, { expires: 7 });
+                        Cookies.set('username', response.data.staff.username);
                         state.menus = staff.menus;
                         state.is_admin = staff.is_admin;
                     } else {
