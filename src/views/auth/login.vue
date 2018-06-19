@@ -74,7 +74,7 @@ export default {
     },
     methods: {
         handleSubmit () {
-            console.log('handleSubmit');
+           
             let that = this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
@@ -130,6 +130,9 @@ export default {
             if (error.response && error.response.status == 400) {
                 message = error.response.data.non_field_errors;
 
+            }
+            if (message == '用户账户已禁用。'){
+                message = '用户账户未激活，请到邮箱激活';
             }
             this.$Notice.error({
                 title: this.$t('Failed'),

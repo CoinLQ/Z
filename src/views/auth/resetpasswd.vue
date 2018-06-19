@@ -72,7 +72,7 @@ export default {
             var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('密码长度为8-30，必须包含数字、大小写字母、特殊符号'))
+                callback(new Error('密码长度为8-30，必须包含数字、字母、特殊符号'))
             }
             callback();
         };
@@ -119,7 +119,7 @@ export default {
                     { validator: validateVericode, trigger: 'blur'}
                 ],
                 password: [
-                    { type: 'string', min: 6, required: true, message: this.$t('密码长度为8-30，必须包含数字、大小写字母、特殊符号') },
+                    { type: 'string', min: 6, required: true, message: this.$t('密码长度为8-30，必须包含数字、字母、特殊符号') },
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [

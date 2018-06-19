@@ -67,7 +67,7 @@ export default {
             var regex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,30}');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('密码长度为8-30，必须包含数字、大小写字母、特殊符号'))
+                callback(new Error('密码长度为8-30，必须包含数字、字母、特殊符号'))
             }
             callback();
         };
@@ -151,11 +151,12 @@ export default {
                             password: that.form.password
                     })
                     .then(function (response) {
-                        that.$Notice.success({
-                            title: '注册完成，请重新登录。',
-                            desc: ''
-                        });
-                        that.gotoLogin();
+                        that.handleSendVericode(event);
+                        // that.$Notice.success({
+                        //     title: '注册完成，请重新登录。',
+                        //     desc: ''
+                        // });
+                        // that.gotoLogin();
                     })
                     .catch(function (error) {
                         if (error.response.data.msg) {
@@ -173,6 +174,76 @@ export default {
                     });
                 }
             });
+        },
+        handleSendVericode(event) {
+            let that = this;
+            var time_value = new Date().getTime();
+            util.ajax.get('/auth/staff/exist_email?email='+this.form.email)
+            .then(function (response) {
+                if (response.data.status == -1) {
+                    
+                    util.ajax.post('/auth/api-vericode/', {
+                            code:200,
+                            email: that.form.email,
+                            username: that.form.username,
+                            send_type:'register',
+                            send_time:that.get_format_time()
+                    })
+                    .then(function (response) {
+                        that.$Notice.success({
+                            title: '激活链接已发送至邮箱，请查收。',
+                            desc: ''
+                        });
+                        that.gotoLogin();
+                    })
+                    .catch(function (error) {
+                        that.$Notice.error({
+                            title: '激活链接发送失败了，请重试。',
+                            desc: error.message
+                        });
+                        
+                    });
+                } else {
+                    that.$Notice.error({
+                        title: that.$t('邮箱不合法。'),
+                        desc: ''
+                    });
+                }
+            })
+            .catch(function (error) {
+                callback();
+                that.$Notice.error({
+                    title: that.$t('请求参数不合法。'),
+                    desc: ''
+                });
+            });
+        },
+        get_format_time(){//获取当前时间，格式必须和后台要求的一致。
+            let myDate = new Date();
+
+            let Y = myDate.getFullYear(),
+                M = myDate.getMonth() + 1,
+                D = myDate.getDate() + 1,
+                H = myDate.getHours(),
+                Min = myDate.getMinutes(),
+                S = myDate.getSeconds();
+
+            if(M < 10){
+                M = '0' + M ;
+            }
+            if(D < 10){
+                D = '0' + D ;
+            }
+            if(H < 10){
+                H = '0' + H ;
+            }
+            if(Min < 10){
+                Min = '0' + Min ;
+            }
+            if(S < 10){
+                S = '0' + S ;
+            }
+            return Y + '-' + M + '-' + D + ' ' + H + ':' + Min + ':' + S;
         },
         gotoLogin() {
              this.$router.push({

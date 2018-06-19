@@ -27,6 +27,14 @@ export const resetPasswdRouter = {
     },
     component: resolve => { require(['@/views/auth/resetpasswd.vue'], resolve); }
 };
+export const activateRouter = {
+    path: '/activate/:id*',
+    name: 'activate',
+    meta: {
+        title: 'Activate - 激活'
+    },
+    component: resolve => { require(['@/views/auth/activate.vue'], resolve); }
+};
 
 export const page404 = {
     path: '/*',
@@ -179,7 +187,7 @@ export const appRouter = [
                 // { path: 'compare/:tid*', title: '反馈审查', name: 'fankui-jiaodui', icon: 'ios-shuffle-strong', component: resolve => { require(['@/views/jiaodui/b_compare.vue'], resolve); } },
             ]
         },
-
+        
     ]
 
 
@@ -188,6 +196,7 @@ export const routers = [
     loginRouter,
     signupRouter,
     resetPasswdRouter,
+    activateRouter,
     otherRouter,
     ...appRouter,
     collateRouter,
