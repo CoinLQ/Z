@@ -14,6 +14,7 @@ export default {
       'Bad params.': '错误的请求参数',
       'Request failed with status code 401': '网络请求失败',
       'All tasks have been done!': '目前没有可分配的任务',
+      'invalid split_info:oldtext not equal texts.': '提交数据与原始数据不符',
     },
     'en-US': {
 

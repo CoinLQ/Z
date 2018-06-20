@@ -74,7 +74,7 @@ export default {
     },
     methods: {
         handleSubmit () {
-            console.log('handleSubmit');
+           
             let that = this;
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
@@ -128,7 +128,6 @@ export default {
             let message = this.$t(error.message);
             if (error.response && error.response.status == 400) {
                 message = error.response.data.non_field_errors;
-
             }
             this.$Notice.error({
                 title: this.$t('Failed'),

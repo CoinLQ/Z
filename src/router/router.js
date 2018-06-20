@@ -27,6 +27,14 @@ export const resetPasswdRouter = {
     },
     component: resolve => { require(['@/views/auth/resetpasswd.vue'], resolve); }
 };
+export const activateRouter = {
+    path: '/activate/:id*',
+    name: 'activate',
+    meta: {
+        title: 'Activate - 激活'
+    },
+    component: resolve => { require(['@/views/auth/activate.vue'], resolve); }
+};
 
 export const page404 = {
     path: '/*',
@@ -207,7 +215,7 @@ export const appRouter = [
                 { path: 'bbs', title: '论坛', name: 'help_bbs', type: 'href', icon: 'erlenmeyer-flask', href: 'http://bbs.lqdzj.cn' },
             ]
         },
-
+        
     ]
 
 
@@ -216,6 +224,7 @@ export const routers = [
     loginRouter,
     signupRouter,
     resetPasswdRouter,
+    activateRouter,
     otherRouter,
     ...appRouter,
     collateRouter,

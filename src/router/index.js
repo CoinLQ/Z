@@ -20,6 +20,7 @@ export const router = new VueRouter(RouterConfig);
 
 router.beforeEach((to, from, next) => {
     iView.LoadingBar.start();
+    
     if (Cookies.get('locking') === '1' && to.name !== 'locking') { // 判断当前是否是锁定状态
         next({
             replace: true,
@@ -28,10 +29,11 @@ router.beforeEach((to, from, next) => {
     } else if (Cookies.get('locking') === '0' && to.name === 'locking') {
         next(false);
     } else {
-        if (!Cookies.get('token') && !(to.name === 'login' || to.name === 'signup' || to.name === 'resetpasswd'|| to.name === 'ie-403')) { // 判断是否已经登录且前往的页面不是登录页
+        if (!Cookies.get('token') && !(to.name === 'login' || to.name === 'signup' || to.name === 'resetpasswd'|| to.name === 'ie-403' || to.name === 'activate')) { // 判断是否已经登录且前往的页面不是登录页
             next({
                 name: 'login'
             });
+            
         } else if (Cookies.get('token') && to.name === 'login') { // 判断是否已经登录且前往的是登录页
             Util.title();
             next({
