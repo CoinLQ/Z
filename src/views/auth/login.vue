@@ -129,10 +129,6 @@ export default {
             let message = this.$t(error.message);
             if (error.response && error.response.status == 400) {
                 message = error.response.data.non_field_errors;
-
-            }
-            if (message == '用户账户已禁用。'){
-                message = '用户账户未激活，请到邮箱激活';
             }
             this.$Notice.error({
                 title: this.$t('Failed'),
