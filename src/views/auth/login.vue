@@ -99,6 +99,7 @@ export default {
 
                 let staff = response.data.staff;
                 Cookies.set('user', staff.email);
+                Cookies.set('username', staff.username);
                 // Cookies.set('last_login', response.data.staff.last_login);
 
                 if (this.keepLogin) {
