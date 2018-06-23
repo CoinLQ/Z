@@ -120,6 +120,7 @@ export const collateRouter = {
         { path: 'mark/:id*', title: '格式标注', name: 'mark', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'verify_mark/:id*', title: '格式标注审定', name: 'verify_mark', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
         { path: 'my_lqpunctfeedback/:id*', title: '我的定本标点反馈', name: 'my_lqpunctfeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
+        { path: 'my_correctfeedback/:id*', title: '我的文字校对反馈', name: 'my_correctfeedback', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
     ]
 };
 
