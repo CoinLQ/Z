@@ -14,7 +14,7 @@ util.title = function(title) {
 };
 
 const ajaxUrl = env === 'development' ?
-    'http://localhost:8000' :
+    'http://api.lqdzj.cn' :
     env === 'production' ?
     'http://api.lqdzj.cn' :
     'http://work-api.lqdzj.cn';
@@ -103,6 +103,7 @@ util.setCurrentPath = function (vm, name) {
     let title = '';
     let isOtherRouter = false;
     let routers = vm.$store.state.app.routers;
+    vm.$store.commit('updateBannerHeader', '');
     routers.forEach(item => {
         if (!item.children) {
             return
@@ -293,42 +294,6 @@ util.createImgObjWithUrl = function(url) {
         }
         image.src = url;
     });
-}
-
-util.getImageUrlFromCode_old = function(code) {
-    /*  e.g. code = GZ000790v030p0010005
-        https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/GZ/000790/v030/GZ000790v030p0010005.jpg
-        https://s3.cn-north-1.amazonaws.com.cn/lqcharacters-images/YB/027/YBv027p00010.jpg
-    */
-    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-col/';
-
-    let re = /^([A-Z]+)(\d*)v(\d+)(p\d+)\w*/.exec(code);
-    if (!re) return '';
-
-    if (re[2]) return  prefix + re[1] + '/' + re[2] + '/v' + re[3] + '/' + code + '.jpg';
-
-    return prefix + re[1] + '/' + re[3] + '/' + code + '.jpg';
-}
-
-util.getPageImageUrlFromCode_old = function (page_code) {
-    //  GL000790_79_2_p30 ZH000010_1_p10a01n02
-    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
-    var last_underline_pos = page_code.lastIndexOf('_');
-    var path = page_code.substr(0, last_underline_pos).replace('_', '/');
-    var url = prefix + path + '/' + page_code  + '.jpg';
-    return url;
-}
-
-/*
- * "page_code": "YB_27_1"
- * https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/YB/27/YB_27_1.jpg
- */
-util.getPageImageUrlFromCode = function(page_code) {
-    const prefix = 'https://s3.cn-north-1.amazonaws.com.cn/lqdzj-image/';
-    var last_underline_pos = page_code.lastIndexOf('_');
-    var path = page_code.substr(0, last_underline_pos).replace('_', '/');
-    var url = prefix + path + '/' + page_code  + '.jpg';
-    return url;
 }
 
 util.getColumnImageUrlFromCode = function (column_code) {

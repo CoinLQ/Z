@@ -90,10 +90,8 @@ export default {
             else {
                 let next;
                 if (d == 'left' || d == 'up') {
-                    // this.$store.commit('setNextCurRect', {next: -1});
                     next = -1;
                 } else {
-                    // this.$store.commit('setNextCurRect', {next: 1});
                     next = 1;
                 }
                 let index = _(this.rects).findIndex({cc: this.curRect.cc}) + next;

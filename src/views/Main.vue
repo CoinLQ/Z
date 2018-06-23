@@ -3,7 +3,7 @@
 </style>
 <template>
     <div class="main" :class="{'main-hide-text': shrink}">
-        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
+        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflowY: shrink ? 'visible' : 'auto', overflowX: 'hidden'}">
             <shrinkable-menu
                 ref="shrinkmenu"
                 :shrink="shrink"
@@ -42,9 +42,9 @@
                     </Row>
                 </div>
                 <div class="header-avator-con">
+                    <message-tip v-show="false" v-model="mesCount"></message-tip>
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                     <!-- <lock-screen></lock-screen> -->
-                    <!-- <message-tip v-model="mesCount"></message-tip> -->
                 </div>
                 </Row>
                 <Row>
@@ -57,7 +57,10 @@
             </div>
             <div class="tags-con">
                 <div class="main-breadcrumb">
-                     <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+                     <breadcrumb-nav :currentPath="currentPath" ></breadcrumb-nav>
+
+                     <span v-if="bannerHeader != ''" class="ivu-breadcrumb-item-separator">&ndash;</span>
+                     <div class='banner-header'>{{bannerHeader}}</div>
                 </div>
                 <!-- <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened> -->
             </div>
@@ -129,6 +132,9 @@
             mesCount () {
                 return this.$store.state.app.messageCount;
             },
+            bannerHeader() {
+                return this.$store.state.app.banner_header;
+            }
         },
         methods: {
             init () {
@@ -137,7 +143,7 @@
                 if (pathArr.length >= 2) {
                     this.$store.commit('addOpenSubmenu', pathArr[1].name);
                 }
-                this.userName = Cookies.get('user');
+                this.userName = Cookies.get('username');
                 let messageCount = 3;
                 this.messageCount = messageCount.toString();
                 this.checkTag(this.$route.name);

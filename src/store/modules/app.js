@@ -26,9 +26,10 @@ const app = {
                 path: '',
                 name: 'home_index'
         }], // 面包屑数组
+        banner_header: '',
         menuList: [],
         openMenuPaths: ['/help'],
-        disableMenuPaths: ['/mytask', '/jiaodui'],
+        disableMenuPaths: [],
         routers: [
             ...routers
         ],
@@ -47,6 +48,9 @@ const app = {
     mutations: {
         setTagsList (state, list) {
             state.tagsList.push(...list);
+        },
+        updateBannerHeader (state, header) {
+            state.banner_header = header;
         },
         updateMenulist (state) {
             let accessCode = parseInt(Cookies.get('access'));
@@ -186,6 +190,7 @@ const app = {
             
             if (state.menus.length == 0) {
                 let baseURL = env === 'development' ? 'http://localhost:8000' : '/';
+                baseURL = '/';
                 Util.ajax.post('/auth/auth-token-refresh/', {
                         token: Cookies.get('token'),
                 }, { baseURL })
@@ -193,6 +198,7 @@ const app = {
                     if (response.data.staff.is_active) {
                         let staff = response.data.staff;
                         Cookies.set('token', response.data.token, { expires: 7 });
+                        Cookies.set('username', response.data.staff.username);
                         state.menus = staff.menus;
                         state.is_admin = staff.is_admin;
                     } else {

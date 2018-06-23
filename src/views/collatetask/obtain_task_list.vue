@@ -31,7 +31,7 @@
         <Table stripe border class="table" size="large" :height="inner_height" :loading="loading" :columns="total_column" :data="rows"></Table>
     </div>
 
-    <Page :total="pagination.total_entries" :current="pagination.page" :pageSize="pagination.page_size" @on-change="changePage" @on-page-size-change="changePageSize" size="small" show-elevator show-sizer></Page>
+    <Page :total="pagination.total_entries" :current="pagination.page" :pageSize="pagination.page_size" @on-change="changePage" @on-page-size-change="changePageSize" size="small" show-elevator placement="top" show-sizer></Page>
 </div>
 </template>
 <script>
@@ -128,7 +128,7 @@ export default {
             util.ajax.put(url).then(function (response) {
                 that.loading = false;
                 if (response.data.status == 0) {
-                    return that.$router.push({name: that.viewRouteName, params: {id: response.data.task_id}})
+                    return that.$router.push({name: that.viewRouteName, params: {id: id}})
                 }
                 else {
                     that.$Notice.error({
@@ -145,7 +145,7 @@ export default {
             })
         },
         handleResize() {
-            this.inner_height = window.innerHeight - 192
+            this.inner_height = window.innerHeight - 206
         }
     },
     mounted() {

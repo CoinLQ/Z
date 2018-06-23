@@ -33,7 +33,10 @@ export default {
 		        55: 'scale-7', // 7
 		        56: 'scale-8', // 8
 		        57: 'scale-9', // 9
-		        112: 'help', // F1
+				112: 'help', // F1
+				8: 'delete',
+				46: 'delete',
+				27: 'help',
 		        // 113: 'focusGlyphPanel', // F2
 		        // 114: 'focusCanvasPanel', // F3
 		        17: 'ctrl',
@@ -64,12 +67,12 @@ export default {
         // document.body.onkeyup = _.throttle(this.handler, 200);
         window.staticfunc = this.handler;
         document.body.addEventListener('keydown', window.staticfunc);
-    	  document.body.addEventListener('keyup', window.staticfunc);
+    	//document.body.addEventListener('keyup', window.staticfunc);
     },
 
     beforeDestroy: function() {
     	document.body.removeEventListener('keydown', window.staticfunc);
-    	document.body.removeEventListener('keyup', window.staticfunc);
+    	//document.body.removeEventListener('keyup', window.staticfunc);
       bus.$off('keyEvent');
     }
 }

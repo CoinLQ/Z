@@ -16,7 +16,7 @@
             <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3>重置密码</h3>
+                    <h3>校勘平台 - 重置密码</h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">

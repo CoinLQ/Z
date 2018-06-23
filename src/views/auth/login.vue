@@ -8,15 +8,15 @@
         <div class="header">
             <h1>
                 <span class="banner-logo">
-                    <img src="./img/logo-icon.jpg" key="min-logo" />
-                </span>龙泉大藏经校勘平台
+                    <img  src="../../images/logo.png" key="max-logo"  />
+                </span>
             </h1>
         </div>
         <div class="main w">
             <div class="form">
                 <div class="hd">
                     <img class="l" src="./img/lline-v1.png" alt="">
-                    <h3>登录</h3>
+                    <h3>校勘平台 - 登录</h3>
                     <img class="r" src="./img/rline-v1.png" alt="">
                 </div>
                 <div class="bd">
@@ -109,8 +109,6 @@ export default {
                 }
                 this.$store.commit('setMenus', staff.menus);
                 this.$store.commit('setAdmin', staff.is_admin);
-
-                this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
 
                 this.$router.push({
                     name: 'otherRouter'

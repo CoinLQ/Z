@@ -53,6 +53,7 @@
     }
     &-breadcrumb{
         padding: 8px 15px 0;
+        display: inline-block;
     }
     &-menu-left{
         background: #464c5b;
@@ -93,7 +94,7 @@
     }
     &-header{
         height: 40px;
-        background: #1c2438;
+        background: #151515;
         box-shadow: 0 2px 1px 1px rgba(100,100,100,.1);
         position: relative;
         z-index: 11;
@@ -115,7 +116,7 @@
             right: 0;
             top: 0;
             height: 50%;
-            width: 40px;
+            width: 72px;
             color: white;
             .switch-theme-con{
                 display: inline-block;
@@ -232,9 +233,18 @@
     }
     background-color: #c32221;
 }
+
+
 .ivu-btn {
     padding: 1px 15px;
+    color: white;
+}
+.ivu-table-wrapper .ivu-btn, .ivu-btn.ivu-btn-text.ivu-btn-large {
     color: grey;
+}
+.ivu-btn-text {
+    background-color: #000000b3;
+    border-color: transparent;
 }
 
 .ivu-loading-bar-inner-color-primary {
@@ -253,4 +263,16 @@
 
 .ivu-select-dropdown {
     max-height: 280px;
+}
+.ivu-breadcrumb {
+    display: inline-block;
+}
+.banner-header {
+    color: #151515;
+    margin-left: 0.1em;
+    font-size: 14px;
+    display: inline-block
+}
+.ivu-dropdown-transfer {
+    width: 220px;
 }

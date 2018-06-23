@@ -105,7 +105,8 @@ export default {
             if (this.current && this.current.id) {
                 this.current.mselected = false;
             }else {
-                this.current.mselected = true; 
+                //this.current.mselected = true;
+                this.current.kselmarked = true;
             }
             
             
@@ -194,6 +195,9 @@ export default {
                         rect.w = point.x - rect.x;
                         break;
                 }
+                rect.kselmarked = true;
+                rect.changed = true;
+                _this.$store.commit('setCurRect', {rect: rect});
                 _this.redraw_canvas();
             }
             else if (_this.current && _this.current.mselected) {
@@ -216,7 +220,7 @@ export default {
         _this.canvas.onmouseup = function (event) {
             if (_this.drag.draggable) {
                 _this.drag.draggable = false;
-            } else if (_this.current.mselected){
+            } else if (_this.current && _this.current.mselected){
                 _this.current.mselected = false;
             }
 
