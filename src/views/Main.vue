@@ -35,7 +35,7 @@
                                 <Icon type="arrow-down-b"></Icon>
                             </a>
                             <DropdownMenu slot="list">
-                                <DropdownItem name="ownSpace"><Icon size="28"  type="ios-personadd" style="margin-right: 8px;"></Icon>修改信息</DropdownItem>
+                                <DropdownItem name="personalCenter"><Icon size="28"  type="ios-personadd" style="margin-right: 8px;"></Icon>修改信息</DropdownItem>
                                 <DropdownItem name="loginout" divided><Icon size="28"  type="android-exit" style="margin-right: 8px;"></Icon>退出登录</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
@@ -158,7 +158,7 @@
                 this.shrink = !this.shrink;
             },
             handleClickUserDropdown (name) {
-                if (name === 'ownSpace') {
+                if (name === 'personalCenter') {
                     util.openNewPage(this, 'personalcenter');
                     this.$router.push({
                         name: 'personal_center'
