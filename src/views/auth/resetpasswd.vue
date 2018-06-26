@@ -84,7 +84,7 @@ export default {
             }
         };
         const validateEmail = (rule, value, callback) => {
-            util.ajax.get('/auth/staff/exist_email?email='+value)
+            util.ajax.get('/auth/staff/exist_email/?email='+value)
             .then(function (response) {
                 if (response.data.status == -1) {
                     callback();
@@ -180,7 +180,7 @@ export default {
         handleSendVericode(event) {
             let that = this;
             var time_value = new Date().getTime();
-            util.ajax.get('/auth/staff/exist_email?email='+this.form.email)
+            util.ajax.get('/auth/staff/exist_email/?email='+this.form.email)
             .then(function (response) {
                 if (response.data.status == -1) {
                     
