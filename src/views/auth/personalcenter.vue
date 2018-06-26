@@ -1,6 +1,13 @@
 <style lang="css">
   @import "./css/base.css";
   @import "./css/personal.css";
+  nav {
+	display: inline-block;
+	margin: 60px auto 45px;
+	background-color: #5597b4;
+	box-shadow: 0 1px 1px #ccc;
+	border-radius: 2px;
+  }
 </style>
 
 <template>
