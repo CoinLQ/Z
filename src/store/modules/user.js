@@ -6,6 +6,7 @@ const user = {
         logout (state, vm) {
             Cookies.remove('user');
             Cookies.remove('token');
+            Cookies.remove('username');
             // 恢复默认样式
             // let themeLink = document.querySelector('link[name="theme"]');
             // themeLink.setAttribute('href', '');
