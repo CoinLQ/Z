@@ -13,7 +13,7 @@
 <template>
   <div id="person-main" align="center">
         <!-- 导航栏 -->
-        <nav :class="activeName">
+        <nav :class="activeName" style="margin: 60px auto 45px;background-color: #5597b4;">
             <a href="#" class="base_info" @click="makeActive('base_info')">修改用户名</a>
             <a href="#" class="reset_pwd" @click="makeActive('reset_pwd')"> 修改密码  </a>
         </nav>
