@@ -42,7 +42,7 @@ import ButtonWrapper from '../mytask/ButtonWrapper';
 export default {
     name: 'ObtianApiList',
     componenets: [ButtonWrapper],
-    props: ['columns', 'viewRouteName'],
+    props: ['columns', 'appName', 'viewRouteName'],
     data () {
         return {
             loading: false,
@@ -74,7 +74,7 @@ export default {
     },
     computed: {
         dataUrl() {
-            return "/api/v1/rect/" + this.viewRouteName;
+            return "/api/v1/" + this.appName + "/" + this.viewRouteName + "/";
         },
         total_column() {
             return this.columns.concat(this.action)
@@ -123,7 +123,7 @@ export default {
         obtain(index){
             let that = this;
             let id = this.rows[index].tid
-            let url = this.dataUrl +"/" +id + "/obtain"
+            let url = this.dataUrl + id + "/obtain"
             that.loading = true;
             util.ajax.put(url).then(function (response) {
                 that.loading = false;

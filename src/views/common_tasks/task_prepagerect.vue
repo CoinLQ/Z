@@ -10,8 +10,8 @@ export default {
     components: {ObtianApiList: ObtianApiList},
     data() {
         return {
-            appname: 'rect',
-            pathname: 'pageverifytask',
+            appname: 'pretask',
+            pathname: 'prepagecoltask',
             columns: [
                 {
                     title: '批次号',
@@ -20,10 +20,6 @@ export default {
                 {
                     title: '任务号',
                     key: 'tid'
-                },
-                {
-                    title: '页信息',
-                    key: 'page_info'
                 },
                 {
                     title: '状态',
