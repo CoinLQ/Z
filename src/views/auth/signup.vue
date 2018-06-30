@@ -56,7 +56,7 @@
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import config from '@/config/config.js';
-
+import _ from 'lodash'
 let saved_username = Cookies.get('user');
 
 export default {
@@ -79,7 +79,7 @@ export default {
             }
         };
         const validateEmail = (rule, value, callback) => {
-            util.ajax.get('/auth/staff/exist_email?email='+value)
+            util.ajax.get('/auth/staff/exist_email/?email='+value)
             .then(function (response) {
                 if (response.data.status == -1) {
                     callback(new Error('此邮箱已被注册.'));
@@ -92,12 +92,17 @@ export default {
             });
         };
         const validateUsername = (rule, value, callback) => {
+            let arr = ['admin'];
+            if (_.find(arr, function(r) {return r == value})) {
+                callback(new Error('不可使用该用户名。'));
+            }
+
             var regex = new RegExp('^(?=.*[-_a-zA-Z0-9]).{5,10}$');
             if (!regex.test(value)) {
                 // Complexity match checking
                 callback(new Error('用户名必须只包括数字、字母、连字号或下划线，长度在5-10之间'))
             }
-            util.ajax.get('/auth/staff/exist_username?username='+value)
+            util.ajax.get('/auth/staff/exist_username/?username='+value)
             
             .then(function (response) {
                 if (response.data.status == -1) {
@@ -107,7 +112,7 @@ export default {
                 }
             })
             .catch(function (error) {
-                callback(new Error('无法查询用户名.'));
+                callback(new Error('无法连接服务器。'));
             });
         };
         return {
@@ -127,7 +132,7 @@ export default {
                     { validator: validateEmail, trigger: 'blur' }
                 ],
                 password: [
-                    { type: 'string', min: 6, required: true, message: this.$t('password required') },
+                    { type: 'string', min: 0, required: true, message: this.$t('password required') },
                     { validator: validatePass, trigger: 'blur' }
                 ],
                 repassword: [
@@ -152,11 +157,6 @@ export default {
                     })
                     .then(function (response) {
                         that.handleSendVericode(event);
-                        // that.$Notice.success({
-                        //     title: '注册完成，请重新登录。',
-                        //     desc: ''
-                        // });
-                        // that.gotoLogin();
                     })
                     .catch(function (error) {
                         if (error.response.data.msg) {
@@ -178,7 +178,7 @@ export default {
         handleSendVericode(event) {
             let that = this;
             var time_value = new Date().getTime();
-            util.ajax.get('/auth/staff/exist_email?email='+this.form.email)
+            util.ajax.get('/auth/staff/exist_email/?email='+this.form.email)
             .then(function (response) {
                 if (response.data.status == -1) {
                     

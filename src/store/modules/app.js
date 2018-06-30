@@ -35,7 +35,8 @@ const app = {
         ],
         tagsList: [...otherRouter.children],
         messageCount: 0,
-        dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        dontCache: ['text-editor', 'artical-publish'] ,// 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
+        username: '',
     },
     getters: {
         menus: state => {
@@ -44,6 +45,11 @@ const app = {
         is_admin: state => {
             return state.is_admin;
         },
+    },
+    setters: {
+        username: (state, username) => {
+            state.username = username;
+        }
     },
     mutations: {
         setTagsList (state, list) {
@@ -199,6 +205,8 @@ const app = {
                         let staff = response.data.staff;
                         Cookies.set('token', response.data.token, { expires: 7 });
                         Cookies.set('username', response.data.staff.username);
+                        Cookies.set('user', response.data.staff.email);
+                        state.username = response.data.staff.username;
                         state.menus = staff.menus;
                         state.is_admin = staff.is_admin;
                     } else {
@@ -213,6 +221,9 @@ const app = {
                     console.log(error);
                 });
             }
+        },
+        setUserName (state, username) {
+            state.username = username;
         }
     }
 };

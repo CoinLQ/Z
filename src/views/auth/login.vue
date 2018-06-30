@@ -56,7 +56,8 @@ export default {
         return {
             form: {
                 email: saved_username,
-                password: ''
+                password: '',
+                username: ''
             },
             rules: {
                 email: [
@@ -101,7 +102,7 @@ export default {
                 Cookies.set('user', staff.email);
                 Cookies.set('username', staff.username);
                 // Cookies.set('last_login', response.data.staff.last_login);
-
+                this.$store.commit('setUserName', staff.username);
                 if (this.keepLogin) {
                     Cookies.set('token', response.data.token, { expires: 7 });
                 } else {
@@ -131,9 +132,10 @@ export default {
             }
             this.$Notice.error({
                 title: this.$t('Failed'),
-                desc: message
+                desc: "用户名或密码错误"
             });
-        }
+        },
+        
     }
 };
 </script>
