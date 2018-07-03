@@ -1,6 +1,20 @@
 <style lang="css">
     @import './css/base.css';
     @import './css/user.css';
+    .popContainer{  
+    position: fixed;  
+    top: 0;  
+    left: 0;  
+    right: 0;  
+    bottom: 0;  
+    background: rgba(e,e,e,0.3);  
+    /* 垂直水平居中 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
 </style>
 
 <template>
@@ -49,18 +63,27 @@
                 <div class="btn" @click="handleSubmit"><img src="././img/btn-v1.png" alt=""></div>
             </div>
         </div>
+        <div>
+            <div class='popContainer' v-show="showLoading">
+                <vue-loading type="spiningDubbles" color="#5ac1dd" :size="{ width: '60px', height: '60px' }" style="position:fixed;"></vue-loading>
+            </div>
+        </div>
     </div>
+    
 </template>
 
 <script>
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import config from '@/config/config.js';
+import { VueLoading } from 'vue-loading-template'
 import _ from 'lodash'
 let saved_username = Cookies.get('user');
 
 export default {
-
+    components: {
+        VueLoading
+    },
     data () {
 
         const validatePass = (rule, value, callback) => {
@@ -116,6 +139,7 @@ export default {
             });
         };
         return {
+            showLoading:false,
             form: {
                 username: '',
                 email: saved_username,
@@ -150,6 +174,7 @@ export default {
             let that = this;
             this.$refs.regForm.validate((valid) => {
                 if (valid) {
+                    that.showLoading = true;
                     util.ajax.post('/auth/api-register/', {
                             username: that.form.username,
                             email: that.form.email,
@@ -159,6 +184,7 @@ export default {
                         that.handleSendVericode(event);
                     })
                     .catch(function (error) {
+                        that.showLoading = false;
                         if (error.response.data.msg) {
                             that.$Notice.error({
                             title: that.$t('Failed'),
@@ -195,13 +221,14 @@ export default {
                             desc: ''
                         });
                         that.gotoLogin();
+                        that.showLoading = false;
                     })
                     .catch(function (error) {
                         that.$Notice.error({
                             title: '激活链接发送失败了，请重试。',
                             desc: error.message
                         });
-                        
+                        that.showLoading = false;
                     });
                 } else {
                     that.$Notice.error({
@@ -216,6 +243,7 @@ export default {
                     title: that.$t('请求参数不合法。'),
                     desc: ''
                 });
+                that.showLoading = false;
             });
         },
         get_format_time(){//获取当前时间，格式必须和后台要求的一致。

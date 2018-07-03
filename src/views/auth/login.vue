@@ -75,9 +75,9 @@ export default {
     },
     methods: {
         handleSubmit () {
-           
+            
             let that = this;
-            this.$refs.loginForm.validate((valid) => {
+            that.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     let baseURL = env === 'development' ? 'http://localhost:8000' : '/';
                     baseURL = '/';
@@ -92,7 +92,7 @@ export default {
                         that.handleFailure(error);
                     });
                 }
-            });
+            }); 
         },
 
         handleSuccess(response) {
@@ -130,9 +130,12 @@ export default {
             if (error.response && error.response.status == 400) {
                 message = error.response.data.non_field_errors;
             }
+            if (message == '无法使用提供的认证信息登录。'){
+                message = "用户名或密码错误";
+            }
             this.$Notice.error({
                 title: this.$t('Failed'),
-                desc: "用户名或密码错误"
+                desc: message
             });
         },
         
