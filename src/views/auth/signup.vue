@@ -65,7 +65,7 @@
         </div>
         <div>
             <div class='popContainer' v-show="showLoading">
-                <vue-loading type="spiningDubbles" color="#5ac1dd" :size="{ width: '60px', height: '60px' }" style="position:fixed;"></vue-loading>
+                <vue-loading type="spin" color="red" :size="{ width: '50px', height: '50px' }" style="position:fixed;"></vue-loading>
             </div>
         </div>
     </div>
