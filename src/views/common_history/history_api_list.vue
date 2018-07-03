@@ -64,7 +64,7 @@ import { on, off } from 'iview/src/utils/dom';
 export default {
     name: 'HistoryApiList',
     componenets: [ButtonWrapper],
-    props: ['columns', 'viewRouteName', 'dataUri'],
+    props: ['columns', 'appName', 'viewRouteName', 'dataUri'],
     data () {
         return {
             loading: false,
@@ -96,7 +96,7 @@ export default {
     },
     computed: {
         dataUrl() {
-            return "/api/v1/rect/" + this.viewRouteName + "/history";
+            return "/api/v1/" + this.appName + "/" + this.viewRouteName + "/history";
         },
         total_column() {
             return this.columns.concat(this.action)

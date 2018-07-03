@@ -1,5 +1,5 @@
 <template>
-<ObtianApiList :viewRouteName="pathname" :columns="columns"></ObtianApiList>
+<ObtianApiList :appName="appname" :viewRouteName="pathname" :columns="columns"></ObtianApiList>
 </template>
 
 <script>
@@ -10,6 +10,7 @@ export default {
     components: {ObtianApiList: ObtianApiList},
     data() {
         return {
+            appname: 'rect',
             pathname: 'pagetask',
             columns: [
                 {

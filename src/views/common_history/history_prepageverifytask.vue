@@ -10,9 +10,9 @@ export default {
     components: {HistoryApiList: HistoryApiList},
     data() {
         return {
-            appname: 'rect',
-            pathname: 'pageverifytask',
-            apiUrl: '/api/pageverifytask/history/',
+            appname: 'pretask',
+            pathname: 'prepagecolverifytask',
+            apiUrl: '/api/prepagecolverifytask/history/',
             columns: [
                 {
                     title: '批次号',

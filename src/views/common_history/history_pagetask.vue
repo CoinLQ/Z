@@ -1,5 +1,5 @@
 <template>
-<HistoryApiList :viewRouteName="pathname" :columns="columns" :dataUri="apiUrl"></HistoryApiList>
+<HistoryApiList :appName="appname" :viewRouteName="pathname" :columns="columns" :dataUri="apiUrl"></HistoryApiList>
 </template>
 
 <script>
@@ -10,6 +10,7 @@ export default {
     components: {HistoryApiList: HistoryApiList},
     data() {
         return {
+            appname: 'rect',
             pathname: 'pagetask',
             apiUrl: '/api/pagetask/history/',
             columns: [
