@@ -91,6 +91,7 @@ export const otherRouter =  {
         { path: 'personalcenter', title: '修改信息', name: 'personal_center', component: resolve => { require(['@/views/auth/personalcenter.vue'], resolve); } },
         { path: 'error-page', title: '错误页面', name: 'errorpage_index', component: resolve => { require(['@/views/error-page/error-page.vue'], resolve); } },
         { path: 'pick-task/:task*', title: '任务领取页面', name: 'picktask_index', component: resolve => { require(['@/views/collatetask/welcome.vue'], resolve); } },
+        { path: 'tripitaka/:id*', title: '实体藏经', name: 'tripitaka_detail', component: resolve => { require(['@/views/tripitaka/bridge_page.vue'], resolve); } },
         { path: 'message', title: '消息中心', name: 'message_index', component: resolve => { require(['@/views/message/message.vue'], resolve); } }
     ]
 };
@@ -129,23 +130,23 @@ export const collateRouter = {
 
 export const appRouter = [
         {
-            path: '/lqtripitaka',
+            path: '/lqdzj',
             icon: 'ios-list-outline',
             name: 'lqtripitaka_menu',
             title: '龙泉藏经',
             component: Main,
             children: [
-                { path: 'lqtripitaka/', access: 0, title: '龙泉藏经', name: 'lqtripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+                { path: '', access: 0, title: '经目列表', name: 'lqtripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
             ]
         },
         {
-            path: '/tripitaka',
+            path: '/tripitakas',
             icon: 'ios-list-outline',
             name: 'tripitaka_menu',
             title: '实体藏经',
             component: Main,
             children: [
-                { path: 'tripitaka/', access: 0, title: '实体藏经', name: 'tripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
+                { path: '', access: 0, title: '藏经列表', name: 'tripitaka', icon: 'images', component: resolve => { require(['@/views/common/iframe_page.vue'], resolve); } },
             ]
         },
         {
@@ -158,11 +159,11 @@ export const appRouter = [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correct.vue'], resolve); } },
                 { path: 'verify_correct', access: 0, title: '文字校对审定', name: 'verify-correct-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_verify_correct.vue'], resolve); } },
                 { path: 'correct_difficult', access: 0, title: '文字校对难字', name: 'correct-difficult-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correct_difficult.vue'], resolve); } },
+                { path: 'correctfeedback', access: 0, title: '文字校对反馈', name: 'correctfeedback-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correctfeedback.vue'], resolve); } },
                 { path: 'page_tasks', access: 0, title: '切分校对', name: 'page-task-history', icon: 'images', component: resolve => { require(['@/views/common_history/history_pagetask.vue'], resolve); } },
                 { path: 'pageverify_tasks', access: 0, title: '切分校对审定', name: 'pageverify-task-history', icon: 'images', component: resolve => { require(['@/views/common_history/history_pageverifytask.vue'], resolve); } },
                 { path: 'prepage_tasks', access: 0, title: '切分预处理', name: 'prepage-task-history', icon: 'images', component: resolve => { require(['@/views/common_history/history_prepagetask.vue'], resolve); } },
                 { path: 'prepageverify_tasks', access: 0, title: '切分预处理审定', name: 'prepageverify-task-history', icon: 'images', component: resolve => { require(['@/views/common_history/history_prepageverifytask.vue'], resolve); } },
-                { path: 'correctfeedback', access: 0, title: '文字校对反馈', name: 'correctfeedback-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_correctfeedback.vue'], resolve); } },
                 { path: 'mark', access: 0, title: '格式标注', name: 'mark-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_mark.vue'], resolve); } },
                 { path: 'verify_mark', access: 0, title: '格式标注审定', name: 'verify-mark-history', icon: 'ios-paper', component: resolve => { require(['@/views/collate_history/history_verify_mark.vue'], resolve); } },
                 { path: 'lqpunct', access: 0, title: '定本标点', name: 'lqpunct-history', icon: 'ios-compose', component: resolve => { require(['@/views/collate_history/history_lqpunct.vue'], resolve); } },
@@ -184,11 +185,11 @@ export const appRouter = [
                 { path: 'correct', access: 0, title: '文字校对', name: 'correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct.vue'], resolve); } },
                 { path: 'verify_correct', access: 0, title: '文字校对审定', name: 'verify_correct-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_verify_correct.vue'], resolve); } },
                 { path: 'correct_difficult', access: 0, title: '文字校对难字', name: 'correct_difficult-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correct_difficult.vue'], resolve); } },
+                { path: 'correctfeedback', access: 0, title: '文字校对反馈', name: 'correctfeedback-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correctfeedback.vue'], resolve); } },
                 { path: 'pagetask', access: 0, title: '切分校对', name: 'pagetask-task', icon: 'images', component: resolve => { require(['@/views/common_tasks/task_pagerect.vue'], resolve); } },
                 { path: 'pageverifytask', access: 0, title: '切分校对审定', name: 'pageverifytask-task', icon: 'images', component: resolve => { require(['@/views/common_tasks/task_pagerectverify.vue'], resolve); } },
                 { path: 'prepagetask', access: 0, title: '切分预处理', name: 'prepagecoltask-task', icon: 'images', component: resolve => { require(['@/views/common_tasks/task_prepagerect.vue'], resolve); } },
                 { path: 'prepageverifytask', access: 0, title: '切分预处理审定', name: 'prepagecolverifytask-task', icon: 'images', component: resolve => { require(['@/views/common_tasks/task_prepagerectverify.vue'], resolve); } },
-                { path: 'correctfeedback', access: 0, title: '文字校对反馈', name: 'correctfeedback-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_correctfeedback.vue'], resolve); } },
                 { path: 'mark', access: 0, title: '格式标注', name: 'mark-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_mark.vue'], resolve); } },
                 { path: 'verify_mark', access: 0, title: '格式标注审定', name: 'verify_mark-task', icon: 'ios-paper', component: resolve => { require(['@/views/collatetask/task_verify_mark.vue'], resolve); } },
                 { path: 'lqpunct', access: 0, title: '定本标点', name: 'lqpunct-task', icon: 'ios-compose', component: resolve => { require(['@/views/collatetask/task_lqpunct.vue'], resolve); } },
