@@ -8,8 +8,8 @@
         <div class="header">
             <h1>
                 <span class="banner-logo">
-                    <img src="./img/logo-icon.jpg" key="min-logo" />
-                </span>龙泉大藏经校勘平台
+                    <img  src="../../images/logo-tra-b.png" key="max-logo"  />
+                </span>
             </h1>
         </div>
         <div class="main w">

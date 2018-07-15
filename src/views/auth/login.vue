@@ -8,7 +8,7 @@
         <div class="header">
             <h1>
                 <span class="banner-logo">
-                    <img  src="../../images/logo.png" key="max-logo"  />
+                    <img  src="../../images/logo-tra-b.png" key="max-logo"  />
                 </span>
             </h1>
         </div>

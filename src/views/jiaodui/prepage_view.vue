@@ -152,6 +152,7 @@ export default {
         that.$Loading.start();
         util.ajax(url).then(function (response) {
             that.$Loading.finish();
+            debugger;
             that.status = response.data.status;
             that.task_id = response.data.task_id;
             that.image_url = response.data.image_url;
@@ -160,6 +161,7 @@ export default {
             that.current = _.find(that.rects, function(r) { return r.x == response.data.current_x && r.y == response.data.current_y}) || that.current;
             return util.createImgObjWithUrl(that.image_url);
         }).then(function (event) {
+            debugger;
             that.$store.commit('setImageAndRects', {image: event.target, rects: that.rects})
             that.$store.commit('setCurRect', {rect: that.current});
             that.updateCanvas += 1;
