@@ -100,7 +100,7 @@ export const collateRouter = {
     path: '/collate',
     icon: 'ios-list-outline',
     name: 'collate',
-    title: '校勘流程',
+    title: '我的任务',
     component: Main,
     children: [
         { path: 'correct/:id*', title: '文字校对', name: 'correct', icon: 'checkmark-round', component: resolve => { require(['@/views/collate/bridge_page.vue'], resolve); } },
