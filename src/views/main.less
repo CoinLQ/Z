@@ -32,10 +32,25 @@
         display: inline-block;
         white-space:nowrap;
         position: absolute;
+        color: #E4C3A8;
     }
     .main-hide-text .layout-text{
         display: none;
+        color: #E4C3A8;
     }
+    .ivu-menu-item-active.ivu-menu-item-selected {
+        // background-color: #3f3b3a!important;
+
+        .layout-text{
+            color: #F56558;
+        }
+    }
+    // .ivu-menu-vertical.ivu-menu-item,
+    // .ivu-menu-submenu .ivu-menu-submenu-title {
+    //     .ivu-icon::before {
+    //         content: ''
+    //     }
+    // }
     &-content-container{
         position: relative;
     }
@@ -67,7 +82,7 @@
         .tags-outer-scroll-con{
             position: relative;
             box-sizing: border-box;
-            padding-right: 120px;
+            padding-right: 100px;
             width: 100%;
             height: 100%;
             .tags-inner-scroll-body{
@@ -186,12 +201,12 @@
             }
         }
     }
-    .single-page-con{
+    .single-page-con {
         position: absolute;
-        top: 80px;
+        top: 90px;
         right: 0;
         bottom: 0;
-        overflow: auto;
+        overflow: hidden;
         background-color: #F0F0F0;
         z-index: 1;
         transition: left .3s;
@@ -199,7 +214,7 @@
             margin: 10px;
         }
         .layout{
-            border: 1px solid #d7dde4;
+            // border: 1px solid #d7dde4;
             background: #f5f7f9;
             height: 100%;
         }
@@ -221,11 +236,12 @@
     transition: transform .3s;
 }
 .logo-con{
-    padding: 11px 0px 11px 0px;
+    // padding: 11px 0px 11px 0px;
+    // #3f3b3a
     text-align: center;
     img{
-        height: 54px;
-        width: auto;
+        height: 56px;
+        width: 198px;
     }
     img.mini{
         height: 36px;
@@ -237,7 +253,7 @@
 
 .ivu-btn {
     padding: 1px 15px;
-    color: white;
+    color: black; // white;
 }
 .ivu-table-wrapper .ivu-btn, .ivu-btn.ivu-btn-text.ivu-btn-large {
     color: grey;
@@ -282,7 +298,99 @@
     color: whitesmoke;
     font-size: 16px;
 }
+
 .ivu-breadcrumb>span:last-child {
     font-weight: inherit;
     color: inherit
 }
+
+/**
+* 覆盖的代码
+*/
+.main {
+    .main-content {
+        background-image: url(../images/bg.png)!important;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// cover
+.main {
+    .logo-con {
+        height: 56px;
+    }
+    .main-header-con {
+        box-shadow: none!important;
+        .layout {
+            border: none!important;
+        }
+    }
+    .main-header {
+        height: 56px;
+        line-height: 50px;
+    }
+}
+.main-content {
+    * {
+        background: transparent!important;
+    }
+    .main-header, .single-page-con {
+        box-shadow: none!important;
+    }
+    .main-header {
+        height: 56px;
+        .main-header-left {
+            vertical-align: top;
+            padding: 5px 0;
+            .ivu-btn {
+                display: inline-block;
+                vertical-align: top;
+                padding: 5px 10px 5px 15px;
+            }
+        }
+        .main-header-right {
+            padding: 5px 0;
+            text-align: right;
+            padding-right: 65px;
+            img {
+                padding: 12px;
+                cursor: pointer;
+            }
+        }
+        .jiankan-logo {
+            height: 36px;
+        }
+    }
+    .tags-con {
+        box-shadow: none!important;
+        .ivu-breadcrumb-item-link {
+            color: #61646D;
+        }
+
+        .main-breadcrumb {
+            padding-top: 0px;
+            .ivu-breadcrumb {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-top: 1px solid #000!important;
+            }
+        }
+    }
+    .user-name {
+        display: inline-block;
+        line-height: 41px;
+        vertical-align: top;
+    }
+    .ivu-breadcrumb-item-separator {
+        margin: 0;
+    }
+}
+
+.tpd-left-content>div {
+    border: none!important;
+    background-color: #fff;
+}
+

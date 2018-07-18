@@ -1,5 +1,5 @@
 <style lang="less">
-    @import './styles/menu.less';
+@import "./styles/menu.less";
 </style>
 
 <template>
@@ -23,62 +23,61 @@
 </template>
 
 <script>
-import sidebarMenu from './components/sidebarMenu.vue';
-import sidebarMenuShrink from './components/sidebarMenuShrink.vue';
-import util from '@/libs/util';
+import sidebarMenu from "./components/sidebarMenu.vue";
+import sidebarMenuShrink from "./components/sidebarMenuShrink.vue";
+import util from "@/libs/util";
 export default {
-    name: 'shrinkableMenu',
-    components: {
-        sidebarMenu,
-        sidebarMenuShrink
+  name: "shrinkableMenu",
+  components: {
+    sidebarMenu,
+    sidebarMenuShrink
+  },
+  props: {
+    shrink: {
+      type: Boolean,
+      default: false
     },
-    props: {
-        shrink: {
-            type: Boolean,
-            default: false
-        },
-        menuList: {
-            type: Array,
-            required: true
-        },
-        theme: {
-            type: String,
-            default: 'dark',
-            validator (val) {
-                return util.oneOf(val, ['dark', 'light']);
-            }
-        },
-        beforePush: {
-            type: Function
-        },
-        openNames: {
-            type: Array
-        }
+    menuList: {
+      type: Array,
+      required: true
     },
-    computed: {
-        bgColor () {
-            return this.theme === 'dark' ? '#333' : '#fff';
-        },
-        shrinkIconColor () {
-            return this.theme === 'dark' ? '#fff' : '#333';
-        }
-        
+    theme: {
+      type: String,
+      default: "dark",
+      validator(val) {
+        return util.oneOf(val, ["dark", "light"]);
+      }
     },
-    methods: {
-        handleChange (name) {
-            let willpush = true;
-            if (this.beforePush !== undefined) {
-                if (!this.beforePush(name)) {
-                    willpush = false;
-                }
-            }
-            if (willpush) {
-                this.$router.push({
-                    name: name
-                });
-            }
-            this.$emit('on-change', name);
-        }
+    beforePush: {
+      type: Function
+    },
+    openNames: {
+      type: Array
     }
+  },
+  computed: {
+    bgColor() {
+      return this.theme === "dark" ? "#3f3b3a" : "#fff";
+    },
+    shrinkIconColor() {
+      return this.theme === "dark" ? "#fff" : "#3f3b3a";
+    }
+  },
+  methods: {
+    handleChange(name) {
+      let willpush = true;
+      if (this.beforePush !== undefined) {
+        if (!this.beforePush(name)) {
+          willpush = false;
+        }
+      }
+      if (willpush) {
+        this.$router.push({
+          name: name
+        });
+      }
+      this.$emit("on-change", name);
+    }
+  }
 };
 </script>
