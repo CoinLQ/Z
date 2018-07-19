@@ -53,7 +53,13 @@
   </div>
   
   <Row>
-        <Col span="12">
+        <Col span="6">
+            <Button type="error" icon="checkmark-round" long @click="submit_save" :loading="isBtnLoading">
+                <span v-if="!isBtnLoading">保存结果</span>
+                <span v-else>进行中</span>
+            </Button>
+        </Col>
+        <Col span="6">
             <Button type="success" :disabled="status == 7 || status == 0" icon="checkmark-round" long @click="confirm_modal = true" :loading="isBtnLoading">
                 <span v-if="!isBtnLoading">完成任务</span>
                 <span v-else>进行中</span>
@@ -168,6 +174,30 @@ export default {
                 desc: that.$t(error.message || '')
             });
         });
+    },
+    submit_save() {
+        let url = '/api/pageverifytask/' + this.task_id + '/save/';
+        let that = this;
+        this.isBtnLoading = true;
+        document.getElementsByClassName("canvas-layout")[0].focus()
+        let r = _.forEach(_.cloneDeep(_.filter(this.solidRects, function(o) { return o.kselmarked })), function (item) {
+            if (item.deleted) {item.op = 3;} else if (item.changed) { item.op = 2;}
+        })
+        util.ajax.post(url, {rects: r, current_x: this.curRect.x, current_y: this.curRect.y}).then(function (response) {
+            let suc = response.data.status == 0;
+            if (!suc) {
+                throw { message: response.data.msg }
+            }
+            that.isBtnLoading = false;
+            that.$Notice.success({title: '随喜', desc: '切分校对保存成功'});
+            that.getWorkingData();
+        }).catch(function (error) {
+            that.isBtnLoading = false;
+            that.$Notice.error({
+                title: that.$t('Failed'),
+                desc: that.$t(error.message)
+            });
+        })
     },
     submit() {
         let url = '/api/pageverifytask/' + this.task_id + '/redo/';
