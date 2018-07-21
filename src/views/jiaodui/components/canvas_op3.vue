@@ -18,7 +18,6 @@ import bus from '@/bus';
 export default {
     name: 'canvasOp',
     components: {KeyEventOpt, MouseEventOpt},
-
     props: ["redraw"],
 
     computed: {
@@ -34,6 +33,7 @@ export default {
     },
 
     methods: {
+        strokeColorA:function(){ return "#eb00d6";},
         setInitCanvasImage: function(){
             let canvas = document.getElementById('canvas-scope');
             canvas.width = 300;
@@ -81,13 +81,14 @@ export default {
                     ctx.fillStyle = '#000000a0';
                     ctx.lineWidth=4*scale;
                 } else if (rect.changed || rect.op == 2) {
-                    ctx.strokeStyle="#2aa766"; //green
+                    ctx.strokeStyle="#00ff00"; //green
                     ctx.fillStyle = '#0000';
                     ctx.lineWidth= 2*scale;
                 } else {
                     rect.red = rect.red || util.getRed();
-                    ctx.strokeStyle=rect.red;
+                    ctx.strokeStyle=this.strokeColorA();
                     ctx.fillStyle = '#0000';
+                    ctx.lineWidth=2*scale;
                 }
                 if (rect.kselected) {
                     ctx.strokeStyle="#db6161bf"; // green // #e32764e6
@@ -113,8 +114,8 @@ export default {
             let refRects = this.$store.getters.refRects;
             _(refRects).forEach(function(rect,i){
                 rect.red = rect.red || util.getRed();
-                ctx.lineWidth=1.5*scale;
-                ctx.strokeStyle=rect.red;
+                ctx.lineWidth=2*scale;
+                ctx.strokeStyle=this.strokeColorA();
                 ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
             }.bind(this));
         },
