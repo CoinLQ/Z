@@ -14,7 +14,31 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-}
+    }
+  .loading{
+        /*固定loading*/
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        /*垂直水平居中*/
+        margin: -20px 0 0 -20px;
+        width: 40px;
+        height: 40px;
+        border: 4px solid;
+        border-color: red red transparent;
+        border-radius: 50%;
+        box-sizing: border-box;
+        /*动画时间1s，线性变化，无限循环*/
+        animation: loading 1s linear infinite;
+    }
+    @keyframes loading{
+        0%{
+            transform: rotate(0deg);
+        }
+        100%{
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
 <template>
@@ -65,7 +89,7 @@
         </div>
         <div>
             <div class='popContainer' v-show="showLoading">
-                <vue-loading type="spin" color="red" :size="{ width: '50px', height: '50px' }" style="position:fixed;"></vue-loading>
+                <div class="loading"></div>
             </div>
         </div>
     </div>
@@ -76,14 +100,10 @@
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import config from '@/config/config.js';
-import { VueLoading } from 'vue-loading-template'
-import _ from 'lodash'
+import _ from 'lodash';
 let saved_username = Cookies.get('user');
 
 export default {
-    components: {
-        VueLoading
-    },
     data () {
 
         const validatePass = (rule, value, callback) => {
