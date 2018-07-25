@@ -48,6 +48,11 @@
 </style>
 <template>
 <div class="outter-wrapper">
+    <el-button-group style="float:right;">
+        <el-button plain size="mini" icon="el-icon-minus" @click="scale +=1" round></el-button>
+        <el-button plain size="mini" round>1:1</el-button>
+        <el-button plain size="mini" icon="el-icon-plus" @click="scale -=1" round></el-button>
+    </el-button-group>
   <div class="canvas-layout"  ref="wrapper" :style="{height: inner_height}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
@@ -83,6 +88,7 @@
 </div>
 </template>
 <script>
+
 import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 import help from "./components/help";
