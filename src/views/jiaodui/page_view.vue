@@ -48,11 +48,11 @@
 </style>
 <template>
 <div class="outter-wrapper">
-    <el-button-group style="float:right;">
-        <el-button plain size="mini" icon="el-icon-minus" @click="scale +=1" round></el-button>
-        <el-button plain size="mini" round>1:1</el-button>
-        <el-button plain size="mini" icon="el-icon-plus" @click="scale -=1" round></el-button>
-    </el-button-group>
+  <el-button-group>
+      <el-button plain size="mini" icon="el-icon-minus" @click="scaleSmall" round></el-button>
+      <el-button plain size="mini" round>1:{{$store.getters.scale}}</el-button>
+      <el-button plain size="mini" icon="el-icon-plus" @click="scaleBig" round></el-button>
+  </el-button-group>
   <div class="canvas-layout"  ref="wrapper" :style="{height: inner_height}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
@@ -94,6 +94,7 @@ import util from "@/libs/util";
 import help from "./components/help";
 import {mapState} from "vuex";
 import { on, off } from 'iview/src/utils/dom';
+import bus from '@/bus';
 
 export default {
   name: "bCheckLeak",
@@ -111,7 +112,8 @@ export default {
       task_id: '',
       updateCanvas: 1,
       submitType: 'error',
-      isBtnLoading: false
+      isBtnLoading: false,
+      scales:[0.25,0.5,1,2,3,4,5,6,7,8,9]
     };
   },
   computed: {
@@ -256,7 +258,29 @@ export default {
     changeSwitch() {
       this.$store.commit('setCover', {cover: this.switch1});
       this.updateCanvas += 1;
-    }
+    },
+    scaleSmall:function(){
+        let curIndex=this.scales.indexOf(this.$store.getters.scale);
+        let newIndex=Math.max(0,curIndex-1);
+        this.updateScale(this.scales[newIndex])
+    },
+      scaleBig:function(){
+          let curIndex=this.scales.indexOf(this.$store.getters.scale);
+          let newIndex=Math.min(this.scales.length-1,curIndex+1);
+          this.updateScale(this.scales[newIndex])
+      },
+      updateScale:function (newScale) {
+            console.log("new Scale:"+newScale);
+          let action="scale-";
+          if(newScale==0.25){
+              action+="3"
+          }else if(newScale==0.5){
+              action+="2"
+          }else {
+              action+=newScale
+          }
+          bus.$emit('keyEvent', {type: "keydown", action: action, modify:{ctrlKey:newScale<1}})
+      }
   }
 };
 </script>

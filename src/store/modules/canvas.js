@@ -312,13 +312,25 @@ const canvas = {
     },
     actions: {
         handleKeyDownEvent({commit, state}, payload) {
+            console.log(payload);
             let action = payload.action;
             let cur = state.curRect.empty? state.rects[0] : state.curRect;
 
             if (!cur) return;
 
             if (_(action).startsWith('scale')) {
-                commit('setScale', {scale: parseInt(action[action.length-1])});
+                let newScale=parseInt(action[action.length-1])
+                if(payload.modify.ctrlKey){
+                    newScale=Math.min(newScale,3);
+                    switch (newScale){
+                        case 2:
+                            newScale=0.5;break;
+                        case 3:
+                            newScale=0.25;break;
+                    }
+                }
+
+                commit('setScale', {scale: newScale});
             }
 
             if (action == 'delete') {
