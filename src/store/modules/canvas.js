@@ -348,6 +348,22 @@ const canvas = {
             // }
 
             //移动
+            if (["mov-left-a", "mov-right-d", "mov-up-w", "mov-down-s"].includes(action)) {
+                // let all = action == 'drul';
+                let unit = payload.modify.step ? 10 : 2;
+
+
+                // else if (!cur.kselected) {
+                //     commit('shiftCurRect', {action: action});
+                //
+                // }
+                commit('moveRect', {action: action, unit: unit});
+                commit('correctCurRect');
+                commit('updateItemRect');
+                return
+            }
+
+            //切换
             if (["mov-left", "mov-right", "mov-up", "mov-down"].includes(action)) {
                 let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
@@ -360,24 +376,9 @@ const canvas = {
                     // commit('enableSelectState');
                     commit('shrinkRect', {action: action, unit: unit, all: all});
 
+                }else {
+                    commit('shiftCurRect', {action: action});
                 }
-                // else if (!cur.kselected) {
-                //     commit('shiftCurRect', {action: action});
-                //
-                // }
-                else { // Move
-                    commit('moveRect', {action: action, unit: unit});
-                }
-                commit('correctCurRect');
-                commit('updateItemRect');
-                return
-            }
-
-            if (["mov-left-a", "mov-right-d", "mov-up-w", "mov-down-s"].includes(action)) {
-                let all = action == 'drul';
-                let unit = payload.modify.step ? 10 : 2;
-
-                commit('shiftCurRect', {action: action});
 
                 commit('correctCurRect');
                 commit('updateItemRect');
