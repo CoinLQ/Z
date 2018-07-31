@@ -103,6 +103,12 @@ export default {
                         ctx.fillStyle = '#000000a0';
                     }
                     ctx.lineWidth=1*scale;
+                    var originCorner=rect.corner;
+                    ['topleft','topright','top','left','right','bottomleft','bottom','bottomright'].forEach(function (corner) {
+                        rect.corner=corner;
+                        this.draw_corner(ctx,rect,scale);
+                    }.bind(this));
+                    rect.corner=originCorner;
                 }
 
                 ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
@@ -122,6 +128,9 @@ export default {
 
         draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
+                console.log("draw_corner:"+rect);
+                ctx.fillStyle = "#FF0000";
+                var botomColor="#000000";
                 let posHandle = {x:0, y:0};
                 switch (rect.corner) {
                     case 'topleft':
@@ -132,14 +141,7 @@ export default {
                         posHandle.x = rect.x + rect.w;
                         posHandle.y = rect.y;
                         break;
-                    case 'bottomleft':
-                        posHandle.x = rect.x;
-                        posHandle.y = rect.y + rect.h;
-                        break;
-                    case 'bottomright':
-                        posHandle.x = rect.x + rect.w;
-                        posHandle.y = rect.y + rect.h;
-                        break;
+
                     case 'top':
                         posHandle.x = rect.x + rect.w / 2;
                         posHandle.y = rect.y;
@@ -148,16 +150,28 @@ export default {
                         posHandle.x = rect.x;
                         posHandle.y = rect.y + rect.h / 2;
                         break;
-                    case 'bottom':
-                        posHandle.x = rect.x + rect.w / 2;
-                        posHandle.y = rect.y + rect.h;
-                        break;
                     case 'right':
                         posHandle.x = rect.x + rect.w;
                         posHandle.y = rect.y + rect.h / 2;
                         break;
+
+                    case 'bottomleft':
+                        posHandle.x = rect.x;
+                        posHandle.y = rect.y + rect.h;
+                        ctx.fillStyle = botomColor;
+                        break;
+                    case 'bottomright':
+                        posHandle.x = rect.x + rect.w;
+                        posHandle.y = rect.y + rect.h;
+                        ctx.fillStyle = botomColor;
+                        break;
+                    case 'bottom':
+                        posHandle.x = rect.x + rect.w / 2;
+                        posHandle.y = rect.y + rect.h;
+                        ctx.fillStyle = botomColor;
+                        break;
                 }
-                ctx.fillStyle = "#FF0000";
+
                 ctx.beginPath();
                 ctx.arc(posHandle.x * scale, posHandle.y * scale, 3, 0, 2 * Math.PI);
                 ctx.fill();
