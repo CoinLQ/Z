@@ -48,11 +48,11 @@
 </style>
 <template>
 <div class="outter-wrapper">
-  <el-button-group>
-      <el-button plain size="mini" icon="el-icon-minus" @click="scaleSmall" round></el-button>
-      <el-button plain size="mini" round>1:{{$store.getters.scale}}</el-button>
-      <el-button plain size="mini" icon="el-icon-plus" @click="scaleBig" round></el-button>
-  </el-button-group>
+  <!--<el-button-group>-->
+      <!--<el-button plain size="mini" icon="el-icon-minus" @click="scaleSmall" round></el-button>-->
+      <!--<el-button plain size="mini" round>1:{{$store.getters.scale}}</el-button>-->
+      <!--<el-button plain size="mini" icon="el-icon-plus" @click="scaleBig" round></el-button>-->
+  <!--</el-button-group>-->
   <div class="canvas-layout"  ref="wrapper" :style="{height: inner_height}">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>

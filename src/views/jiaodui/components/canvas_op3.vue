@@ -33,7 +33,7 @@ export default {
     },
 
     methods: {
-        strokeColorA:function(){ return "#eb00d6";},
+        strokeColorA:function(){ return "#c32221";},
         setInitCanvasImage: function(){
             let canvas = document.getElementById('canvas-scope');
             canvas.width = 300;
@@ -73,35 +73,39 @@ export default {
             let rects = this.$store.getters.rects;
             let cover = this.$store.getters.cover;
             window.rects = rects;
+
             _(rects).forEach(function(rect,i){
-                ctx.lineWidth=1.5*scale;
-                ctx.globalAlpha = 0.5;
-                
+                ctx.lineWidth=1*scale;
+                ctx.globalAlpha = 0.8;
+
                 if (rect.deleted || rect.op == 3) {
-                    ctx.fillStyle = '#000000a0';
-                    ctx.lineWidth=4*scale;
+                    return;
+                    // ctx.fillStyle = '#000000a0';
+                    // ctx.lineWidth=1*scale;
                 } else if (rect.changed || rect.op == 2) {
-                    ctx.strokeStyle="#00ff00"; //green
+                    ctx.strokeStyle="#88c177"; //green
                     ctx.fillStyle = '#0000';
-                    ctx.lineWidth= 2*scale;
+                    ctx.lineWidth= 1*scale;
                 } else {
                     rect.red = rect.red || util.getRed();
                     ctx.strokeStyle=this.strokeColorA();
                     ctx.fillStyle = '#0000';
-                    ctx.lineWidth=2*scale;
+                    ctx.lineWidth=1*scale;
                 }
+                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                this.draw_corner(ctx, rect, scale);
+
                 if (rect.kselected) {
-                    ctx.strokeStyle="#db6161bf"; // green // #e32764e6
-                    ctx.fillStyle = '#db6161a0';
-                    if (rect.deleted) {
-                        ctx.fillStyle = '#000000a0';
-                    }
-                } else if (rect == current) {
-                    ctx.strokeStyle = "#1892e8bf"; // blue
-                    ctx.fillStyle = '#1892e8a0';
-                    if (rect.deleted) {
-                        ctx.fillStyle = '#000000a0';
-                    }
+                    // ctx.strokeStyle="#db6161"; // green // #e32764e6
+                    ctx.fillStyle = '#b8906f';
+                    ctx.globalAlpha=0.2;
+                    ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                }else if(rect == current){
+                    ctx.fillStyle = '#c32221';
+                    ctx.globalAlpha=0.2;
+                    ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+
+                    ctx.globalAlpha=0.8;
                     ctx.lineWidth=1*scale;
                     var originCorner=rect.corner;
                     ['topleft','topright','top','left','right','bottomleft','bottom','bottomright'].forEach(function (corner) {
@@ -110,11 +114,6 @@ export default {
                     }.bind(this));
                     rect.corner=originCorner;
                 }
-
-                ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
-                ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
-
-                this.draw_corner(ctx, rect, scale);
             }.bind(this));
 
             let refRects = this.$store.getters.refRects;
@@ -128,9 +127,10 @@ export default {
 
         draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
+                var radius=2.5*scale;
                 // console.log("draw_corner:"+rect);
-                ctx.fillStyle = "#FF0000";
-                var bottomColor="#000000";
+                ctx.fillStyle = "#408fef";
+                var bottomColor="#c32221";
                 let posHandle = {x:0, y:0};
                 switch (rect.corner) {
                     case 'topleft':
@@ -173,7 +173,7 @@ export default {
                 }
 
                 ctx.beginPath();
-                ctx.arc(posHandle.x * scale, posHandle.y * scale, 3, 0, 2 * Math.PI);
+                ctx.arc(posHandle.x * scale, posHandle.y * scale, radius, 0, 2 * Math.PI);
                 ctx.fill();
             }
         },

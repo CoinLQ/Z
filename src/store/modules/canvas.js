@@ -400,10 +400,10 @@ const canvas = {
                 r.y += r.h;
                 r.h *= -1;
             }
-            if (r.w <10 || r.h < 10) {
-                // too small to be valuable for use
-                return _.pull(state.rects, r);
-            }
+            // if (r.w <10 || r.h < 10) {
+            //     // too small to be valuable for use
+            //     return _.pull(state.rects, r);
+            // }
 
 
             // let clip = util.getImageClip(state.image, r.w, r.h, r.x, r.y, 1);
