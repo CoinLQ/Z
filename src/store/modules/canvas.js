@@ -265,19 +265,19 @@ const canvas = {
             console.log('set ctrlPressed ' + state.ctrlPressed)
         },
 
-        setSelectState(state, payload) {
-            let cur = state.curRect;
-            if (cur.kselected) {  // selected by keydown operation
-                cur.kselected = false;
-            }
-            else {
-                cur.kselected = true;
-            }
-        },
-        enableSelectState(state, payload) {
-            let cur = state.curRect;
-            if (cur) cur.kselected = true;
-        },
+        // setSelectState(state, payload) {
+            // let cur = state.curRect;
+            // if (cur.kselected) {  // selected by keydown operation
+            //     cur.kselected = false;
+            // }
+            // else {
+            //     cur.kselected = true;
+            // }
+        // },
+        // enableSelectState(state, payload) {
+        //     let cur = state.curRect;
+        //     if (cur) cur.kselected = true;
+        // },
         shiftCurRect(state, payload) {
             let next = 0;
             let action = payload.action;
@@ -343,26 +343,29 @@ const canvas = {
                 commit('setCtrlState', {press: true});
             }
 
-            if (action == 'select') {
-                commit('setSelectState');
-            }
+            // if (action == 'select') {
+            //     commit('setSelectState');
+            // }
 
+            //移动
             if (["mov-left", "mov-right", "mov-up", "mov-down"].includes(action)) {
                 let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
 
                 if (payload.modify.enlarge) {
-                    commit('enableSelectState');
+                    // commit('enableSelectState');
                     commit('enlargeRect', {action: action, unit: unit, all: all});
 
                 } else if (payload.modify.shrink) {
-                    commit('enableSelectState');
+                    // commit('enableSelectState');
                     commit('shrinkRect', {action: action, unit: unit, all: all});
 
-                } else if (!cur.kselected) {
-                    commit('shiftCurRect', {action: action});
-
-                } else { // Move
+                }
+                // else if (!cur.kselected) {
+                //     commit('shiftCurRect', {action: action});
+                //
+                // }
+                else { // Move
                     commit('moveRect', {action: action, unit: unit});
                 }
                 commit('correctCurRect');

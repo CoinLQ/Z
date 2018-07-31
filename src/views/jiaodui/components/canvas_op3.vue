@@ -95,24 +95,29 @@ export default {
                 ctx.strokeRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
                 this.draw_corner(ctx, rect, scale);
 
-                if (rect.kselected) {
-                    // ctx.strokeStyle="#db6161"; // green // #e32764e6
-                    ctx.fillStyle = '#b8906f';
-                    ctx.globalAlpha=0.2;
-                    ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
-                }else if(rect == current){
+                // if (rect.kselected) {
+                //     ctx.strokeStyle="#db6161"; // green // #e32764e6
+                    // ctx.fillStyle = '#b8906f';
+                    // ctx.globalAlpha=0.2;
+                    // ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
+                // }else
+                if(rect == current){
                     ctx.fillStyle = '#c32221';
                     ctx.globalAlpha=0.2;
                     ctx.fillRect(rect.x*scale, rect.y*scale, rect.w*scale, rect.h*scale);
 
-                    ctx.globalAlpha=0.8;
-                    ctx.lineWidth=1*scale;
-                    var originCorner=rect.corner;
-                    ['topleft','topright','top','left','right','bottomleft','bottom','bottomright'].forEach(function (corner) {
-                        rect.corner=corner;
-                        this.draw_corner(ctx,rect,scale);
-                    }.bind(this));
-                    rect.corner=originCorner;
+                    // ctx.globalAlpha=0.8;
+                    // ctx.lineWidth=1*scale;
+                    // var originCorner=rect.corner;
+                    // ['topleft','topright',
+                    //     // 'top','left','right',
+                    //     'bottomleft',
+                    //     // 'bottom',
+                    //     'bottomright'].forEach(function (corner) {
+                    //     rect.corner=corner;
+                    //     this.draw_corner(ctx,rect,scale);
+                    // }.bind(this));
+                    // rect.corner=originCorner;
                 }
             }.bind(this));
 
@@ -127,11 +132,11 @@ export default {
 
         draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
-                var radius=Math.min(2.5*scale,5);
+                var radius = Math.min(2.5 * scale, 5);
                 // console.log("draw_corner:"+rect);
                 ctx.fillStyle = "#408fef";
-                var bottomColor="#c32221";
-                let posHandle = {x:0, y:0};
+                var bottomColor = "#c32221";
+                let posHandle = {x: 0, y: 0};
                 switch (rect.corner) {
                     case 'topleft':
                         posHandle.x = rect.x;
@@ -177,6 +182,7 @@ export default {
                 ctx.fill();
             }
         },
+
         update_canvas: function (current) {
             this.redraw_canvas();
         },
