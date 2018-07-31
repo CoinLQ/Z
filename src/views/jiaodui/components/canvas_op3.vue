@@ -128,9 +128,9 @@ export default {
 
         draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
-                console.log("draw_corner:"+rect);
+                // console.log("draw_corner:"+rect);
                 ctx.fillStyle = "#FF0000";
-                var botomColor="#000000";
+                var bottomColor="#000000";
                 let posHandle = {x:0, y:0};
                 switch (rect.corner) {
                     case 'topleft':
@@ -158,17 +158,17 @@ export default {
                     case 'bottomleft':
                         posHandle.x = rect.x;
                         posHandle.y = rect.y + rect.h;
-                        ctx.fillStyle = botomColor;
+                        ctx.fillStyle = bottomColor;
                         break;
                     case 'bottomright':
                         posHandle.x = rect.x + rect.w;
                         posHandle.y = rect.y + rect.h;
-                        ctx.fillStyle = botomColor;
+                        ctx.fillStyle = bottomColor;
                         break;
                     case 'bottom':
                         posHandle.x = rect.x + rect.w / 2;
                         posHandle.y = rect.y + rect.h;
-                        ctx.fillStyle = botomColor;
+                        ctx.fillStyle = bottomColor;
                         break;
                 }
 
