@@ -6,16 +6,6 @@
       color: #9ea7b4;
     }
 
-    .canvas-layout {
-        overflow: scroll;
-        text-align: center;
-        padding: 4px;
-        margin: 10px;
-        background-color: #cccccc;
-        box-shadow: 0px 0px 3px 3px #363E4E;
-        border-radius: 2px;
-    }
-
     .button {
         background-color: #cccccc29;
         border-color: #cccccc;
@@ -48,12 +38,7 @@
 </style>
 <template>
 <div class="outter-wrapper">
-  <el-button-group>
-      <el-button plain size="mini" icon="el-icon-minus" @click="scaleSmall" round></el-button>
-      <el-button plain size="mini" round>1:{{$store.getters.scale}}</el-button>
-      <el-button plain size="mini" icon="el-icon-plus" @click="scaleBig" round></el-button>
-  </el-button-group>
-  <div class="canvas-layout"  ref="wrapper" :style="{height: inner_height}">
+  <div class="canvas-layoutA"  ref="wrapper">
     <div><canvas-op :redraw="updateCanvas" @scrollToRect="scrollToRect"></canvas-op></div>
   </div>
   <div class="switch">
@@ -93,7 +78,7 @@ import canvasOp from "./components/canvas_op3.vue";
 import util from "@/libs/util";
 import help from "./components/help";
 import {mapState} from "vuex";
-import { on, off } from 'iview/src/utils/dom';
+
 import bus from '@/bus';
 
 export default {
@@ -104,7 +89,7 @@ export default {
   data() {
     return {
       confirm_modal: false,
-      inner_height: 100,
+
       status: 0,
       switch1: true,
       rects: [],
@@ -113,7 +98,6 @@ export default {
       updateCanvas: 1,
       submitType: 'error',
       isBtnLoading: false,
-      scales:[0.25,0.5,1,2,3,4,5,6,7,8,9]
     };
   },
   computed: {
@@ -139,17 +123,9 @@ export default {
     this.getWorkingData();
     this.$store.commit('setScale', {scale: 1});
     this.$Notice.config({top: 50, duration: 3});
-    this.handleResize();
-    on(window, 'resize', this.handleResize);
    },
-  beforeDestroy() {
-      this.$store.commit('resetAll')
-      off(window, 'resize', this.handleResize);
-  },
   methods: {
-    handleResize() {
-        this.inner_height = (window.innerHeight - 150) + 'px';;
-    },
+
     getWorkingData() {
         let that = this;
         let url = '/api/pagetask/obtain/';
@@ -187,7 +163,7 @@ export default {
         //     desc: '还有未处理过的字块，请全部检查处理后再提交！'
         // });
         this.isBtnLoading = true;
-        document.getElementsByClassName("canvas-layout")[0].focus()
+        document.getElementsByClassName("canvas-layoutA")[0].focus()
         let r = _.forEach(_.cloneDeep(_.filter(this.solidRects, function(o) { return o.kselmarked })), function (item) {
             if (item.deleted) {item.op = 3;} else if (item.changed) { item.op = 2;}
         })
@@ -211,7 +187,7 @@ export default {
         let url = '/api/pagetask/' + this.task_id + '/done/';
         let that = this;
         this.isBtnLoading = true;
-        document.getElementsByClassName("canvas-layout")[0].focus()
+        document.getElementsByClassName("canvas-layoutA")[0].focus()
         let r = _.forEach(_.cloneDeep(this.solidRects), function (item) {
             if (item.deleted) item.op = 3;
         })
@@ -233,7 +209,7 @@ export default {
     },
     scrollToRect() {
       let scale = this.$store.getters.scale;
-      let canvas = document.getElementsByClassName('canvas-layout')[0];
+      let canvas = document.getElementsByClassName('canvas-layoutA')[0];
       let viewWidth = canvas.clientWidth;
       let viewHeight = canvas.clientHeight -20;
       let offsetTop = canvas.scrollTop;
@@ -259,28 +235,7 @@ export default {
       this.$store.commit('setCover', {cover: this.switch1});
       this.updateCanvas += 1;
     },
-    scaleSmall:function(){
-        let curIndex=this.scales.indexOf(this.$store.getters.scale);
-        let newIndex=Math.max(0,curIndex-1);
-        this.updateScale(this.scales[newIndex])
-    },
-      scaleBig:function(){
-          let curIndex=this.scales.indexOf(this.$store.getters.scale);
-          let newIndex=Math.min(this.scales.length-1,curIndex+1);
-          this.updateScale(this.scales[newIndex])
-      },
-      updateScale:function (newScale) {
-            // console.log("new Scale:"+newScale);
-          let action="scale-";
-          if(newScale==0.25){
-              action+="3"
-          }else if(newScale==0.5){
-              action+="2"
-          }else {
-              action+=newScale
-          }
-          bus.$emit('keyEvent', {type: "keydown", action: action, modify:{ctrlKey:newScale<1}})
-      }
+
   }
 };
 </script>

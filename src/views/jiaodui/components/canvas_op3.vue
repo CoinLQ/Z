@@ -1,17 +1,44 @@
+<style scoped>
+.canvas-layout {
+overflow: scroll;
+text-align: center;
+padding: 4px;
+margin: 10px;
+background-color: #cccccc;
+box-shadow: 0px 0px 3px 3px #363E4E;
+border-radius: 2px;
+}
+</style>
+
 <template>
-  <canvas :id="canvasId">
-      <KeyEventOpt></KeyEventOpt>
-      <MouseEventOpt :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
-  </canvas>
+    <div class="row">
+        <div class="col-lg-11 canvas-layout" :style="{height: this.inner_height}">
+            <canvas :id="canvasId"  >
+                <KeyEventOpt></KeyEventOpt>
+                <MouseEventOpt :canvasId="canvasId" @drawnow="update_canvas"></MouseEventOpt>
+            </canvas>
+        </div>
+        <el-button-group class="col-lg-1">
+            <el-button plain size="mini" icon="el-icon-minus" @click="scaleSmall" round></el-button>
+            <el-button plain size="mini" round>1:{{$store.getters.scale}}</el-button>
+            <el-button plain size="mini" icon="el-icon-plus" @click="scaleBig" round></el-button>
+        </el-button-group>
+    </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import  _ from 'lodash';
 import Cookies from 'js-cookie';
 import util from '@/libs/util'
 import KeyEventOpt from "./keyEventOpt3";
 import MouseEventOpt from "./mouseEventOpt3";
 import bus from '@/bus';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import { on, off } from 'iview/src/utils/dom';
+
+Vue.use(ElementUI);
 
 // http://cheatsheetworld.com/programming/html5-canvas-cheat-sheet/
 
@@ -19,6 +46,12 @@ export default {
     name: 'canvasOp',
     components: {KeyEventOpt, MouseEventOpt},
     props: ["redraw"],
+    data:function(){
+        return {
+            scales:[0.25,0.5,1,2,3,4,5,6,7,8,9],
+            inner_height: 100,
+        };
+    },
 
     computed: {
         canvasId() {
@@ -189,10 +222,43 @@ export default {
             this.redraw_canvas();
             this.$emit('scrollToRect');
         },
+        scaleSmall:function(){
+            let curIndex=this.scales.indexOf(this.$store.getters.scale);
+            let newIndex=Math.max(0,curIndex-1);
+            this.updateScale(this.scales[newIndex])
+        },
+        scaleBig:function(){
+            let curIndex=this.scales.indexOf(this.$store.getters.scale);
+            let newIndex=Math.min(this.scales.length-1,curIndex+1);
+            this.updateScale(this.scales[newIndex])
+        },
+        updateScale:function (newScale) {
+            // console.log("new Scale:"+newScale);
+            let action="scale-";
+            if(newScale==0.25){
+                action+="3"
+            }else if(newScale==0.5){
+                action+="2"
+            }else {
+                action+=newScale
+            }
+            bus.$emit('keyEvent', {type: "keydown", action: action, modify:{ctrlKey:newScale<1}})
+        },
+        handleResize() {
+            this.inner_height = (window.innerHeight - 200) + 'px';
+            console.log("inner-height:"+this.inner_height);
+        },
     },
     mounted: function(){
         this.setInitCanvasImage()
         bus.$on('keyEvent', this.handleKeyEvent);
-    }
+
+        this.handleResize();
+        on(window, 'resize', this.handleResize);
+    },
+    beforeDestroy() {
+        this.$store.commit('resetAll')
+        off(window, 'resize', this.handleResize);
+    },
 };
 </script>
