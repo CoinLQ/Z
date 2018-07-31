@@ -270,7 +270,7 @@ export default {
           this.updateScale(this.scales[newIndex])
       },
       updateScale:function (newScale) {
-            console.log("new Scale:"+newScale);
+            // console.log("new Scale:"+newScale);
           let action="scale-";
           if(newScale==0.25){
               action+="3"

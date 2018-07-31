@@ -312,7 +312,7 @@ const canvas = {
     },
     actions: {
         handleKeyDownEvent({commit, state}, payload) {
-            console.log(payload);
+            // console.log(payload);
             let action = payload.action;
             let cur = state.curRect.empty? state.rects[0] : state.curRect;
 
