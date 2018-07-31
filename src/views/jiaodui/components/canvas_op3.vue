@@ -127,7 +127,7 @@ export default {
 
         draw_corner: function(ctx, rect, scale) {
             if (rect.corner) {
-                var radius=2.5*scale;
+                var radius=Math.min(2.5*scale,5);
                 // console.log("draw_corner:"+rect);
                 ctx.fillStyle = "#408fef";
                 var bottomColor="#c32221";
