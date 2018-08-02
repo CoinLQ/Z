@@ -265,19 +265,19 @@ const canvas = {
             console.log('set ctrlPressed ' + state.ctrlPressed)
         },
 
-        setSelectState(state, payload) {
-            let cur = state.curRect;
-            if (cur.kselected) {  // selected by keydown operation
-                cur.kselected = false;
-            }
-            else {
-                cur.kselected = true;
-            }
-        },
-        enableSelectState(state, payload) {
-            let cur = state.curRect;
-            if (cur) cur.kselected = true;
-        },
+        // setSelectState(state, payload) {
+            // let cur = state.curRect;
+            // if (cur.kselected) {  // selected by keydown operation
+            //     cur.kselected = false;
+            // }
+            // else {
+            //     cur.kselected = true;
+            // }
+        // },
+        // enableSelectState(state, payload) {
+        //     let cur = state.curRect;
+        //     if (cur) cur.kselected = true;
+        // },
         shiftCurRect(state, payload) {
             let next = 0;
             let action = payload.action;
@@ -343,38 +343,42 @@ const canvas = {
                 commit('setCtrlState', {press: true});
             }
 
-            if (action == 'select') {
-                commit('setSelectState');
-            }
+            // if (action == 'select') {
+            //     commit('setSelectState');
+            // }
 
-            if (["mov-left", "mov-right", "mov-up", "mov-down"].includes(action)) {
-                let all = action == 'drul';
+            //移动
+            if (["mov-left-a", "mov-right-d", "mov-up-w", "mov-down-s"].includes(action)) {
+                // let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
 
-                if (payload.modify.enlarge) {
-                    commit('enableSelectState');
-                    commit('enlargeRect', {action: action, unit: unit, all: all});
 
-                } else if (payload.modify.shrink) {
-                    commit('enableSelectState');
-                    commit('shrinkRect', {action: action, unit: unit, all: all});
-
-                } else if (!cur.kselected) {
-                    commit('shiftCurRect', {action: action});
-
-                } else { // Move
-                    commit('moveRect', {action: action, unit: unit});
-                }
+                // else if (!cur.kselected) {
+                //     commit('shiftCurRect', {action: action});
+                //
+                // }
+                commit('moveRect', {action: action, unit: unit});
                 commit('correctCurRect');
                 commit('updateItemRect');
                 return
             }
 
-            if (["mov-left-a", "mov-right-d", "mov-up-w", "mov-down-s"].includes(action)) {
+            //切换
+            if (["mov-left", "mov-right", "mov-up", "mov-down"].includes(action)) {
                 let all = action == 'drul';
                 let unit = payload.modify.step ? 10 : 2;
 
-                commit('shiftCurRect', {action: action});
+                if (payload.modify.enlarge) {
+                    // commit('enableSelectState');
+                    commit('enlargeRect', {action: action, unit: unit, all: all});
+
+                } else if (payload.modify.shrink) {
+                    // commit('enableSelectState');
+                    commit('shrinkRect', {action: action, unit: unit, all: all});
+
+                }else {
+                    commit('shiftCurRect', {action: action});
+                }
 
                 commit('correctCurRect');
                 commit('updateItemRect');
@@ -400,7 +404,7 @@ const canvas = {
                 r.y += r.h;
                 r.h *= -1;
             }
-            if (r.w <10 || r.h < 10) {
+            if (r.w + r.h < 12) {
                 // too small to be valuable for use
                 return _.pull(state.rects, r);
             }
