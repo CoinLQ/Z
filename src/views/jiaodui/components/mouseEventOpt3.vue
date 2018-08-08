@@ -41,20 +41,64 @@ export default {
                     if (this.dist(mouse, this.point(rect.x + rect.w, rect.y + rect.h / 2)) <= this.handle_size) return 'right';
                     return false;
                 },
+                getNearestCorner: function (mouse, rect) {
+                    let distance=this.dist(mouse, this.point(rect.x, rect.y));
+                    if (distance <= this.handle_size) return {type:'topleft',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x + rect.w, rect.y));
+                    if ( distance<= this.handle_size) return {type:'topright',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x, rect.y + rect.h));
+                    if ( distance<= this.handle_size) return {type:'bottomleft',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x + rect.w, rect.y + rect.h));
+                    if (  distance<= this.handle_size) return {type:'bottomright',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x + rect.w / 2, rect.y))
+                    if ( distance<= this.handle_size) return {type:'top',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x, rect.y + rect.h / 2))
+                    if ( distance<= this.handle_size) return {type:'left',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x + rect.w / 2, rect.y + rect.h))
+                    if ( distance<= this.handle_size) return {type:'bottom',dist:distance};
+
+                    distance=this.dist(mouse, this.point(rect.x + rect.w, rect.y + rect.h / 2))
+                    if ( distance<= this.handle_size) return {type:'right',dist:distance};
+                    return false;
+                },
                 mark_corner: function(mouse, rects) {
                     if (this.current) {
                         this.current.corner = false;
                     }
-                    var rect = _.find(rects, function(r) {
-                        if (r.deleted) return false;
-
-                        let corner = this.getHandle(mouse, r)
-                        if (corner) {
-                            r.corner = corner;
+                    var minRect=null;
+                    for(var i=0;i<rects.length;i++){
+                        var r=rects[i];
+                        if (r.deleted)  continue;
+                        var cornerInfo=this.getNearestCorner(mouse,r);
+                        if(i==0){
+                            minRect=rects[0];
+                            minRect.cornerInfo=cornerInfo;
+                        } else if(cornerInfo &&
+                            (!minRect.cornerInfo || cornerInfo.dist<minRect.cornerInfo.dist)
+                        ){
+                            minRect=r;
+                            minRect.cornerInfo=cornerInfo;
                         }
-                        return corner;
-                    }.bind(this));
-                    this.current = rect;
+                    }
+                    // console.log("mark_corner:");
+                    // console.log(minRect);
+                    // var rect = _.find(rects, function(r) {
+                    //     if (r.deleted) return false;
+                    //
+                    //     let corner = this.getHandle(mouse, r)
+                    //     if (corner) {
+                    //         r.corner = corner;
+                    //     }
+                    //     return corner;
+                    // }.bind(this));
+                    minRect.corner=minRect.cornerInfo.type;
+                    this.current = minRect;
                 },
                 clear_corner: function(rects) {
                     rects.forEach(function(rect, i){

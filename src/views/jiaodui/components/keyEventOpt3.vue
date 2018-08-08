@@ -56,7 +56,7 @@ export default {
 		    }
 
         // TODO: it'd be better to make combo keys into a certain action.
-        bus.$emit('keyEvent', {type: type, action: action, modify:{enlarge: shiftKey, shrink: altKey, step: ctrlKey}});
+        bus.$emit('keyEvent', {type: type, action: action, modify:{enlarge: shiftKey, shrink: altKey, step: ctrlKey, ctrlKey:ctrlKey}});
 
 	        event.preventDefault();
 			},

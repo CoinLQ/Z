@@ -217,6 +217,19 @@ export default {
       } else {
         this.content_height = window.innerHeight - this.topHeight;
       }
+    },
+    shield_refresh() {
+        var event = event || window.event;
+        var keycode = event.keyCode || event.which;
+        if(keycode == 116){
+            if(event.preventDefault){//chrome、firefox、IE9+
+                this.$router.go(0);
+                event.preventDefault();
+            }else{//IE8-
+                event.keyCode = 0;
+                event.returnValue = false;
+            }
+        }
     }
   },
   watch: {
@@ -237,9 +250,11 @@ export default {
     this.init();
     this.content_height = window.innerHeight - this.topHeight;
     on(window, "resize", this.handleResize);
+    on(window, "keydown", this.shield_refresh);
   },
   beforeDestroy() {
     off(window, "resize", this.handleResize);
+    off(window, "keydown", this.shield_refresh);
   },
   created() {
     // 显示打开的页面的列表
