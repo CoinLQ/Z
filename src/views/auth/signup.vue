@@ -143,7 +143,7 @@ export default {
             var regex = new RegExp('^(?=.*[-_a-zA-Z0-9]).{5,10}$');
             if (!regex.test(value)) {
                 // Complexity match checking
-                callback(new Error('用户名必须只包括数字、字母、连字号或下划线，长度在5-10之间'))
+                // callback(new Error('用户名必须只包括数字、字母、连字号或下划线，长度在5-10之间'))
             }
             util.ajax.get('/auth/staff/exist_username/?username='+value)
             
