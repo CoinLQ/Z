@@ -76,14 +76,14 @@ export default {
 
             _(rects).forEach(function(rect,i){
                 ctx.lineWidth=1*scale;
-                ctx.globalAlpha = 0.8;
+                ctx.globalAlpha = 0.9;
 
                 if (rect.deleted || rect.op == 3) {
                     return;
                     // ctx.fillStyle = '#000000a0';
                     // ctx.lineWidth=1*scale;
                 } else if (rect.changed || rect.op == 2) {
-                    ctx.strokeStyle="#88c177"; //green
+                    ctx.strokeStyle='green'; //green
                     ctx.fillStyle = '#0000';
                     ctx.lineWidth= 1*scale;
                 } else {
@@ -158,6 +158,7 @@ export default {
                     case 'right':
                         posHandle.x = rect.x + rect.w;
                         posHandle.y = rect.y + rect.h / 2;
+                        ctx.fillStyle = bottomColor;
                         break;
 
                     case 'bottomleft':
