@@ -64,6 +64,11 @@
                                 <Input v-model.trim="form.username" placeholder="请输入用户名"></Input>
                             </FormItem>
                         </div>
+                        <div class="item nickname">
+                            <FormItem prop="nickname">
+                                <Input v-model.trim="form.nickname" placeholder="请输入真实姓名(可选)"></Input>
+                            </FormItem>
+                        </div>
                         <div class="item email">
                             <FormItem prop="email">
                                 <Input v-model.trim="form.email" placeholder="请输入邮箱"></Input>
@@ -162,6 +167,7 @@ export default {
             showLoading:false,
             form: {
                 username: '',
+                nickname: '',
                 email: saved_username,
                 password: '',
                 repassword: ''
@@ -197,6 +203,7 @@ export default {
                     that.showLoading = true;
                     util.ajax.post('/auth/api-register/', {
                             username: that.form.username,
+                            nickname: that.form.nickname,
                             email: that.form.email,
                             password: that.form.password
                     })
